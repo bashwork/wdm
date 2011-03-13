@@ -1,0 +1,17 @@
+<project xmlns:ivy="antlib:fr.jayasoft.ivy.ant">
+
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <!-- compile the documentation -->
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <target name="site" depends="compile" description="build the documentation" >
+    <mkdir dir="${docs.dir}" />
+    <scaladoc srcdir="${src.dir}" destdir="${docs.dir}">
+      <classpath refid="classpath" />
+      <src path="${src.dir}" />
+      <include name="**/*.scala" />
+    </scaladoc>
+  </target>
+
+</project>
+
+

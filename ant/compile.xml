@@ -1,0 +1,14 @@
+<project xmlns:ivy="antlib:fr.jayasoft.ivy.ant">
+
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <!-- compiles all the samples -->
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <target name="compile" depends="init" description="compiles all the samples" >
+    <mkdir dir="${build.dir}" />
+    <scalac srcdir="${src.dir}" destdir="${build.dir}" classpathref="classpath"
+        deprecation="yes" unchecked="yes">
+      <include name="**/*.scala" />
+    </scalac>
+  </target>
+
+</project>

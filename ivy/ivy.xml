@@ -1,0 +1,29 @@
+<ivy-module version="1.0">
+  <info organisation="school" module="wdm" revision="1.0.0" />
+
+  <configurations>
+    <conf name="default" description="normal build" />
+    <conf name="test" visibility="private" description="used to build and run tests" />
+  </configurations>
+
+  <dependencies>
+    <dependency org="org.scala-lang" name="scala-compiler" rev="2.8.1" />
+    <dependency org="org.scala-lang" name="scala-library" rev="2.8.1" />
+    <dependency org="commons-cli" name="commons-cli" rev="1.2" />
+    <dependency org="org.slf4j" name="slf4j-api" rev="1.6.1" />
+    <dependency org="org.slf4j" name="slf4j-simple" rev="1.6.1" />
+    <dependency org="org.scalatest" name="scalatest" rev="1.3" conf="test->*" />
+    <!--
+    <dependency org="org.scala-tools.testing" name="specs_2.8.1_java_1.5" rev="1.6.6" conf="test->*" >
+      <exclude name="javax.script" />
+      <exclude name="junit" />
+      <exclude name="jmock" />
+      <exclude name="easymock" />
+      <exclude name="mockito" />
+    </dependency>
+    <dependency org="org.mockito" name="mockito-all" rev="1.8.5" conf="test->*" />
+    <dependency org="com.googlecode.xmemcached" name="xmemcached" rev="1.3.1" />
+    <dependency org="com.twitter" name="querulous" rev="1.1.0"/>
+    -->
+  </dependencies>
+</ivy-module>

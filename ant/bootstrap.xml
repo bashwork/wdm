@@ -1,0 +1,40 @@
+<project xmlns:ivy="antlib:fr.jayasoft.ivy.ant">
+
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <!-- build variables -->
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <property name="src.dir"    location="${basedir}/src"/>
+  <property name="build.dir"  location="${basedir}/build"/>
+  <property name="jar.dir"    location="${basedir}/jar"/>
+  <property name="lib.dir"    location="${basedir}/lib"/>
+  <property name="docs.dir"   location="${build.dir}/docs"/>
+  <property name="main.class" value="org.wdm.Application"/>
+
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <!-- ivy configuration -->
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <property name="ivy.dep.file" value="${basedir}/ivy/ivy.xml"/>
+  <property name="ivy.settings.file" value="${basedir}/ivy/ivysettings.xml"/>
+
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <!-- define the global classpath -->
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <path id="classpath">
+    <fileset dir="${lib.dir}" includes="**/*.jar"/>
+  </path>
+
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <!-- import our various commands -->
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  <import file="init.xml" />
+  <import file="clean.xml" />
+  <import file="compile.xml" />
+  <import file="test.xml" />
+  <import file="docs.xml" />
+  <import file="package.xml" />
+  <import file="run.xml" />
+
+</project>
+
+

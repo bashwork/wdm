@@ -1,0 +1,19 @@
+<project xmlns:ivy="antlib:fr.jayasoft.ivy.ant">
+
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <!-- run the unit tests -->
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <target name="test" depends="package" description="run the unit tests" >
+    <taskdef name="scalatest" classname="org.scalatest.tools.ScalaTestAntTask">
+      <classpath refid="classpath"/>
+    </taskdef>
+
+    <scalatest runpath="${jar.dir}/${ant.project.name}.jar">
+      <reporter type="stdout" />
+      <reporter type="file" filename="${build.dir}/test.results" />
+    </scalatest>
+  </target>
+
+</project>
+
+

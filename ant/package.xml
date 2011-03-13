@@ -1,0 +1,24 @@
+<project xmlns:ivy="antlib:fr.jayasoft.ivy.ant">
+
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <!-- build a jar of all the samples -->
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <target name="package" depends="compile" description="generate the distribution" >
+    <mkdir dir="${jar.dir}/"/>
+    <jar jarfile="${jar.dir}/${ant.project.name}.jar" basedir="${build.dir}">
+
+      <zipfileset src="${lib.dir}/commons-cli-1.2.jar" />
+      <zipfileset src="${lib.dir}/scala-compiler-2.8.1.jar" />
+      <zipfileset src="${lib.dir}/scala-library-2.8.1.jar" />
+      <zipfileset src="${lib.dir}/slf4j-api-1.6.1.jar" />
+      <zipfileset src="${lib.dir}/slf4j-simple-1.6.1.jar" />
+
+      <manifest>
+        <attribute name="Main-Class" value="${main.class}" />
+      </manifest>
+    </jar>
+  </target>
+
+</project>
+
+

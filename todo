@@ -1,0 +1,13 @@
+abstract loader trait
+- jdbc loader
+- redis/memcached
+
+convertors
+- json
+- xml
+- yaml
+- csv/excel
+- serialized java
+
+testing
+- scalacheck

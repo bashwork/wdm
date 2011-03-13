@@ -1,0 +1,33 @@
+<project xmlns:ivy="antlib:fr.jayasoft.ivy.ant">
+
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <!-- get and install sonar -->
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <target name="download-sonar" description="retrieve ivy installation">
+    <get src="${sonar.url}" dest="${sonar.jar}.download" usetimestamp="true" />
+    <move src="${sonar.jar}.download" tofile="${sonar.jar}" />
+  </target>
+
+  <target name="install-sonar" depends="download-sonar" description="install the new sonar download">
+    <taskdef uri="antlib:org.sonar.ant" resource="org/sonar/ant/antlib.xml">
+      <classpath path="classpath" />
+    </taskdef>
+  </target>
+
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <!-- retrieves all the dependencies using ivy -->
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <target name="sonar" depends="install-sonar" description="run the sonar project">
+    <property key="sonar.jdbc.url" value="jdbc:derby://localhost:1527/sonar;create=true" />
+    <property key="sonar.jdbc.driver" value="org.apache.derby.jdbc.ClientDriver" />
+
+    <sonar:sonar workdir="${basedir}">
+      <sources><path location="${src.dir}" /></sources>
+      <tests><path location="${src.dir}" /></tests>
+      <binaries><path location="${build.dir}" /></binaries>
+      <libraries><path location="${lib.dir}" /></libraries>
+
+    </sonar:sonar>
+  </target>
+
+</project>
