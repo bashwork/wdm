@@ -6,10 +6,11 @@ import java.io.Serializable
  * Represents a single item from the dataset
  *
  * @param value The value of this item
+ * @param frequency The number of occurrences of this item
  * @param confidence The confidence of this item
  * @param support The support of this item
  */
-class Item private (val value:String, val frequencey:Int, val confidence:Double, val support:Double)
+class Item private (val value:String, val frequency:Int, val confidence:Double, val support:Double)
     extends Serializable {
 
    override def equals(input:Any) =

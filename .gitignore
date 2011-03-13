@@ -1,0 +1,4 @@
+*.swp
+lib/
+build/
+jar/
