@@ -17,6 +17,9 @@ class Item private (val value:String, val frequency:Int, val confidence:Double, 
        input.isInstanceOf[Item] &&
        input.asInstanceOf[Item].value == this.value
 
+   override def hashCode = value.hashCode
+   override def toString = value
+
 }
 
 object Item {

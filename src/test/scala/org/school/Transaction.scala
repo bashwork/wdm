@@ -21,5 +21,17 @@ class TransactionSpec extends FlatSpec with ShouldMatchers {
 
 		transaction.sets.length should be (2)
 	}
+
+	it should "produce all unique candidates" in {
+        var items1 = ('a' to 'm').map {x => Item(x.toString) }.toList
+        var items2 = ('g' to 'z').map {x => Item(x.toString) }.toList
+		val transaction = Transaction(ItemSet(items1), ItemSet(items2))
+		val candidates = transaction.candidates
+
+		candidates.size should be (26)
+		candidates(Item("a")) should be (1)
+		candidates(Item("g")) should be (2)
+		candidates(Item("z")) should be (1)
+	}
 }
 

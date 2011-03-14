@@ -9,6 +9,12 @@ import java.io.Serializable
  */
 class Transaction private (val sets:List[ItemSet])
     extends Serializable {
+
+    def candidates() : Map[Item, Int] = {
+
+        val everything = sets.map { _.items }.flatten.toList
+        everything groupBy identity mapValues { _.size }
+    }
 }
 
 object Transaction {
