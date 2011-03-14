@@ -7,14 +7,26 @@ import java.io.Serializable
  *
  * @param items The items composing this Item set
  */
-class ItemSet private (val items:Set[Item])
+class ItemSet[T] private (val items:Set[T])
     extends Serializable {
 
-    def minsup()  = items.map { _.support }.min
-    def minconf() = items.map { _.confidence }.min
+    /**
+     * Retrieve the minimum support for this transaction set
+     *
+     * @param support The support lookup table
+     * @return The minimum support for this collection
+     */
+    def minsup(support:AbstractSupport[T]) =
+        items.map { support.get(_) }.min
+
+    override def hashCode() = items.hashCode
+    override def equals(other:Any) = other match {
+        case that: ItemSet[_] => this.items == that.items
+        case _ => false
+    }
 }
 
 object ItemSet {
-    def apply(items:List[Item]) = new ItemSet(items.toSet)
-    def apply(items:Item*) = new ItemSet(items.toList.toSet)
+    def apply[T](items:List[T]) = new ItemSet[T](items.toSet)
+    def apply[T](items:T*) = new ItemSet[T](items.toList.toSet)
 }

@@ -25,7 +25,7 @@ class SequentialFormatSpec extends FlatSpec with ShouldMatchers {
 
 		val support = SingleSupport(0.2)
 		val loader = MemoryLoader(example)
-		val transactions = SequentialFormat.process(loader, support)
+		val transactions = SequentialFormat.process(loader)
 
 		transactions.size should be (9)
 		transactions.foldLeft(0) { (a,b) =>

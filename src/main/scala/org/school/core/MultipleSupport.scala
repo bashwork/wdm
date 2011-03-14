@@ -7,8 +7,8 @@ import org.school.core.loader.LoaderFactory
 /**
  * Implements a support lookup that has multiple support values
  */
-class MultipleSupport private (val table:Map[String,Double],
-	val default:Double = 0.0) extends AbstractSupport {
+class MultipleSupport[T] private (val table:Map[T,Double],
+	val default:Double = 0.0) extends AbstractSupport[T] {
 
     /**
      * Retrieves the requested value for the specified key
@@ -16,7 +16,7 @@ class MultipleSupport private (val table:Map[String,Double],
      * @param key The key to find the value for
      * @return the value for the specified input
      */
-    override def get(key:String) = table getOrElse(key, default)
+    override def get(key:T) = table getOrElse(key, default)
 }
 
 object MultipleSupport {
@@ -25,8 +25,8 @@ object MultipleSupport {
     private val misMatcher = """MIS\((\d+)\)\s=\s(.+)""".r
     private val sdcMatcher = """SDC\s=\s(.+)""".r
 
-    def apply(lookup:Map[String,Double]) = new MultipleSupport(lookup)
-    def apply(source:Iterator[String]) : MultipleSupport = {
+    def apply[T](lookup:Map[T,Double]) = new MultipleSupport[T](lookup)
+    def apply(source:Iterator[String]) : MultipleSupport[String] = {
 		var sdc = 0.0
 		var data = Map[String, Double]()
 
@@ -37,7 +37,7 @@ object MultipleSupport {
 			}
         }
 
-        val support = new MultipleSupport(data)
+        val support = new MultipleSupport[String](data)
 		support.sdc = sdc
 		support
     }

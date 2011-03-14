@@ -1,7 +1,7 @@
 package org.school.core.format
 
 import scala.collection.mutable.ListBuffer
-import org.school.core.{Item, ItemSet, Transaction, AbstractSupport}
+import org.school.core.{ItemSet, Transaction, AbstractSupport}
 
 /**
  * Format processor for the sequential format presented by the WDM
@@ -15,15 +15,14 @@ object SequentialFormat extends AbstractFormat {
      * Processes the given source into ItemSets
      *
      * @param source The source to be processed
-     * @param support The support lookup table
      * @return The processed list iterator
      */
-    def process(source:Iterator[String], support:AbstractSupport) : List[Transaction] = {
-		val transactions = ListBuffer[Transaction]()
+    def process(source:Iterator[String]) : List[Transaction[String]] = {
+		val transactions = ListBuffer[Transaction[String]]()
 
 		source foreach { _ match {
 			case line if line.trim.isEmpty =>
-			case line => transactions += buildTransaction(line, support)
+			case line => transactions += buildTransaction(line)
 		}}
 
 		transactions.toList
@@ -32,16 +31,14 @@ object SequentialFormat extends AbstractFormat {
 	/**
 	 *
 	 */
-	private def buildTransaction(line:String, support:AbstractSupport) : Transaction = {
-		val itemsets = ListBuffer[ItemSet]()
+	private def buildTransaction(line:String) : Transaction[String] = {
+		val itemsets = ListBuffer[ItemSet[String]]()
 		val captures = (matcher findAllIn line).matchData
 
 		captures.foreach { matches =>
-			val items = matches.group(1).split(", ").map { item =>
-				Item(item, 1, 1, support.get(item))
-			}
-			itemsets += ItemSet(items.toList)
+			val items = matches.group(1).split(", ")
+			itemsets += ItemSet[String](items.toList)
 		}
-		Transaction(itemsets.toList)
+		Transaction[String](itemsets.toList)
 	}
 }

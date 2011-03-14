@@ -14,8 +14,8 @@ trait AbstractFormat {
      * @param lookup The support lookup table
      * @return The processed list iterator
      */
-    def process(source:Iterator[String], lookup:AbstractSupport) : List[Transaction]
-    def process(source:AbstractLoader, lookup:AbstractSupport) : List[Transaction] = {
-		process(source.load, lookup)
+    def process(source:Iterator[String]) : List[Transaction[String]]
+    def process(source:AbstractLoader) : List[Transaction[String]] = {
+		process(source.load)
 	}
 }

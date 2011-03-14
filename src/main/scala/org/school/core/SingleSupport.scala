@@ -3,7 +3,7 @@ package org.school.core
 /**
  * Implements a support lookup that has a single support value
  */
-class SingleSupport private (val support:Double) extends AbstractSupport {
+class SingleSupport[T] private (val support:Double) extends AbstractSupport[T] {
 
     /**
      * Retrieves the requested value for the specified key
@@ -11,9 +11,9 @@ class SingleSupport private (val support:Double) extends AbstractSupport {
      * @param key The key to find the value for
      * @return the value for the specified input
      */
-    override def get(key:String) = support
+    override def get(key:T) = support
 }
 
 object SingleSupport {
-    def apply(support:Double) = new SingleSupport(support)
+    def apply[T](support:Double) = new SingleSupport[T](support)
 }

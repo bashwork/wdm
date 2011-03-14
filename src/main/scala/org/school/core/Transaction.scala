@@ -7,17 +7,23 @@ import java.io.Serializable
  *
  * @param sets The itemsets composing this Transaction
  */
-class Transaction private (val sets:List[ItemSet])
+class Transaction[T] private (val sets:List[ItemSet[T]])
     extends Serializable {
 
-    def candidates() : Map[Item, Int] = {
+    def unique()   = sets.map { _.items }.flatten.toSet
+    def allItems() = sets.map { _.items }.flatten.toList
 
-        val everything = sets.map { _.items }.flatten.toList
-        everything groupBy identity mapValues { _.size }
-    }
+    /**
+     * Retrieve the minimum support for this transaction set
+     *
+     * @param support The support lookup table
+     * @return The minimum support for this collection
+     */
+    def minsup(support:AbstractSupport[T]) =
+        sets.map { s => s.minsup(support) }.min
 }
 
 object Transaction {
-    def apply(items:List[ItemSet]) = new Transaction(items)
-    def apply(items:ItemSet*) = new Transaction(items.toList)
+    def apply[T](items:List[ItemSet[T]]) = new Transaction[T](items)
+    def apply[T](items:ItemSet[T]*) = new Transaction[T](items.toList)
 }

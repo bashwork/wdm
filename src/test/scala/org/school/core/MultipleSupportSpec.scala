@@ -9,7 +9,7 @@ class MultipleSupportSpec extends FlatSpec with ShouldMatchers {
 
 	it should "initialize correctly with a map" in {
 		val map = (0 to 3).map { id => (id.toString, id.doubleValue) } toMap
-		val mis = MultipleSupport(map)
+		val mis = MultipleSupport[String](map)
 
 		//mis must haveClass[MultipleSupport]
 		mis.get("1") should be (1)

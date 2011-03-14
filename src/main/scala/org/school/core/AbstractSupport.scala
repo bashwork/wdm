@@ -1,6 +1,6 @@
 package org.school.core
 
-trait AbstractSupport {
+trait AbstractSupport[T] {
 
     /**
      * Reprsents support difference constaint
@@ -13,5 +13,5 @@ trait AbstractSupport {
      * @param key The key to find the value for
      * @return the value for the specified input
      */
-    def get(key:String) : Double
+    def get(key:T) : Double
 }
