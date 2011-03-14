@@ -1,6 +1,12 @@
 package org.school.core
 
 trait AbstractSupport {
+
+    /**
+     * Reprsents support difference constaint
+     */
+	var sdc: Double = 0.0
+
     /**
      * Retrieves the requested value for the specified key
      *

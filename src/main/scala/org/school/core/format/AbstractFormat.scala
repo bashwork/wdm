@@ -1,6 +1,7 @@
 package org.school.core.format
 
 import org.school.core.{Transaction,AbstractSupport}
+import org.school.core.loader.AbstractLoader
 
 /**
  */
@@ -14,4 +15,7 @@ trait AbstractFormat {
      * @return The processed list iterator
      */
     def process(source:Iterator[String], lookup:AbstractSupport) : List[Transaction]
+    def process(source:AbstractLoader, lookup:AbstractSupport) : List[Transaction] = {
+		process(source.load, lookup)
+	}
 }
