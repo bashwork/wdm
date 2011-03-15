@@ -16,9 +16,7 @@ class Transaction[T] private (val sets:List[ItemSet[T]])
 
     def unique()   = sets.map { _.items }.flatten.toSet
     def allItems() = sets.map { _.items }.flatten.toList
-	def contains(other:Transaction[T]) = Boolean {
-		true
-	}
+	def contains(other:Transaction[T]) = true
 
     /**
      * Retrieve the minimum support for this transaction set

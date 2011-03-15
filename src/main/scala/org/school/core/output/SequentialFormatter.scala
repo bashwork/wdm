@@ -1,7 +1,7 @@
 package org.school.core.output
 
 import scala.collection.mutable.StringBuilder
-import org.school.core.{ItemSet, Transaction}
+import org.school.core.{ItemSet, Transaction, FrequentSet}
 
 /**
  * Output formatter used for project 1 sequential rules.
@@ -19,26 +19,26 @@ import org.school.core.{ItemSet, Transaction}
  * <{2,13}{13}> Count: 1
  * """
  */
-object SequentialFormat {
+object SequentialFormatter {
 
     /**
      * Processes the given source into ItemSets
      *
-     * @param source The source to be processed
+     * @param frequents The source to be processed
      * @return The processed list iterator
      */
-    def process(results:List[Transaction[String]]) : Iterator[String] = {
+    def process(frequents:List[FrequentSet[String]]) : String = {
 		val buffer = new StringBuilder
 
-		results foreach { result =>
-			buffer.append("\nThe number of length" + result.size)
-			buffer.append(" sequential patterns is " + result.length + "\n")
-			result.transactions foreach { transaction =>
-				buffer.apppend(buildPattern(transaction))
+		frequents foreach { frequent =>
+			buffer.append("\nThe number of length " + frequent.length)
+			buffer.append(" sequential patterns is " + frequent.size + "\n")
+			frequent.transactions foreach { transaction =>
+				buildPattern(transaction, buffer)
 			}
 		}
 
-		buffer.toIterator
+		buffer.toString
     }
 
 	/**
@@ -46,16 +46,14 @@ object SequentialFormat {
      * @param pattern The pattern to format
      * @return The formatted pattern
      */
-	private def buildPattern(pattern:Transaction[String]) : String {
-		val buffer = new StringBuilder
+	private def buildPattern(pattern:(Transaction[String], Int),
+        buffer:StringBuilder) {
 
 		buffer.append("<")
-		pattern.sets.foreach { set =>
-			val format = set.reduceLeft { (t,s) => t + ", " + s }
-			buffer.append("{" + format "}")
+		pattern._1.sets.foreach { set =>
+			val format = set.items.reduceLeft { (t,s) => t + "," + s }
+			buffer.append("{" + format + "}")
 		}
-		buffer.append("> Count: " + set.count + "\n")
-
-		buffer.toString
+		buffer.append("> Count: " + pattern._2 + "\n")
 	}
 }
