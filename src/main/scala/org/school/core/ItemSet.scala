@@ -21,7 +21,7 @@ class ItemSet[T] private (val items:Set[T])
 
     override def hashCode() = items.hashCode
     override def equals(other:Any) = other match {
-        case that: ItemSet[_] => this.items == that.items
+        case that: ItemSet[_] => that.items == this.items
         case _ => false
     }
 }

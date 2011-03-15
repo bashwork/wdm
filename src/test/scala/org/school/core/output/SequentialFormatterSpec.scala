@@ -1,6 +1,6 @@
 package org.school.core.output
 
-//import scala.collection.mutable.Map
+import java.io.File
 import org.scalatest.FlatSpec
 import org.scalatest.matchers.ShouldMatchers
 
@@ -31,9 +31,21 @@ The number of length 3 sequential patterns is 2
                      Transaction(ItemSet("2"), ItemSet("13"), ItemSet("14")) -> 2)
 
         val frequents = List(FrequentSet[String](t1), FrequentSet[String](t2), FrequentSet[String](t3))
-		val actual = SequentialFormatter.process(frequents)
+		val formatter = new SequentialFormatter(frequents)
 
-        actual should be (expected)
+        formatter.format should be (expected)
+	}
+
+	it should "store the result in an output file" in {
+
+        val filename = "sequential-output.txt"
+        val t1 = Map(Transaction(ItemSet("1")) -> 1, Transaction(ItemSet("2")) -> 2)
+        val frequents = List(FrequentSet[String](t1))
+		val formatter = new SequentialFormatter(frequents).toFile(filename)
+
+        val file = new File(filename)
+        file.exists should be (true)
+        file.delete should be (true)
 	}
 }
 

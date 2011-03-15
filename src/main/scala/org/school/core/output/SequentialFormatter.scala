@@ -5,7 +5,9 @@ import org.school.core.{ItemSet, Transaction, FrequentSet}
 
 /**
  * Output formatter used for project 1 sequential rules.
- * example: """
+ *
+ * @param frequents The source to be processed
+ * @example """
  *
  * The number of length 1 sequential patterns is 2
  * <{1}> Count: 1
@@ -19,15 +21,15 @@ import org.school.core.{ItemSet, Transaction, FrequentSet}
  * <{2,13}{13}> Count: 1
  * """
  */
-object SequentialFormatter {
+class SequentialFormatter(frequents:List[FrequentSet[String]])
+    extends AbstractFormatter {
 
     /**
      * Processes the given source into ItemSets
      *
-     * @param frequents The source to be processed
-     * @return The processed list iterator
+     * @return The processed string result
      */
-    def process(frequents:List[FrequentSet[String]]) : String = {
+    def format() : String = {
 		val buffer = new StringBuilder
 
 		frequents foreach { frequent =>

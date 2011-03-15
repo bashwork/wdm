@@ -10,13 +10,30 @@ import java.io.Serializable
 class Transaction[T] private (val sets:List[ItemSet[T]])
     extends Serializable {
 
-    // as defined by WDM
+    /** The number of itemsets in this transaction */
     def size()     = sets.size
+
+    /** The total number of items in all the itemsets */
     def length()   = sets.foldLeft(0) { (t,s) => t + s.items.size }
 
+    /** A flat list of all the unique items in this transaction */
     def unique()   = sets.map { _.items }.flatten.toSet
+
+    /** A flat list of every item in this transaction */
     def allItems() = sets.map { _.items }.flatten.toList
-	def contains(other:Transaction[T]) = true
+
+    /**
+     * Checks if the supplied transaction is a contiguous
+     * subset of this transaction.
+     *
+     * @param other The other transaction to test
+     * @return true if successful, false otherwise
+     */
+	def contains(other:Transaction[T]) : Boolean = {
+        sets.zip(other.sets).foldLeft(true) { (result, itemset) =>
+            result & itemset._2.items.subsetOf(itemset._1.items)
+        }
+    }
 
     /**
      * Retrieve the minimum support for this transaction set
