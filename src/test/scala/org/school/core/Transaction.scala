@@ -22,7 +22,7 @@ class TransactionSpec extends FlatSpec with ShouldMatchers {
 		transaction.sets.length should be (2)
 	}
 
-	it should "produce all unique candidates" in {
+	it should "be able to produce all unique candidates" in {
         var items1 = ('a' to 'm').map { _.toString }.toList
         var items2 = ('g' to 'z').map { _.toString }.toList
 		val transaction = Transaction(ItemSet(items1), ItemSet(items2))
@@ -31,13 +31,22 @@ class TransactionSpec extends FlatSpec with ShouldMatchers {
 		candidates.size should be (26)
 	}
 
-	it should "produce the correct minsup" in {
+	it should "be able to produce the correct minsup" in {
         var items  = ('a' to 'm').map { _.toString }.toList
 		val values = items.map { x => (x, (x(0) - '`') * 0.1) }
 		val support = MultipleSupport(values.toMap)
 		val transaction = Transaction(ItemSet(items.take(10)), ItemSet(items.takeRight(10)))
 
 		transaction.minsup(support) should be (0.1)
+	}
+
+	it should "give the correct size and length defined in WDM" in {
+        var items1 = ('a' to 'd').map { _.toString }.toList
+        var items2 = ('e' to 'g').map { _.toString }.toList
+		val transaction = Transaction(ItemSet(items1), ItemSet(items2))
+
+		transaction.size should be (2)
+		transaction.length should be (7)
 	}
 }
 

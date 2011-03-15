@@ -29,7 +29,10 @@ object SequentialFormat extends AbstractFormat {
     }
 
 	/**
-	 *
+	 * A helper method that extracts the next sequential rule
+     *
+	 * @param line The line to parse for the next rule
+	 * @return A transaction for the specified line
 	 */
 	private def buildTransaction(line:String) : Transaction[String] = {
 		val itemsets = ListBuffer[ItemSet[String]]()
@@ -39,6 +42,7 @@ object SequentialFormat extends AbstractFormat {
 			val items = matches.group(1).split(", ")
 			itemsets += ItemSet[String](items.toList)
 		}
+
 		Transaction[String](itemsets.toList)
 	}
 }

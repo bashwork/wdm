@@ -3,15 +3,22 @@ package org.school.core
 import java.io.Serializable
 
 /**
- * Represents a sequence of itemsets
+ * Represents an ordered sequence of itemsets
  *
  * @param sets The itemsets composing this Transaction
  */
 class Transaction[T] private (val sets:List[ItemSet[T]])
     extends Serializable {
 
+    // as defined by WDM
+    def size()     = sets.size
+    def length()   = sets.foldLeft(0) { (t,s) => t + s.items.size }
+
     def unique()   = sets.map { _.items }.flatten.toSet
     def allItems() = sets.map { _.items }.flatten.toList
+	def contains(other:Transaction[T]) = Boolean {
+		true
+	}
 
     /**
      * Retrieve the minimum support for this transaction set

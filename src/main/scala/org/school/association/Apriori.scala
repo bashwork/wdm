@@ -10,7 +10,7 @@ import org.school.core.{ItemSet, Transaction}
  * @param sequences The collection of transactions to process
  * @param support The support lookup table for each item
  */
-class GeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
+class Apriori[T](val sequences:List[Transaction[T]],
     val support:AbstractSupport[T]) {
 
     /**
@@ -42,9 +42,9 @@ class GeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
      *
      * @return A list of all the unique items
      */
-    def initialize() : Transaction[T] = {
-        val total    = sequences.size.doubleValue                                   // S.size == n
-        val allItems = sequences.map { _.unique }.flatten                           // I with repeats
+    private def initialize() : Transaction[T] = {
+        val total    = sequences.size                                               // S.sze == n
+        val allItems = sequences.map { _.allItems }.flatten                         // I with repeats
         val counts   = allItems groupBy identity mapValues { _.size }               // I.count
         val unique   = counts.keys.toList                                           // I
         val sorted   = unique.sortWith { (a,b) => support.get(a) < support.get(b) } // L

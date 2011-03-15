@@ -20,14 +20,14 @@ class ItemSetSpec extends FlatSpec with ShouldMatchers {
 		itemset.items.size should be (2)
 	}
 
-	it should "equal same values" in {
+	it should "equal an itemset with the same values" in {
 		val itemset1 = ItemSet((1 to 10).toList)
 		val itemset2 = ItemSet((1 to 10).toList)
 
 		itemset1 should equal (itemset2)
 	}
 
-	it should "not be equal to different values" in {
+	it should "not be equal to an itemset with different values" in {
 		val itemset1 = ItemSet((1 to 10).toList)
 		val itemset2 = ItemSet((2 to 10).toList)
 
