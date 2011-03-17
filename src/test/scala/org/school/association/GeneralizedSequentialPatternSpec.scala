@@ -13,7 +13,7 @@ class GeneralizedSequentialPatternSpec extends FlatSpec
 
 	it should "initialize correctly" in {
 		val s   = (1 to 5).map { x => Transaction(ItemSet(x.toString)) }.toList
-		val ms  = MultipleSupport((0 to 5).map { x => (x.toString, x*0.1) } .toMap)
+		val ms  = MultipleSupport((1 to 5).map { x => (x.toString, x*0.1) } .toMap)
 		val gsp = new GeneralizedSequentialPattern(s, ms)
 
 		gsp should not be (null)
@@ -22,7 +22,7 @@ class GeneralizedSequentialPatternSpec extends FlatSpec
 	it should "produce f1 correctly" in {
 		val initialize = PrivateMethod[FrequentSet[String]]('initialize)
 		val s   = List(Transaction(ItemSet("3")), Transaction(ItemSet("4", "3")), Transaction(ItemSet("1", "3")))
-		val ms  = MultipleSupport((0 to 5).map { x => (x.toString, x*0.1) } .toMap)
+		val ms  = MultipleSupport((1 to 5).map { x => (x.toString, x*0.1) } .toMap)
 		val gsp = new GeneralizedSequentialPattern(s, ms)
 		val f1  = (gsp invokePrivate initialize()).unique
 
@@ -34,7 +34,7 @@ class GeneralizedSequentialPatternSpec extends FlatSpec
 	it should "calculate sdc correctly" in {
 		val evaluateSdc = PrivateMethod[Boolean]('evaluateSdc)
 		val s   = (1 to 5).map { x => Transaction(ItemSet(x.toString)) }.toList
-		val ms  = MultipleSupport((0 to 5).map { x => (x.toString, x*0.1) } .toMap)
+		val ms  = MultipleSupport((1 to 5).map { x => (x.toString, x*0.1) } .toMap)
 		ms.sdc = 0.4 // artificial support difference constraint
 		val gsp = new GeneralizedSequentialPattern(s, ms)
 
@@ -45,16 +45,42 @@ class GeneralizedSequentialPatternSpec extends FlatSpec
 	it should "generate candidate2 correctly" in {
 		val candidateGen2 = PrivateMethod[List[Transaction[String]]]('candidateGen2)
 		val s   = (1 to 5).map { x => Transaction(ItemSet(x.toString)) }.toList
-		val ms  = MultipleSupport((0 to 5).map { x => (x.toString, x*0.1) } .toMap)
+		val ms  = MultipleSupport((1 to 5).map { x => (x.toString, x*0.1) } .toMap)
 		val gsp = new GeneralizedSequentialPattern(s, ms)
 		val frequent = FrequentSet((1 to 3).map { x => Transaction(ItemSet(x.toString)) }.toList)
-		val actual = (gsp invokePrivate candidateGen2(frequent))
-		val expected = List(
+		val actuals = (gsp invokePrivate candidateGen2(frequent))
+		val expecteds = List(
 			Transaction(ItemSet("1", "2")), Transaction(ItemSet("1"), ItemSet("2")),
 			Transaction(ItemSet("1", "3")), Transaction(ItemSet("1"), ItemSet("3")),
 			Transaction(ItemSet("2", "3")), Transaction(ItemSet("2"), ItemSet("3")))
 
-		actual.zip(expected) foreach { case(aN, eN) => aN == eN should be (true) }
+		actuals.zip(expecteds) foreach { case(actual, expected) =>
+            actual == expected should be (true) }
+	}
+
+	it should "generate frequent2 correctly" in {
+		val buildFrequent = PrivateMethod[FrequentSet[String]]('buildFrequent)
+		val s   = List(
+            Transaction(ItemSet("1", "2")), Transaction(ItemSet("1"), ItemSet("2")),
+            Transaction(ItemSet("1", "2")), Transaction(ItemSet("1"), ItemSet("2")),
+            Transaction(ItemSet("1"), ItemSet("3"))) // 1(5/5), 2(4/5), 3(1/5)
+
+		val ms  = MultipleSupport((1 to 5).map { x => (x.toString, 0.3) } .toMap)
+		val gsp = new GeneralizedSequentialPattern(s, ms)
+		val candidate = List(
+			Transaction(ItemSet("1", "2")), Transaction(ItemSet("1"), ItemSet("2")),
+			Transaction(ItemSet("1", "3")), Transaction(ItemSet("1"), ItemSet("3")),
+			Transaction(ItemSet("2", "3")), Transaction(ItemSet("2"), ItemSet("3")))
+
+		val actuals = (gsp invokePrivate buildFrequent(candidate))
+		val expecteds = List(
+                Transaction(ItemSet("1", "2")),
+                Transaction(ItemSet("1"), ItemSet("2")))
+
+		actuals.transactions(0).length should be(2)
+		actuals.transactions(1).length should be(1)
+		actuals.transactions.zip(expecteds) foreach { case(actual, expected) =>
+            actual == expected should be (true) }
 	}
 }
 

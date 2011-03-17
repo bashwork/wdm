@@ -19,6 +19,15 @@ class ItemSet[T] private (val items:Set[T])
     def minsup(support:AbstractSupport[T]) =
         items.map { support.get(_) }.min
 
+    /**
+     * Checks if the supplied itemset is contained
+     * in this one.
+     *
+     * @param other The other itemset to test
+     * @return true if successful, false otherwise
+     */
+	def contains(other:ItemSet[T]) = other.items.subsetOf(items)
+
     override def hashCode() = items.hashCode
     override def equals(other:Any) = other match {
         case that: ItemSet[_] => that.items == this.items

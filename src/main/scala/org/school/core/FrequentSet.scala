@@ -19,8 +19,8 @@ class FrequentSet[T] private (val transactions:List[Transaction[T]],
 }
 
 object FrequentSet {
-    def apply[T](items:List[Transaction[T]]) =
-        new FrequentSet[T](items, items.head.length)
-    def apply[T](items:Transaction[T]*) =
-        new FrequentSet[T](items.toList, items.head.length)
+    def apply[T](items:List[Transaction[T]]) = new FrequentSet[T](items,
+        items.headOption.map { _.length }.getOrElse(0))
+    def apply[T](items:Transaction[T]*) = new FrequentSet[T](items.toList,
+        items.headOption.map { _.length }.getOrElse(0))
 }

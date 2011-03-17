@@ -27,6 +27,7 @@ class GeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
         frequents += initialize()
 
         (2 to 1000).takeWhile( _ => frequents.last.transactions.size > 0) foreach { k =>
+            logger.debug("generating frequent set: " + k)
             val ck = k match {
                 case 2 => candidateGen2(frequents.last)
                 case _ => candidateGen(frequents.last)
@@ -53,6 +54,7 @@ class GeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
         val sorted   = unique.sortWith { (a,b) => support.get(a) < support.get(b) } // L
         val filtered = sorted.filter { i => (counts(i) / total) >= support.get(i) } // <F1>
 
+        logger.debug("generated initial candidates: " + filtered)
         FrequentSet(filtered.map { x =>												// <{F1}>
 			Transaction(List(ItemSet(x)), counts(x)) })
     }
@@ -64,24 +66,22 @@ class GeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
      * @param candidates A collection of possible candidates
      * @return The frequent candidate list
      */
-    private def buildFrequent(candidates:List[Transaction[T]]) : FrequentSet[T] = {
-        val total  = sequences.size                         // S.size == n
-        val counts = HashMap[Transaction[T], Int]()
+    def buildFrequent(candidates:List[Transaction[T]]) : FrequentSet[T] = {
+        val n = sequences.size
 
-        sequences.map { _.sets }.flatten.foreach { sequence =>
+        sequences.foreach { sequence =>
             candidates.foreach { candidate =>
-                if (sequence == candidate) {
-                    counts.get(candidate) match {
-                        case None => counts.put(candidate, 0)
-                        case Some(_) => counts(candidate) += 1
-                    }
+                if (sequence contains candidate) {
+                    candidate.count += 1
                 }
-                // two other cases
+                // if (candidate - minsup(item) in sequence) {
+                //    candidate.restCount += 1
+                // }
             }
         }
 
         FrequentSet(candidates.filter { c =>
-            (counts(c) / total) >= c.minsup(support) }) // <{Fn}>
+            (c.count / n) >= c.minsup(support) }) // <{Fn}>
     }
 
     /**
@@ -118,6 +118,7 @@ class GeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
 			case(l, index) => logger.debug("candidate2 support({}) not met: {}", l.count/n, l.sets)
         }
     
+        logger.debug("generated candidates2: " + candidates.toList)
         candidates.toList
     }
     
@@ -139,7 +140,8 @@ class GeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
                 }
             }
         }
-    
+
+        logger.debug("generated candidatesN: " + candidates.toList)
         candidates.toList
     }
 }

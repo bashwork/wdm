@@ -8,9 +8,10 @@ import java.io.Serializable
  *
  * @param sets The itemsets composing this Transaction
  * @param count Used to indicate the frequency of this transaction
+ * @param restCount A count used during rule generation
  */
-class Transaction[T] private (val sets:List[ItemSet[T]], var count:Int)
-    extends Serializable {
+class Transaction[T] private (val sets:List[ItemSet[T]],
+    var count:Int, var restCount:Int) extends Serializable {
 
     /** The number of itemsets in this transaction */
     def size()     = sets.size
@@ -32,9 +33,14 @@ class Transaction[T] private (val sets:List[ItemSet[T]], var count:Int)
      * @return true if successful, false otherwise
      */
 	def contains(other:Transaction[T]) : Boolean = {
-        sets.zip(other.sets).foldLeft(true) { (result, itemset) =>
-            result & itemset._2.items.subsetOf(itemset._1.items)
+        val initial = other.sets.map { o =>
+            sets.findIndexOf { t => o.items.subsetOf(t.items) } }
+        var result = !initial.contains(-1) && !initial.isEmpty
+        for (i <- 0 until initial.size -1) {
+            result &= initial(i) < initial(i + 1)
         }
+
+        result
     }
 
     /**
@@ -46,6 +52,7 @@ class Transaction[T] private (val sets:List[ItemSet[T]], var count:Int)
     def minsup(support:AbstractSupport[T]) =
         sets.map { s => s.minsup(support) }.min
 
+    override def hashCode = sets.hashCode
     override def equals(other:Any) = other match {
         case that: Transaction[_] => that.sets == this.sets
         case _ => false
@@ -55,6 +62,6 @@ class Transaction[T] private (val sets:List[ItemSet[T]], var count:Int)
 }
 
 object Transaction {
-    def apply[T](items:ItemSet[T]*) = new Transaction[T](items.toList, 0)
-    def apply[T](items:List[ItemSet[T]], count:Int = 0) = new Transaction[T](items, count)
+    def apply[T](items:ItemSet[T]*) = new Transaction[T](items.toList, 0, 0)
+    def apply[T](items:List[ItemSet[T]], count:Int = 0) = new Transaction[T](items, count, 0)
 }

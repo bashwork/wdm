@@ -50,12 +50,23 @@ class TransactionSpec extends FlatSpec with ShouldMatchers {
 	}
 
 	it should "check if another transaction is a subset" in {
-		val left  = Transaction(ItemSet((1 to 5).toList), ItemSet(7, 8),ItemSet(9))
-		val right = Transaction(ItemSet(2, 3), ItemSet(7), ItemSet(9))
-		val fail  = Transaction(ItemSet(2, 3), ItemSet(9))
+		val left  = Transaction(ItemSet((1 to 5).toList), ItemSet(7, 8), ItemSet(9))
+		val pass1 = Transaction(ItemSet(2, 3), ItemSet(7), ItemSet(9))
+		val pass2 = Transaction(ItemSet(7), ItemSet(9))
+		val pass3 = Transaction(ItemSet(2))
+		val pass4 = Transaction(ItemSet(2, 3), ItemSet(9))
+		val fail1 = Transaction[Int]()
+		val fail2 = Transaction(ItemSet(2), ItemSet(3), ItemSet(9))
+		val fail3 = Transaction(ItemSet(2), ItemSet(8), ItemSet(9), ItemSet(10))
 
-		left contains right should be (true)
-		left contains fail  should be (false)
+		left contains pass1 should be (true)
+		left contains pass2 should be (true)
+		left contains pass3 should be (true)
+		left contains pass4 should be (true)
+		left contains fail2 should be (false)
+		left contains fail3 should be (false)
+		left contains fail1 should be (false)
+		fail1 contains left should be (false)
 	}
 
 	it should "check if another transaction is equal" in {
