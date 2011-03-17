@@ -12,6 +12,7 @@
       <ibiblio name="maven1-repository.dev.java.net" m2compatible="true" root="http://download.java.net/maven/1/"/>
       <ibiblio name="maven2-repository.dev.java.net" m2compatible="true" root="http://download.java.net/maven/2/"/>
       <ibiblio name="specs-extra" m2compatible="true" root="http://specs.googlecode.com/svn/maven2/" />
+      <ibiblio name="scct-repository" m2compatible="true" root="http://mtkopone.github.com/scct/maven-repo" />
     </chain>
     <filesystem name="local" m2compatible="true" transactional="false">
       <artifact pattern="${basedir}/dist/repo/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />

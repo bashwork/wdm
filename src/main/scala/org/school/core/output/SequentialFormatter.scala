@@ -48,14 +48,14 @@ class SequentialFormatter(frequents:List[FrequentSet[String]])
      * @param pattern The pattern to format
      * @return The formatted pattern
      */
-	private def buildPattern(pattern:(Transaction[String], Int),
+	private def buildPattern(pattern:Transaction[String],
         buffer:StringBuilder) {
 
 		buffer.append("<")
-		pattern._1.sets.foreach { set =>
+		pattern.sets.foreach { set =>
 			val format = set.items.reduceLeft { (t,s) => t + "," + s }
 			buffer.append("{" + format + "}")
 		}
-		buffer.append("> Count: " + pattern._2 + "\n")
+		buffer.append("> Count: " + pattern.count + "\n")
 	}
 }

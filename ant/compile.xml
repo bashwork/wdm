@@ -7,6 +7,7 @@
     <mkdir dir="${build.dir}" />
     <scalac srcdir="${src.dir}" destdir="${build.dir}" classpathref="classpath"
         deprecation="yes" unchecked="yes">
+        <!-- addparams="-Xplugin:scct_2.8.0-0.1-SNAPSHOT.jar" -->
       <include name="**/*.scala" />
     </scalac>
   </target>

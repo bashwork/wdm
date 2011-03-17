@@ -9,15 +9,16 @@ import java.io.Serializable
  * @param transactions The k-length frequent patterns
  * @param length The pattern length this represents
  */
-class FrequentSet[T] private (val transactions:Map[Transaction[T], Int],
+class FrequentSet[T] private (val transactions:List[Transaction[T]],
     val length:Int) extends Serializable {
 
     def size() = transactions.size
+    def unique() = transactions.map { _.unique }.flatten
 }
 
 object FrequentSet {
-    def apply[T](items:Map[Transaction[T], Int]) =
-        new FrequentSet[T](items, items.head._1.length)
-    def apply[T](items:(Transaction[T],Int)*) =
-        new FrequentSet[T](items.toMap, items.head._1.length)
+    def apply[T](items:List[Transaction[T]]) =
+        new FrequentSet[T](items, items.head.length)
+    def apply[T](items:Transaction[T]*) =
+        new FrequentSet[T](items.toList, items.head.length)
 }

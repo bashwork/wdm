@@ -3,11 +3,13 @@ package org.school.core
 import java.io.Serializable
 
 /**
- * Represents an ordered sequence of itemsets
+ * Represents an ordered sequence of itemsets.
+ * Note that count is only used for the frequency sets.
  *
  * @param sets The itemsets composing this Transaction
+ * @param count Used to indicate the frequency of this transaction
  */
-class Transaction[T] private (val sets:List[ItemSet[T]])
+class Transaction[T] private (val sets:List[ItemSet[T]], var count:Int)
     extends Serializable {
 
     /** The number of itemsets in this transaction */
@@ -43,9 +45,14 @@ class Transaction[T] private (val sets:List[ItemSet[T]])
      */
     def minsup(support:AbstractSupport[T]) =
         sets.map { s => s.minsup(support) }.min
+
+    override def equals(other:Any) = other match {
+        case that: Transaction[_] => that.sets == this.sets
+        case _ => false
+    }
 }
 
 object Transaction {
-    def apply[T](items:List[ItemSet[T]]) = new Transaction[T](items)
-    def apply[T](items:ItemSet[T]*) = new Transaction[T](items.toList)
+    def apply[T](items:ItemSet[T]*) = new Transaction[T](items.toList, 0)
+    def apply[T](items:List[ItemSet[T]], count:Int = 0) = new Transaction[T](items, count)
 }
