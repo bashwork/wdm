@@ -57,5 +57,21 @@ class TransactionSpec extends FlatSpec with ShouldMatchers {
 		left contains right should be (true)
 		left contains fail  should be (false)
 	}
+
+	it should "check if another transaction is equal" in {
+		val left  = Transaction(ItemSet(2, 3), ItemSet(7), ItemSet(9))
+		val right = Transaction(ItemSet(2, 3), ItemSet(7), ItemSet(9))
+		val fail  = Transaction(ItemSet(2, 3), ItemSet(9))
+
+		left == right should be (true)
+		left == fail should  be (false)
+	}
+
+	it should "convert to a string correctly" in {
+		val instance  = Transaction(ItemSet(2, 3), ItemSet(7), ItemSet(9))
+		val actual = "<{2,3}{7}{9}>"
+
+		instance.toString should be (actual)
+	}
 }
 

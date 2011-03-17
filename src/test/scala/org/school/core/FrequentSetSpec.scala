@@ -24,5 +24,13 @@ class FrequentSetSpec extends FlatSpec with ShouldMatchers {
         FrequentSet(t2).length should be (2)
         FrequentSet(t3).length should be (3)
 	}
+
+	it should "convert to a string correctly" in {
+        val transactions = List(Transaction(ItemSet("1")), Transaction(ItemSet("2")))
+        val frequents = FrequentSet(transactions)
+		val actual = "<{1}>\n<{2}>"
+
+		frequents.toString should be(actual)
+	}
 }
 

@@ -41,5 +41,11 @@ class ItemSetSpec extends FlatSpec with ShouldMatchers {
 
 		itemset.minsup(support) should be (0.1)
 	}
+
+	it should "convert to a string correctly" in {
+
+		ItemSet(2).toString should be ("{2}")
+		ItemSet(2,3).toString should be ("{2,3}")
+	}
 }
 

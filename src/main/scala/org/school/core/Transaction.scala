@@ -50,6 +50,8 @@ class Transaction[T] private (val sets:List[ItemSet[T]], var count:Int)
         case that: Transaction[_] => that.sets == this.sets
         case _ => false
     }
+
+	override def toString() = sets.mkString("<", "", ">")
 }
 
 object Transaction {

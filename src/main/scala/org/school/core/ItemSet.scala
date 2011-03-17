@@ -24,7 +24,10 @@ class ItemSet[T] private (val items:Set[T])
         case that: ItemSet[_] => that.items == this.items
         case _ => false
     }
+
+	override def toString() = items.mkString("{", ",", "}")
 }
+
 
 object ItemSet {
     def apply[T](items:List[T]) = new ItemSet[T](items.toSet)

@@ -14,6 +14,8 @@ class FrequentSet[T] private (val transactions:List[Transaction[T]],
 
     def size() = transactions.size
     def unique() = transactions.map { _.unique }.flatten
+
+	override def toString() = transactions.mkString("\n")
 }
 
 object FrequentSet {

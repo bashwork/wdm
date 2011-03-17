@@ -4,6 +4,7 @@ import org.scalatest.{FlatSpec,PrivateMethodTester}
 import org.scalatest.matchers.ShouldMatchers
 import org.school.core.{MultipleSupport}
 import org.school.core.{ItemSet, Transaction, FrequentSet}
+import scala.tools.nsc.Interpreter._
 
 class GeneralizedSequentialPatternSpec extends FlatSpec
 	with ShouldMatchers with PrivateMethodTester {
@@ -41,12 +42,19 @@ class GeneralizedSequentialPatternSpec extends FlatSpec
 		(gsp invokePrivate evaluateSdc(s(0), s(4))) should be (true)
 	}
 
-	//it should "generate candidate2 correctly" in {
-	//	val candidateGen2 = PrivateMethod[List[Transaction[String]]]('candidateGen2)
-	//	val s   = (1 to 5).map { x => Transaction(ItemSet(x.toString)) }.toList
-	//	val ms  = MultipleSupport((0 to 5).map { x => (x.toString, x*0.1) } .toMap)
-	//	val gsp = new GeneralizedSequentialPattern(s, ms)
-	//	//val result = (gsp invokePrivate candidateGen2(frequent))
-	//}
+	it should "generate candidate2 correctly" in {
+		val candidateGen2 = PrivateMethod[List[Transaction[String]]]('candidateGen2)
+		val s   = (1 to 5).map { x => Transaction(ItemSet(x.toString)) }.toList
+		val ms  = MultipleSupport((0 to 5).map { x => (x.toString, x*0.1) } .toMap)
+		val gsp = new GeneralizedSequentialPattern(s, ms)
+		val frequent = FrequentSet((1 to 3).map { x => Transaction(ItemSet(x.toString)) }.toList)
+		val actual = (gsp invokePrivate candidateGen2(frequent))
+		val expected = List(
+			Transaction(ItemSet("1", "2")), Transaction(ItemSet("1"), ItemSet("2")),
+			Transaction(ItemSet("1", "3")), Transaction(ItemSet("1"), ItemSet("3")),
+			Transaction(ItemSet("2", "3")), Transaction(ItemSet("2"), ItemSet("3")))
+
+		actual.zip(expected) foreach { case(aN, eN) => aN == eN should be (true) }
+	}
 }
 

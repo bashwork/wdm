@@ -8,6 +8,9 @@
       <classpath refid="classpath"/>
     </taskdef>
 
+    <property name="scct.coverage.file" value="${build.dir}/coverage.data" />
+    <property name="scct.report.dir" value="${build.dir}/coverage" />
+
     <scalatest runpath="${jar.dir}/${ant.project.name}.jar">
       <reporter type="stdout" />
       <reporter type="file" filename="${build.dir}/test.results" />

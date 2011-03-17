@@ -1,5 +1,6 @@
 package org.school.association
 
+import org.slf4j.{Logger, LoggerFactory}
 import scala.collection.mutable.HashMap
 import scala.collection.mutable.ListBuffer
 import org.school.core.{AbstractSupport}
@@ -12,6 +13,8 @@ import org.school.core.{ItemSet, Transaction, FrequentSet}
  */
 class GeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
     val support:AbstractSupport[T]) {
+
+	private val logger = LoggerFactory.getLogger(this.getClass)
 
     /**
      * Processes the current sequence list to produce all the
@@ -103,12 +106,16 @@ class GeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
         val candidates = ListBuffer[Transaction[T]]()
         val items = frequent.transactions
 
-        items.zipWithIndex.foreach { case(l, index) if (l.count / n) >= l.minsup(support) =>
-            items.takeRight(items.size - index + 1).foreach { h =>
-                if ((h.count / n) >= h.minsup(support) && evaluateSdc(l, h)) {
-                    candidates += Transaction(l.sets ++ h.sets) // {1} ++ {2} -> {1, 2}
-                }
-            }
+        items.zipWithIndex.foreach {
+			case(l, index) if (l.count / n) >= l.minsup(support) => {
+            	items.takeRight(items.size - (index + 1)).foreach { h =>
+            	    if ((h.count / n) >= h.minsup(support) && evaluateSdc(l, h)) {
+            	        candidates += Transaction(l.sets ++ h.sets)           // <{1},{2}>
+            	        candidates += Transaction(l.sets.head, h.sets.head)   // <{1,  2}>
+            	    }
+            	}
+			}
+			case(l, index) => logger.debug("candidate2 support({}) not met: {}", l.count/n, l.sets)
         }
     
         candidates.toList
