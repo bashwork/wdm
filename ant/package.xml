@@ -1,7 +1,7 @@
 <project xmlns:ivy="antlib:fr.jayasoft.ivy.ant">
 
   <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-  <!-- build a jar of all the samples -->
+  <!-- build a jar of the code -->
   <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
   <target name="package" depends="compile" description="generate the distribution" >
     <mkdir dir="${jar.dir}/"/>
@@ -15,6 +15,36 @@
 
       <manifest>
         <attribute name="Main-Class" value="${main.class}" />
+        <attribute name="Built-By" value="${author}" />
+        <section name="org.school">
+          <attribute name="Specification-Vendor" value="${author}" />
+          <attribute name="Specification-Title" value="${ant.project.name}" />
+          <attribute name="Specification-Version" value="${version}" />
+          <attribute name="Implementation-Vendor" value="${author}" />
+          <attribute name="Implementation-Title" value="${ant.project.name}" />
+          <attribute name="Implementation-Version" value="${version}" />
+        </section>
+      </manifest>
+    </jar>
+  </target>
+
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <!-- build a source jar of the code -->
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <target name="package-src" depends="compile" description="generate the distribution" >
+    <mkdir dir="${jar.dir}/"/>
+    <jar jarfile="${jar.dir}/${ant.project.name}-src.jar" basedir="${src.dir}">
+      <manifest>
+        <attribute name="Main-Class" value="${main.class}" />
+        <attribute name="Built-By" value="${author}" />
+        <section name="org.school">
+          <attribute name="Specification-Vendor" value="${author}" />
+          <attribute name="Specification-Title" value="${ant.project.name}" />
+          <attribute name="Specification-Version" value="${version}" />
+          <attribute name="Implementation-Vendor" value="${author}" />
+          <attribute name="Implementation-Title" value="${ant.project.name}" />
+          <attribute name="Implementation-Version" value="${version}" />
+        </section>
       </manifest>
     </jar>
   </target>

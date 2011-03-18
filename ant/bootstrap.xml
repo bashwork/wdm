@@ -1,6 +1,13 @@
 <project xmlns:ivy="antlib:fr.jayasoft.ivy.ant">
 
   <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <!-- project variables -->
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <property name="author"     value="Galen Collins"/>
+  <property name="version"    value="1.0"/>
+  <property name="main.class" value="org.wdm.Application"/>
+
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
   <!-- build variables -->
   <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
   <property name="src.dir"    location="${basedir}/src"/>
@@ -8,7 +15,7 @@
   <property name="jar.dir"    location="${basedir}/jar"/>
   <property name="lib.dir"    location="${basedir}/lib"/>
   <property name="docs.dir"   location="${build.dir}/docs"/>
-  <property name="main.class" value="org.wdm.Application"/>
+  <property name="dist.dir"   location="${build.dir}/dist"/>
 
   <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
   <!-- ivy configuration -->
@@ -34,6 +41,8 @@
   <import file="docs.xml" />
   <import file="package.xml" />
   <import file="run.xml" />
+  <import file="dist.xml" />
+  <import file="install.xml" />
 
 </project>
 

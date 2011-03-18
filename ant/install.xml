@@ -1,0 +1,16 @@
+<project xmlns:ivy="antlib:fr.jayasoft.ivy.ant">
+
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <!-- install the library -->
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <target name="install" depends="dist" description="installs the project" >
+    <exec executable="sbaz" failonerror="true">
+      <arg value="install" />
+      <arg value="-f" />
+      <arg value="${dist.dir}/wdm-${version}.sbp" />
+    </exec>
+  </target>
+
+</project>
+
+

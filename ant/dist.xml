@@ -1,0 +1,18 @@
+<project xmlns:ivy="antlib:fr.jayasoft.ivy.ant">
+
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <!-- builds a sbaz package -->
+  <!-- http://code.google.com/p/scalacheck/source/browse/trunk/build.xml?r=375 -->
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <target name="dist" depends="package,site" description="builds a sbaz package" >
+    <mkdir dir="${dist.dir}" />
+    <sbaz version="${version}" name="${ant.project.name}"
+        file="build/pkg"
+        link="https://github.com/bashwork/wdm/"
+        description="A collection of algorithms from Web Data Mining">
+    </sbaz>
+  </target>
+
+</project>
+
+

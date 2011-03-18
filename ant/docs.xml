@@ -6,6 +6,7 @@
   <target name="site" depends="compile" description="build the documentation" >
     <mkdir dir="${docs.dir}" />
     <scaladoc srcdir="${src.dir}" destdir="${docs.dir}">
+        <!--addparams="-linksource" -->
       <classpath refid="classpath" />
       <src path="${src.dir}" />
       <include name="**/*.scala" />

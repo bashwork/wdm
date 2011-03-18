@@ -5,10 +5,11 @@ import scala.collection.mutable.HashMap
 import scala.collection.mutable.ListBuffer
 import org.school.core.{AbstractSupport}
 import org.school.core.{ItemSet, Transaction, FrequentSet}
+import org.school.utility.Stopwatch
 
 /**
  * This is an implementation of the Minimum Support Generalized Sequential
- * Pattern algorith outlined in WDM. Given a collection of transactions
+ * Pattern algorithm outlined in WDM. Given a collection of transactions
  * and an item support lookup table, it will generate a a listing of frequent
  * transactions as well as their support count.
  *
@@ -21,6 +22,7 @@ class GeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
     /** This is N represented in the gsp algorithm */
     private val sizeN = sequences.size.doubleValue
 	private val logger = LoggerFactory.getLogger(this.getClass)
+	private val stopwatch = new Stopwatch()
 
     /**
      * Processes the current sequence list to produce all the
@@ -30,6 +32,7 @@ class GeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
      */
     def process() : List[FrequentSet[T]] = {
         val frequents = ListBuffer[FrequentSet[T]]()
+        stopwatch.start
         frequents += initialize()
 
         (2 to 1000).takeWhile( _ => frequents.last.transactions.size > 0) foreach { k =>
@@ -41,6 +44,7 @@ class GeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
             frequents += buildFrequent(ck)
         }
 
+        logger.info("GSP processing took " + stopwatch.toString)
         frequents.dropRight(1).toList // the last frequent is empty
     }
 
@@ -59,6 +63,7 @@ class GeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
         val sorted   = unique.sortWith { (a,b) => support.get(a) < support.get(b) } // L
         val filtered = sorted.filter { i => (counts(i) / sizeN) >= support.get(i) } // <F1>
 
+        logger.info("GSP initialization took " + stopwatch.toString)
         logger.debug("generated initial candidates: " + filtered)
         FrequentSet(filtered.map { x =>												// <{F1}>
 			Transaction(List(ItemSet(x)), counts(x)) })
@@ -83,6 +88,7 @@ class GeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
             }
         }
 
+        logger.info("GSP frequent generation took " + stopwatch.toString)
         FrequentSet(candidates.filter { c =>
             (c.count / sizeN) >= c.minsup(support) }) // <{Fn}>
     }
@@ -143,10 +149,10 @@ class GeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
             	    }
             	}
 			}
-			case(l, index) => logger.debug("candidate2 support({}) not met: {}", (l.count / sizeN), l.sets)
+			case(l, index) => logger.debug("candidateN support({}) not met: {}", (l.count / sizeN), l.sets)
         }
     
-        logger.debug("generated candidates2: " + candidates.toList)
+        logger.debug("generated candidatesN: " + candidates.toList)
         candidates.toList
     }
 }
