@@ -5,9 +5,11 @@
   <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
   <target name="compile" depends="init" description="compiles all the samples" >
     <mkdir dir="${build.dir}" />
+    <condition property="compile.args" value="-Xplugin:${lib.dir}/scct_2.8.0-0.1-SNAPSHOT.jar">
+      <isset property="compile.coverage" />
+    </condition>
     <scalac srcdir="${src.dir}" destdir="${build.dir}" classpathref="classpath"
-        deprecation="yes" unchecked="yes">
-        <!--addparams="-Xplugin:${lib.dir}/scct_2.8.0-0.1-SNAPSHOT.jar"-->
+        deprecation="yes" unchecked="yes" addparams="${compile.args}">
       <include name="**/*.scala" />
     </scalac>
   </target>
