@@ -7,6 +7,10 @@ import org.school.core.{AbstractSupport}
 import org.school.core.{ItemSet, Transaction, FrequentSet}
 
 /**
+ * This is an implementation of the Minimum Support Generalized Sequential
+ * Pattern algorith outlined in WDM. Given a collection of transactions
+ * and an item support lookup table, it will generate a a listing of frequent
+ * transactions as well as their support count.
  *
  * @param sequences The collection of transactions to process
  * @param support The support lookup table for each item
@@ -75,7 +79,7 @@ class GeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
                 }
                 // if (candidate - minsup(item) in sequence) {
                 //    candidate.restCount += 1
-                // }
+                // } this is only used for rule generation TODO
             }
         }
 
@@ -130,15 +134,19 @@ class GeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
         val candidates = ListBuffer[Transaction[T]]()
         val items = frequent.transactions
 
-        items.zipWithIndex.foreach { case(l, index) if (l.count / sizeN) >= l.minsup(support) =>
-            items.takeRight(items.size - index + 1).foreach { h =>
-                if ((h.count / sizeN) >= h.minsup(support) && evaluateSdc(l, h)) {
-                    candidates += Transaction(l.sets ++ h.sets) // {1} ++ {2} -> {1, 2}
-                }
-            }
+        items.zipWithIndex.foreach {
+			case(l, index) if (l.count / sizeN) >= l.minsup(support) => {
+            	items.takeRight(items.size - (index + 1)).foreach { h =>
+            	    if ((h.count / sizeN) >= h.minsup(support) && evaluateSdc(l, h)) {
+            	        candidates += Transaction(l.sets ++ h.sets)           // <{1},{2}>
+            	        candidates += Transaction(l.sets.head, h.sets.head)   // <{1,  2}>
+            	    }
+            	}
+			}
+			case(l, index) => logger.debug("candidate2 support({}) not met: {}", (l.count / sizeN), l.sets)
         }
-
-        logger.debug("generated candidatesN: " + candidates.toList)
+    
+        logger.debug("generated candidates2: " + candidates.toList)
         candidates.toList
     }
 }
