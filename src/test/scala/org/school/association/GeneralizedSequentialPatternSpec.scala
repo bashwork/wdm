@@ -72,15 +72,16 @@ class GeneralizedSequentialPatternSpec extends FlatSpec
 			Transaction(ItemSet("1", "3")), Transaction(ItemSet("1"), ItemSet("3")),
 			Transaction(ItemSet("2", "3")), Transaction(ItemSet("2"), ItemSet("3")))
 
-		val actuals = (gsp invokePrivate buildFrequent(candidate))
+		val actual = (gsp invokePrivate buildFrequent(candidate))
 		val expecteds = List(
                 Transaction(ItemSet("1", "2")),
                 Transaction(ItemSet("1"), ItemSet("2")))
 
-		actuals.transactions(0).length should be(2)
-		actuals.transactions(1).length should be(1)
-		actuals.transactions.zip(expecteds) foreach { case(actual, expected) =>
-            actual == expected should be (true) }
+		actual.transactions.size should be (expecteds.size)
+        expecteds.zipWithIndex foreach { case(expected, index) =>
+            expected == actual.transactions(index) should be (true) }
+		actual.transactions(0).length should be(2)
+		actual.transactions(1).length should be(2)
 	}
 }
 

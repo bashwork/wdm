@@ -14,6 +14,8 @@ import org.school.core.{ItemSet, Transaction, FrequentSet}
 class GeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
     val support:AbstractSupport[T]) {
 
+    /** This is N represented in the gsp algorithm */
+    private val sizeN = sequences.size.doubleValue
 	private val logger = LoggerFactory.getLogger(this.getClass)
 
     /**
@@ -47,12 +49,11 @@ class GeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
      * @return A list of all the unique items
      */
     private def initialize() : FrequentSet[T] = {
-        val total    = sequences.size.doubleValue                                   // S.size == n
         val allItems = sequences.map { _.unique }.flatten                           // I with repeats
         val counts   = allItems groupBy identity mapValues { _.size }               // I.count
         val unique   = counts.keys.toList                                           // I
         val sorted   = unique.sortWith { (a,b) => support.get(a) < support.get(b) } // L
-        val filtered = sorted.filter { i => (counts(i) / total) >= support.get(i) } // <F1>
+        val filtered = sorted.filter { i => (counts(i) / sizeN) >= support.get(i) } // <F1>
 
         logger.debug("generated initial candidates: " + filtered)
         FrequentSet(filtered.map { x =>												// <{F1}>
@@ -66,9 +67,7 @@ class GeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
      * @param candidates A collection of possible candidates
      * @return The frequent candidate list
      */
-    def buildFrequent(candidates:List[Transaction[T]]) : FrequentSet[T] = {
-        val n = sequences.size
-
+    private def buildFrequent(candidates:List[Transaction[T]]) : FrequentSet[T] = {
         sequences.foreach { sequence =>
             candidates.foreach { candidate =>
                 if (sequence contains candidate) {
@@ -81,7 +80,7 @@ class GeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
         }
 
         FrequentSet(candidates.filter { c =>
-            (c.count / n) >= c.minsup(support) }) // <{Fn}>
+            (c.count / sizeN) >= c.minsup(support) }) // <{Fn}>
     }
 
     /**
@@ -102,20 +101,19 @@ class GeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
      * @return A possible candidate set to process
      */
     private def candidateGen2(frequent:FrequentSet[T]) : List[Transaction[T]] = {
-        val n = sequences.size
         val candidates = ListBuffer[Transaction[T]]()
         val items = frequent.transactions
 
         items.zipWithIndex.foreach {
-			case(l, index) if (l.count / n) >= l.minsup(support) => {
+			case(l, index) if (l.count / sizeN) >= l.minsup(support) => {
             	items.takeRight(items.size - (index + 1)).foreach { h =>
-            	    if ((h.count / n) >= h.minsup(support) && evaluateSdc(l, h)) {
+            	    if ((h.count / sizeN) >= h.minsup(support) && evaluateSdc(l, h)) {
             	        candidates += Transaction(l.sets ++ h.sets)           // <{1},{2}>
             	        candidates += Transaction(l.sets.head, h.sets.head)   // <{1,  2}>
             	    }
             	}
 			}
-			case(l, index) => logger.debug("candidate2 support({}) not met: {}", l.count/n, l.sets)
+			case(l, index) => logger.debug("candidate2 support({}) not met: {}", (l.count / sizeN), l.sets)
         }
     
         logger.debug("generated candidates2: " + candidates.toList)
@@ -129,13 +127,12 @@ class GeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
      * @return A possible candidate set to process
      */
     private def candidateGen(frequent:FrequentSet[T]) : List[Transaction[T]] = {
-        val n = sequences.size
         val candidates = ListBuffer[Transaction[T]]()
         val items = frequent.transactions
 
-        items.zipWithIndex.foreach { case(l, index) if (l.count / n) >= l.minsup(support) =>
+        items.zipWithIndex.foreach { case(l, index) if (l.count / sizeN) >= l.minsup(support) =>
             items.takeRight(items.size - index + 1).foreach { h =>
-                if ((h.count / n) >= h.minsup(support) && evaluateSdc(l, h)) {
+                if ((h.count / sizeN) >= h.minsup(support) && evaluateSdc(l, h)) {
                     candidates += Transaction(l.sets ++ h.sets) // {1} ++ {2} -> {1, 2}
                 }
             }
