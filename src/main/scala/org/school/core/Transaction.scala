@@ -52,6 +52,29 @@ class Transaction[T] private (val sets:List[ItemSet[T]],
     def minsup(support:AbstractSupport[T]) =
         sets.map { s => s.minsup(support) }.min
 
+    /**
+     * Performs the join specified in GSP
+     *
+     * @param right The other transaction to join
+     * @return The new joined transaction
+     */
+	def join(right:Transaction[T]) : Option[Transaction[T]] = {
+		val left = sets.takeRight(sets.size - 1)
+		val isJoinable = (firstSkip contains(right.sets.head)) &&
+			(left == right.sets.slice(1, right.sets.size - 1))
+
+		if (isJoinable) Some(lastJoin(left, right.sets.last)) else None
+	}
+
+    /**
+     * Returns all the subsequence permutations
+     *
+     * @return The list of subsequence permutations
+     */
+	def subsequences : List[Transaction[T]] = {
+		List(this)
+	}
+
     override def hashCode = sets.hashCode
     override def equals(other:Any) = other match {
         case that: Transaction[_] => that.sets == this.sets
@@ -59,6 +82,29 @@ class Transaction[T] private (val sets:List[ItemSet[T]],
     }
 
 	override def toString() = sets.mkString("<", "", ">")
+
+	/**
+     * Helper method to return the correct first set for join testing
+     *
+     * @returns The correct first itemset
+     */
+	private def firstSkip : ItemSet[T] = {
+		if (sets.head.size == 1) sets(1)
+		else ItemSet(sets.head.items.takeRight(sets.head.size - 1))
+	}
+
+	/**
+     * Helper method to return the correct last set for joining
+     *
+     * @param right The other transaction to join
+     * @returns The correct last itemset
+     */
+	private def lastJoin(left:List[ItemSet[T]], right:ItemSet[T]) = {
+		val last = sets.last
+		val post = if (right contains last) List(right) else List(last, right)
+		
+		Transaction(left ++ post)
+	}
 }
 
 object Transaction {

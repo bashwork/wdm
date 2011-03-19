@@ -112,11 +112,11 @@ class GeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
      */
     private def candidateGen2(frequent:FrequentSet[T]) : List[Transaction[T]] = {
         val candidates = ListBuffer[Transaction[T]]()
-        val items = frequent.transactions
+        val transactions = frequent.transactions
 
-        items.zipWithIndex.foreach {
+        transactions.zipWithIndex.foreach {
 			case(l, index) if (l.count / sizeN) >= l.minsup(support) => {
-            	items.takeRight(items.size - (index + 1)).foreach { h =>
+            	transactions.takeRight(transactions.size - (index + 1)).foreach { h =>
             	    if ((h.count / sizeN) >= h.minsup(support) && evaluateSdc(l, h)) {
             	        candidates += Transaction(l.sets ++ h.sets)           // <{1},{2}>
             	        candidates += Transaction(l.sets.head, h.sets.head)   // <{1,  2}>
@@ -138,17 +138,17 @@ class GeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
      */
     private def candidateGen(frequent:FrequentSet[T]) : List[Transaction[T]] = {
         val candidates = ListBuffer[Transaction[T]]()
-        val items = frequent.transactions
+        val transactions = frequent.transactions
 
-        items.zipWithIndex.foreach { case(left, lindex) => {
-        	items.zipWithIndex.foreach {
+        transactions.zipWithIndex.foreach { case(left, lindex) => {
+        	transactions.zipWithIndex.foreach {
 				case(right, rindex) if lindex != rindex => {
-					candidateCheck(left, right) match {
+					candidateCheck(left, right, frequent) match {
 						case Some(candidate) => candidates += candidate
-						case None => //
+						case None => // these two did not join
 					}
 				}
-				case _ => //
+				case _ => // we can't join the same transaction
 			}
         } }
     
@@ -164,11 +164,19 @@ class GeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
      * @param right The right transaction to join
      * @return optionally a joined candidate set
      */
-	private def candidateCheck(left:Transaction[T], right:Transaction[T])
-		: Option[Transaction[T]] = {
+	private def candidateCheck(left:Transaction[T], right:Transaction[T],
+		frequent:FrequentSet[T]) : Option[Transaction[T]] = {
 
-		//	left.items ++ right.items
-		return Some(left)
-		return None
+		left.join(right) match {
+			case Some(result) => {
+				if (result.subsequences.forall { s =>
+					frequent.transactions.exists { t => t contains s }}) {
+					return Some(result)
+				}
+			}
+			case None =>  // could not join the two
+		}
+
+		None
 	}
 }
