@@ -69,9 +69,11 @@ class Transaction[T] private (val sets:List[ItemSet[T]],
 			else right.sets.init ++ List(ItemSet(right.sets.last.items.init))
 
 		def joiner = {
-			val r = right.sets.last
-			val last = sets.last
-			val post = if (r contains last) List(r) else List(last, r)
+			val (r, l) = (right.sets.last, sets.last)
+			val post = if (r contains l) List(r)	            // {3}    & {3, 4}
+				else if (l.items.last == r.items.head)			// {3, 4} & {4, 5}
+					List(ItemSet(l.items ++ List(r.items.last)))
+				else List(l, r)					                // {3}    & {4}
 			
 			Transaction(sets.init ++ post)
 		}

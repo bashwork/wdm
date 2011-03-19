@@ -103,17 +103,22 @@ class TransactionSpec extends FlatSpec with ShouldMatchers {
 	it should "join another transaction correctly" in {
 		val left1  = Transaction(ItemSet(1), ItemSet(2), ItemSet(4))
 		val left2  = Transaction(ItemSet(1, 2), ItemSet(4))
+		val left3  = Transaction(ItemSet(1, 2))
 		val right1 = Transaction(ItemSet(2), ItemSet(4, 5))
 		val right2 = Transaction(ItemSet(3), ItemSet(4, 5))
+		val right3 = Transaction(ItemSet(2, 3))
 		val Some(actual1) = left1 join right1
 		val Some(actual2) = left2 join right1
-		val actual3 = left2 join right2
-		val expected1 = Transaction(ItemSet(1), ItemSet(2), ItemSet(4, 5))
-		val expected2 = Transaction(ItemSet(1, 2), ItemSet(4, 5))
+		val Some(actual3) = left3 join right3
+		val actualFail = left2 join right2
+		val expected1  = Transaction(ItemSet(1), ItemSet(2), ItemSet(4, 5))
+		val expected2  = Transaction(ItemSet(1, 2), ItemSet(4, 5))
+		val expected3  = Transaction(ItemSet(1, 2, 3))
 
 		expected1 == actual1 should be (true)
 		expected2 == actual2 should be (true)
-		actual3 should be (None)
+		expected3 == actual3 should be (true)
+		actualFail should be (None)
 	}
 }
 

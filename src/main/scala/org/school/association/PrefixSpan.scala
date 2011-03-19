@@ -54,7 +54,7 @@ class PrefixSpan[T](val sequences:List[Transaction[T]],
         val sorted   = unique.sortWith { (a,b) => support.get(a) < support.get(b) } // L
         val filtered = sorted.filter { i => (counts(i) / sizeN) >= support.get(i) } // <F1>
 
-        logger.info("GSP initialization took " + stopwatch.toString)
+        logger.debug("PrefixSpan initialization took " + stopwatch.toString)
         logger.debug("generated initial candidates: " + filtered)
         FrequentSet(filtered.map { x =>												// <{F1}>
 			Transaction(List(ItemSet(x)), counts(x)) })

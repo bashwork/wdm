@@ -45,7 +45,7 @@ class GeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
             logger.info("generated frequent set {}: size({})", k, frequents.last.size)
         }
 
-        logger.info("GSP processing took " + stopwatch.toString)
+        logger.debug("GSP processing took " + stopwatch.toString)
         frequents.init.toList // the last frequent is empty
     }
 
@@ -64,7 +64,7 @@ class GeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
         val sorted   = unique.sortWith { (a,b) => support.get(a) < support.get(b) } // L
         val filtered = sorted.filter { i => (counts(i) / sizeN) >= support.get(i) } // <F1>
 
-        logger.info("GSP initialization took " + stopwatch.toString)
+        logger.debug("GSP initialization took " + stopwatch.toString)
         logger.debug("generated initial candidates: " + filtered)
         FrequentSet(filtered.map { x =>												// <{F1}>
 			Transaction(List(ItemSet(x)), counts(x)) })
@@ -77,7 +77,7 @@ class GeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
      * @param candidates A collection of possible candidates
      * @return The frequent candidate list
      */
-    private def buildFrequent(candidates:List[Transaction[T]]) : FrequentSet[T] = {
+    def buildFrequent(candidates:List[Transaction[T]]) : FrequentSet[T] = {
         sequences.foreach { sequence =>
             candidates.foreach { candidate =>
                 if (sequence contains candidate) {
@@ -125,7 +125,7 @@ class GeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
             	    }
             	}
 			}
-			case(l, index) => logger.info("candidate2 support({}) not met: {}", (l.count / sizeN), l.sets)
+			case(l, index) => logger.debug("candidate2 support({}) not met: {}", (l.count / sizeN), l.sets)
         }
     
         logger.debug("generated candidates2: " + candidates.toList)
@@ -138,7 +138,7 @@ class GeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
      * @param frequent The previous frequent items to build with
      * @return A possible candidate set to process
      */
-    private def candidateGenN(frequent:FrequentSet[T]) : List[Transaction[T]] = {
+    def candidateGenN(frequent:FrequentSet[T]) : List[Transaction[T]] = {
         val candidates = ListBuffer[Transaction[T]]()
         val transactions = frequent.transactions
 

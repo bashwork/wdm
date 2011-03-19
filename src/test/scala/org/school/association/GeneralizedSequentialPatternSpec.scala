@@ -91,20 +91,50 @@ class GeneralizedSequentialPatternSpec extends FlatSpec
 		val sequence = (1 to 5).map { x => Transaction(ItemSet(x.toString)) }.toList
 		val gsp = new GeneralizedSequentialPattern(sequence, SingleSupport[String](0.1))
 
-		val frequent = FrequentSet(List(
+		val frequent = FrequentSet(
 			Transaction(ItemSet("1", "2"), ItemSet("4")),
 			Transaction(ItemSet("1", "2"), ItemSet("5")),
 			Transaction(ItemSet("1"), ItemSet("4", "5")),
 			Transaction(ItemSet("1", "4"), ItemSet("6")),
 			Transaction(ItemSet("2"), ItemSet("4", "5")),
-			Transaction(ItemSet("2"), ItemSet("4"), ItemSet("6"))))
-		val expected = List(
-			Transaction(ItemSet("1", "2")), Transaction(ItemSet("4"), ItemSet("5")))
+			Transaction(ItemSet("2"), ItemSet("4"), ItemSet("6")))
+		val expected = List(Transaction(ItemSet("1", "2"), ItemSet("4", "5")))
 		val actual = (gsp invokePrivate candidateGenN(frequent))
 
 		actual.size should be (expected.size)
 		for (index <- 0 to actual.size - 1) {
             actual(index) == expected(index) should be (true) 
+		}
+	}
+
+	it should "generate frequentN correctly" in {
+		val candidateGenN = PrivateMethod[List[Transaction[String]]]('candidateGenN)
+		val buildFrequent = PrivateMethod[FrequentSet[String]]('buildFrequent)
+		val sequence = List(
+            Transaction(ItemSet("30"), ItemSet("90")),
+            Transaction(ItemSet("10", "20"), ItemSet("30"), ItemSet("10", "40", "60", "70")),
+            Transaction(ItemSet("30", "50", "70", "80")),
+            Transaction(ItemSet("30"), ItemSet("30", "40", "70", "80"), ItemSet("90")),
+            Transaction(ItemSet("90")))
+		val gsp = new GeneralizedSequentialPattern(sequence, SingleSupport[String](0.25))
+
+        val frequent = FrequentSet(
+            Transaction(ItemSet("30"), ItemSet("40")),
+            Transaction(ItemSet("30"), ItemSet("70")),
+            Transaction(ItemSet("30"), ItemSet("90")),
+            Transaction(ItemSet("30", "70")),
+            Transaction(ItemSet("30", "80")),
+            Transaction(ItemSet("40", "70")),
+            Transaction(ItemSet("70", "80")))
+        val expected = FrequentSet(
+            Transaction(ItemSet("30"), ItemSet("40", "70")),
+            Transaction(ItemSet("30", "70", "80")))
+		val candidates = (gsp invokePrivate candidateGenN(frequent))
+		val actual = (gsp invokePrivate buildFrequent(candidates))
+
+		actual.size should be (expected.size)
+		for (index <- 0 to actual.size - 1) {
+            actual.transactions(index) == expected.transactions(index) should be (true) 
 		}
 	}
 
@@ -130,11 +160,18 @@ class GeneralizedSequentialPatternSpec extends FlatSpec
         val f3 = FrequentSet(Transaction(ItemSet("30"), ItemSet("40", "70")),
             Transaction(ItemSet("30", "40", "70")))
 
-		val expecteds = List(f1, f2, f3)
+		val expected = List(f1, f2, f3)
 		val actual = gsp.process
 
-        expecteds.zipWithIndex foreach { case(expected, index) =>
-            expected == actual(index) should be (true) }
+		// thar be dragons here
+		actual.size should be (expected.size)
+		for (index <- 0 to actual.size - 1) {
+			val (left, right) = (actual(index).transactions, expected(index).transactions)
+			left.size should be (right.size)
+			for (j <- 0 to left.size - 1) {
+            	left(j) == right(j) should be (true) 
+			}
+		}
 	}
 }
 
