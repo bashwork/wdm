@@ -7,8 +7,11 @@ import java.io.Serializable
  *
  * @param items The items composing this Item set
  */
-class ItemSet[T] private (val items:Set[T])
+class ItemSet[T] private (val items:List[T])
     extends Serializable {
+
+	/** The size of the ItemSet */
+	def size = items.size
 
     /**
      * Retrieve the minimum support for this transaction set
@@ -26,7 +29,8 @@ class ItemSet[T] private (val items:Set[T])
      * @param other The other itemset to test
      * @return true if successful, false otherwise
      */
-	def contains(other:ItemSet[T]) = other.items.subsetOf(items)
+	def contains(other:ItemSet[T]) =
+		other.items.forall { o => items.contains(o) }
 
     override def hashCode() = items.hashCode
     override def equals(other:Any) = other match {
@@ -39,6 +43,6 @@ class ItemSet[T] private (val items:Set[T])
 
 
 object ItemSet {
-    def apply[T](items:List[T]) = new ItemSet[T](items.toSet)
-    def apply[T](items:T*) = new ItemSet[T](items.toList.toSet)
+    def apply[T](items:List[T]) = new ItemSet[T](items.distinct)
+    def apply[T](items:T*) = new ItemSet[T](items.toList.distinct)
 }

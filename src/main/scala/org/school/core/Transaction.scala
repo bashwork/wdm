@@ -17,7 +17,7 @@ class Transaction[T] private (val sets:List[ItemSet[T]],
     def size()     = sets.size
 
     /** The total number of items in all the itemsets */
-    def length()   = sets.foldLeft(0) { (t,s) => t + s.items.size }
+    def length()   = sets.foldLeft(0) { (t,s) => t + s.size }
 
     /** A flat list of all the unique items in this transaction */
     def unique()   = sets.map { _.items }.flatten.toSet
@@ -34,7 +34,7 @@ class Transaction[T] private (val sets:List[ItemSet[T]],
      */
 	def contains(other:Transaction[T]) : Boolean = {
         val initial = other.sets.map { o =>
-            sets.findIndexOf { t => o.items.subsetOf(t.items) } }
+            sets.findIndexOf { t => t contains o } }
         var result = !initial.contains(-1) && !initial.isEmpty
         for (i <- 0 until initial.size -1) {
             result &= initial(i) < initial(i + 1)

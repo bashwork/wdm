@@ -52,8 +52,7 @@ class SequentialFormatter(frequents:List[FrequentSet[String]])
         buffer:StringBuilder) {
 
 		buffer.append("<")
-		pattern.sets.foreach { set =>
-			buffer.append(set.items.mkString("{", ",", "}")) }
+		pattern.sets.foreach { set => buffer.append(set.toString) }
 		buffer.append("> Count: " + pattern.count + "\n")
 	}
 }

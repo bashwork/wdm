@@ -140,19 +140,35 @@ class GeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
         val candidates = ListBuffer[Transaction[T]]()
         val items = frequent.transactions
 
-        items.zipWithIndex.foreach {
-			case(l, index) if (l.count / sizeN) >= l.minsup(support) => {
-            	items.takeRight(items.size - (index + 1)).foreach { h =>
-            	    if ((h.count / sizeN) >= h.minsup(support) && evaluateSdc(l, h)) {
-            	        candidates += Transaction(l.sets ++ h.sets)           // <{1},{2}>
-            	        candidates += Transaction(l.sets.head, h.sets.head)   // <{1,  2}>
-            	    }
-            	}
+        items.zipWithIndex.foreach { case(left, lindex) => {
+        	items.zipWithIndex.foreach {
+				case(right, rindex) if lindex != rindex => {
+					candidateCheck(left, right) match {
+						case Some(candidate) => candidates += candidate
+						case None => //
+					}
+				}
+				case _ => //
 			}
-			case(l, index) => logger.debug("candidateN support({}) not met: {}", (l.count / sizeN), l.sets)
-        }
+        } }
     
         logger.debug("generated candidatesN: " + candidates.toList)
         candidates.toList
     }
+
+    /**
+     * Helper to test each possible candidate set and return the
+     * merged result.
+     *
+     * @param left The left transaction to join
+     * @param right The right transaction to join
+     * @return optionally a joined candidate set
+     */
+	private def candidateCheck(left:Transaction[T], right:Transaction[T])
+		: Option[Transaction[T]] = {
+
+		//	left.items ++ right.items
+		return Some(left)
+		return None
+	}
 }
