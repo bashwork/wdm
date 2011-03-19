@@ -1,6 +1,7 @@
 package org.school.core
 
 import java.io.Serializable
+import scala.collection.mutable.ListBuffer
 
 /**
  * Represents an ordered sequence of itemsets.
@@ -54,16 +55,28 @@ class Transaction[T] private (val sets:List[ItemSet[T]],
 
     /**
      * Performs the join specified in GSP
+     * To test if we can join, we perform the following:
+     * 1. Is the first element of the join list the same
+     * 2. Is the first element of the join list the same
      *
      * @param right The other transaction to join
      * @return The new joined transaction
      */
 	def join(right:Transaction[T]) : Option[Transaction[T]] = {
-		val left = sets.takeRight(sets.size - 1)
-		val isJoinable = (firstSkip contains(right.sets.head)) &&
-			(left == right.sets.slice(1, right.sets.size - 1))
+		val jleft = if (sets.head.size == 1) sets.tail
+			else ItemSet(sets.head.items.tail) :: sets.tail
+		val jright = if (right.sets.last.size == 1) right.sets.init
+			else right.sets.init ++ List(ItemSet(right.sets.last.items.init))
 
-		if (isJoinable) Some(lastJoin(left, right.sets.last)) else None
+		def joiner = {
+			val r = right.sets.last
+			val last = sets.last
+			val post = if (r contains last) List(r) else List(last, r)
+			
+			Transaction(sets.init ++ post)
+		}
+
+		if (jleft == jright) Some(joiner) else None
 	}
 
     /**
@@ -72,7 +85,19 @@ class Transaction[T] private (val sets:List[ItemSet[T]],
      * @return The list of subsequence permutations
      */
 	def subsequences : List[Transaction[T]] = {
-		List(this)
+        val possible = ListBuffer[Transaction[T]]()
+
+		for (i <- 0 to sets.size - 1) {
+			val (left, middle :: right) = sets.splitAt(i)
+			for (j <- 0 to middle.size - 1) {
+				val (il, im :: ir) = middle.items.splitAt(j)
+				val set = if ((il.size + ir.size) != 0)
+					List(ItemSet(il ++ ir)) else List[ItemSet[T]]()
+				possible += Transaction(left ++ set ++ right)
+			}
+		}
+
+		possible.toList
 	}
 
     override def hashCode = sets.hashCode
@@ -82,29 +107,6 @@ class Transaction[T] private (val sets:List[ItemSet[T]],
     }
 
 	override def toString() = sets.mkString("<", "", ">")
-
-	/**
-     * Helper method to return the correct first set for join testing
-     *
-     * @returns The correct first itemset
-     */
-	private def firstSkip : ItemSet[T] = {
-		if (sets.head.size == 1) sets(1)
-		else ItemSet(sets.head.items.takeRight(sets.head.size - 1))
-	}
-
-	/**
-     * Helper method to return the correct last set for joining
-     *
-     * @param right The other transaction to join
-     * @returns The correct last itemset
-     */
-	private def lastJoin(left:List[ItemSet[T]], right:ItemSet[T]) = {
-		val last = sets.last
-		val post = if (right contains last) List(right) else List(last, right)
-		
-		Transaction(left ++ post)
-	}
 }
 
 object Transaction {

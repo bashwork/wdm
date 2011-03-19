@@ -35,17 +35,18 @@ class GeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
         stopwatch.start
         frequents += initialize()
 
-        (2 to 1000).takeWhile( _ => frequents.last.transactions.size > 0) foreach { k =>
+        (2 to 1000).toStream.takeWhile(_ => frequents.last.size > 0).foreach { k =>
             logger.debug("generating frequent set: " + k)
             val ck = k match {
                 case 2 => candidateGen2(frequents.last)
-                case _ => candidateGen(frequents.last)
+                case _ => candidateGenN(frequents.last)
             }
             frequents += buildFrequent(ck)
+            logger.info("generated frequent set {}: size({})", k, frequents.last.size)
         }
 
         logger.info("GSP processing took " + stopwatch.toString)
-        frequents.dropRight(1).toList // the last frequent is empty
+        frequents.init.toList // the last frequent is empty
     }
 
     /**
@@ -88,7 +89,7 @@ class GeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
             }
         }
 
-        logger.info("GSP frequent generation took " + stopwatch.toString)
+        logger.debug("GSP frequent generation took " + stopwatch.toString)
         FrequentSet(candidates.filter { c =>
             (c.count / sizeN) >= c.minsup(support) }) // <{Fn}>
     }
@@ -113,17 +114,18 @@ class GeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
     private def candidateGen2(frequent:FrequentSet[T]) : List[Transaction[T]] = {
         val candidates = ListBuffer[Transaction[T]]()
         val transactions = frequent.transactions
+		implicit def transToType(t:Transaction[T]) : T = t.sets.head.items.head	
 
         transactions.zipWithIndex.foreach {
 			case(l, index) if (l.count / sizeN) >= l.minsup(support) => {
             	transactions.takeRight(transactions.size - (index + 1)).foreach { h =>
             	    if ((h.count / sizeN) >= h.minsup(support) && evaluateSdc(l, h)) {
-            	        candidates += Transaction(l.sets ++ h.sets)           // <{1},{2}>
-            	        candidates += Transaction(l.sets.head, h.sets.head)   // <{1,  2}>
+            	        candidates += Transaction(ItemSet[T](l, h)) // <{1,  2}>
+            	        candidates += Transaction(l.sets ++ h.sets) // <{1},{2}>
             	    }
             	}
 			}
-			case(l, index) => logger.debug("candidate2 support({}) not met: {}", (l.count / sizeN), l.sets)
+			case(l, index) => logger.info("candidate2 support({}) not met: {}", (l.count / sizeN), l.sets)
         }
     
         logger.debug("generated candidates2: " + candidates.toList)
@@ -136,7 +138,7 @@ class GeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
      * @param frequent The previous frequent items to build with
      * @return A possible candidate set to process
      */
-    private def candidateGen(frequent:FrequentSet[T]) : List[Transaction[T]] = {
+    private def candidateGenN(frequent:FrequentSet[T]) : List[Transaction[T]] = {
         val candidates = ListBuffer[Transaction[T]]()
         val transactions = frequent.transactions
 

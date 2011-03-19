@@ -49,15 +49,17 @@ class GeneralizedSequentialPatternSpec extends FlatSpec
 		val gsp = new GeneralizedSequentialPattern(sequence, support)
 
 		val frequent = FrequentSet((1 to 3).map { x =>
-            Transaction(ItemSet(x.toString)) }.toList)
-		val expecteds = List(
+            Transaction(List(ItemSet(x.toString)), 2) }.toList)
+		val expected = List(
 			Transaction(ItemSet("1", "2")), Transaction(ItemSet("1"), ItemSet("2")),
 			Transaction(ItemSet("1", "3")), Transaction(ItemSet("1"), ItemSet("3")),
 			Transaction(ItemSet("2", "3")), Transaction(ItemSet("2"), ItemSet("3")))
-		val actuals = (gsp invokePrivate candidateGen2(frequent))
+		val actual = (gsp invokePrivate candidateGen2(frequent))
 
-		actuals.zip(expecteds) foreach { case(actual, expected) =>
-            actual == expected should be (true) }
+		actual.size should be (expected.size)
+		for (index <- 0 to actual.size - 1) {
+            actual(index) == expected(index) should be (true) 
+		}
 	}
 
 	it should "generate frequent2 correctly" in {
@@ -82,6 +84,28 @@ class GeneralizedSequentialPatternSpec extends FlatSpec
             expected == actual.transactions(index) should be (true) }
 		actual.transactions(0).length should be(2)
 		actual.transactions(1).length should be(2)
+	}
+
+	it should "generate candidateN correctly" in {
+		val candidateGenN = PrivateMethod[List[Transaction[String]]]('candidateGenN)
+		val sequence = (1 to 5).map { x => Transaction(ItemSet(x.toString)) }.toList
+		val gsp = new GeneralizedSequentialPattern(sequence, SingleSupport[String](0.1))
+
+		val frequent = FrequentSet(List(
+			Transaction(ItemSet("1", "2"), ItemSet("4")),
+			Transaction(ItemSet("1", "2"), ItemSet("5")),
+			Transaction(ItemSet("1"), ItemSet("4", "5")),
+			Transaction(ItemSet("1", "4"), ItemSet("6")),
+			Transaction(ItemSet("2"), ItemSet("4", "5")),
+			Transaction(ItemSet("2"), ItemSet("4"), ItemSet("6"))))
+		val expected = List(
+			Transaction(ItemSet("1", "2")), Transaction(ItemSet("4"), ItemSet("5")))
+		val actual = (gsp invokePrivate candidateGenN(frequent))
+
+		actual.size should be (expected.size)
+		for (index <- 0 to actual.size - 1) {
+            actual(index) == expected(index) should be (true) 
+		}
 	}
 
 	it should "process a dataset correctly" in {

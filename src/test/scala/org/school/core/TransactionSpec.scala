@@ -79,10 +79,41 @@ class TransactionSpec extends FlatSpec with ShouldMatchers {
 	}
 
 	it should "convert to a string correctly" in {
-		val instance  = Transaction(ItemSet(2, 3), ItemSet(7), ItemSet(9))
-		val actual = "<{2,3}{7}{9}>"
+		val instance = Transaction(ItemSet(2, 3), ItemSet(7), ItemSet(9))
+		val expected = "<{2,3}{7}{9}>"
 
-		instance.toString should be (actual)
+		instance.toString should be (expected)
+	}
+
+	it should "generate all subsequences correctly" in {
+		val instance = Transaction(ItemSet(2, 3), ItemSet(7), ItemSet(9))
+		val actual   = instance.subsequences
+		val expected = List(
+			Transaction(ItemSet(3), ItemSet(7), ItemSet(9)),
+			Transaction(ItemSet(2), ItemSet(7), ItemSet(9)),
+			Transaction(ItemSet(2, 3), ItemSet(9)),
+			Transaction(ItemSet(2, 3), ItemSet(7)))
+
+		expected.size should be (actual.size)
+		for (index <- 0 to expected.size - 1) {
+			expected(index) == actual(index) should be (true)
+		}
+	}
+
+	it should "join another transaction correctly" in {
+		val left1  = Transaction(ItemSet(1), ItemSet(2), ItemSet(4))
+		val left2  = Transaction(ItemSet(1, 2), ItemSet(4))
+		val right1 = Transaction(ItemSet(2), ItemSet(4, 5))
+		val right2 = Transaction(ItemSet(3), ItemSet(4, 5))
+		val Some(actual1) = left1 join right1
+		val Some(actual2) = left2 join right1
+		val actual3 = left2 join right2
+		val expected1 = Transaction(ItemSet(1), ItemSet(2), ItemSet(4, 5))
+		val expected2 = Transaction(ItemSet(1, 2), ItemSet(4, 5))
+
+		expected1 == actual1 should be (true)
+		expected2 == actual2 should be (true)
+		actual3 should be (None)
 	}
 }
 
