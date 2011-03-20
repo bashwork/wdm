@@ -1,6 +1,12 @@
-#!/usr/bin/env sh
+#!/bin/bash
 #------------------------------------------------------------ #
-# A helper runner script for *nix systems
+# script variables
 #------------------------------------------------------------ #
-java -cp ../jar/wdm.jar org.school.main.GeneralizedSequentialPatternMain -i data.txt -s para.txt
-java -cp ../jar/wdm.jar org.school.main.PrefixSpanMain -i data.txt -s para.txt
+INPUT="config/data.txt"
+SUPPORT="config/para.txt"
+
+#------------------------------------------------------------ #
+# script runner
+#------------------------------------------------------------ #
+java -cp jar/wdm.jar org.school.main.MsGeneralizedSequentialPatternMain -i ${INPUT} -s ${SUPPORT}
+java -cp jar/wdm.jar org.school.main.PrefixSpanMain -i ${INPUT} -s ${SUPPORT}

@@ -1,5 +1,11 @@
-REM 
-REM A helper runner script for windows
-REM 
-java -cp ../jar/wdm.jar org.school.main.GeneralizedSequentialPatternMain -i data.txt -s para.txt
-java -cp ../jar/wdm.jar org.school.main.PrefixSpanMain -i data.txt -s para.txt
+@echo off
+REM ------------------------------------------------------------ 
+REM script variables
+REM ------------------------------------------------------------ 
+set JAVA=java
+
+REM ------------------------------------------------------------ 
+REM script runner
+REM ------------------------------------------------------------ 
+%JAVA% -cp wdm.jar org.school.main.GeneralizedSequentialPatternMain -i %1 -s %2
+%JAVA% -cp wdm.jar org.school.main.PrefixSpanMain -i %1 -s %2
