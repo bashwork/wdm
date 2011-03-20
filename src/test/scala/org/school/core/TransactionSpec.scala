@@ -75,7 +75,7 @@ class TransactionSpec extends FlatSpec with ShouldMatchers {
 		val fail  = Transaction(ItemSet(2, 3), ItemSet(9))
 
 		left == right should be (true)
-		left == fail should  be (false)
+		left == fail  should be (false)
 	}
 
 	it should "convert to a string correctly" in {
@@ -99,6 +99,20 @@ class TransactionSpec extends FlatSpec with ShouldMatchers {
 			expected(index) == actual(index) should be (true)
 		}
 	}
+
+	it should "produce without subsequences correctly" in {
+		val instance1 = Transaction(ItemSet(2, 3), ItemSet(7), ItemSet(9))
+		val instance2 = Transaction(ItemSet(3), ItemSet(7), ItemSet(8, 9))
+		val actual1  = Transaction(ItemSet(3), ItemSet(7), ItemSet(9))
+		val actual2  = Transaction(ItemSet(2), ItemSet(7), ItemSet(9))
+		val actual3  = Transaction(ItemSet(2, 3), ItemSet(7))
+		val actual4  = Transaction(ItemSet(2, 3), ItemSet(9))
+
+        (instance1.without(0) ) == actual1 should be(true)
+        (instance1.without(1) ) == actual2 should be(true)
+        (instance1.without(-1)) == actual3 should be(true)
+        (instance1.without(-2)) == actual4 should be(true)
+    }
 
 	it should "join another transaction correctly" in {
 		val left1  = Transaction(ItemSet(1), ItemSet(2), ItemSet(4))

@@ -9,7 +9,7 @@ import org.school.association.MsGeneralizedSequentialPattern
 object MsGeneralizedSequentialPatternMain extends RunnerTrait { 
 
     val version  = "0.1.0"
-	val mainName = "MsGeneralizedSequentialPattern"
+	val mainName = "MsGSP"
 
 	/**
      * Process the given input data with the GSP algorithm

@@ -110,7 +110,7 @@ class MsGeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
 
         logger.debug("frequent generation took " + stopwatch.toString)
         FrequentSet(candidates.filter { c =>
-            c.support >= c.minsup(support) })   // <{Fn}>
+            c.support >= c.minsup(support) }.distinct)   // <{Fn}>
     }
 
     /**
@@ -141,8 +141,11 @@ class MsGeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
             	transactions.drop(index + 1).foreach { h =>
             	    if (h.support >= l.minsup(support) && evaluateSdc(l, h)) {
             	        candidates += Transaction(ItemSet[T](l, h)) // <{1,  2}>
+                        candidates.last.minMisItem = l.sets.last
             	        candidates += Transaction(l.sets ++ h.sets) // <{1},{2}>
+                        candidates.last.minMisItem = l.sets.last
             	        candidates += Transaction(h.sets ++ l.sets) // <{2},{1}>
+                        candidates.last.minMisItem = l.sets.last
             	    }
             	}
 			}
@@ -167,7 +170,7 @@ class MsGeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
         	transactions.zipWithIndex.foreach {
 				case(right, rindex) if lindex != rindex => {
 					candidateCheck(left, right, frequent) match {
-						case Some(candidate) => candidates += candidate
+						case Some(candidate) => candidates ++= candidate
 						case None => // these two did not join
 					}
 				}
@@ -188,44 +191,94 @@ class MsGeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
      * @return optionally a joined candidate set
      */
 	private def candidateCheck(left:Transaction[T], right:Transaction[T],
-		frequent:FrequentSet[T]) : Option[Transaction[T]] = {
+		frequent:FrequentSet[T]) : Option[List[Transaction[T]]] = {
 
-        val result = if (left.minMisItem == left.sets.head.items.head)
+        val result = if (left.minMisItem.items.head == left.sets.head.items.head)
                  candidateJoinLeft(left, right, frequent)
-            else if (right.minMisItem == right.sets.last.items.last)
+            else if (right.minMisItem.items.last == right.sets.last.items.last)
                  candidateJoinRight(left, right, frequent)
             else candidateJoinRegular(left, right, frequent)
 
-        return result match {
-            case Some(join) => None//candidatePrune(join, frequent)
-            case _          => None
+        result match {
+            case Some(joins) => candidatePrune(joins, frequent)
+            case _           => None
         }
 	}
 
     /**
-     * Helper to test each possible candidate set and return the
-     * merged result.
+     * If the first item in the sequence is the minMisItem, we perform
+     * this join step.
      *
      * @param left The left transaction to join
      * @param right The right transaction to join
      * @return optionally a joined candidate set
      */
 	private def candidateJoinLeft(left:Transaction[T], right:Transaction[T],
-		frequent:FrequentSet[T]) : Option[Transaction[T]] = {
-        None
+		frequent:FrequentSet[T]) : Option[List[Transaction[T]]] = {
+        val results = ListBuffer[Transaction[T]]()
+
+        if ((left.without(1) != right.without(-1)) && // check if we will be frequent
+             right.minsup(support) > left.minsup(support)) return None
+
+        val lastLeft  = left.sets.last.items
+        val lastRight = right.sets.last.items
+        if (lastRight.size == 1) { // {1}{2} & {3} => {1}{2}{3}
+            results += Transaction(left.sets ++ List(ItemSet(lastRight.last)))
+            results.last.minMisItem = left.minMisItem
+
+            if (((left.size == 2) && (left.length == 2)) &&
+                (lastRight.last.toString > lastLeft.last.toString)) {   // fuck type erasure
+                results += Transaction(left.sets.head,                  // {1}{2} & {4} => {1}{2,4}
+                    ItemSet(left.sets.last.items.last, lastRight.last))
+                results.last.minMisItem = left.minMisItem
+            }
+        }
+        else if (((left.size == 1) && (left.length == 2)) &&
+            (lastRight.last.toString > lastLeft.last.toString) ||       // fuck type erasure
+            (left.length > 2)) {
+            results += Transaction(left.sets ++ List(right.sets.last)) // {1}{2} & {4} => {1}{2}{4}
+            results.last.minMisItem = left.minMisItem
+        }
+
+        if (results.size > 0) Some(results.toList) else None
     }
 
     /**
-     * Helper to test each possible candidate set and return the
-     * merged result.
+     * If the last item in the second sequence is the minMisItem,
+     * we perform * this join step.
      *
      * @param left The left transaction to join
      * @param right The right transaction to join
      * @return optionally a joined candidate set
      */
 	private def candidateJoinRight(left:Transaction[T], right:Transaction[T],
-		frequent:FrequentSet[T]) : Option[Transaction[T]] = {
-        None
+		frequent:FrequentSet[T]) : Option[List[Transaction[T]]] = {
+        val results = ListBuffer[Transaction[T]]()
+
+        if ((left.without(0) != right.without(-2)) && // check if we will be frequent
+             right.minsup(support) < left.minsup(support)) return None
+
+        val lastLeft  = left.sets.last.items
+        val lastRight = right.sets.last.items
+        if (lastLeft.size == 1) { // {1}{2} & {3} => {1}{2}{3}
+            results += Transaction(right.sets ++ List(ItemSet(lastLeft.last)))
+            results.last.minMisItem = right.minMisItem
+
+            if (((right.size == 2) && (right.length == 2)) &&
+                (lastRight.last.toString > lastLeft.last.toString)) {   // fuck type erasure
+                results += Transaction(right.sets.head,                 // {1}{2} & {4} => {1}{2,4}
+                    ItemSet(right.sets.last.items.last, lastLeft.last))
+                results.last.minMisItem = right.minMisItem
+            }
+        }
+        else if (((right.size == 1) && (right.length == 2)) &&
+            (lastRight.last.toString > lastLeft.last.toString) ||       // fuck type erasure
+            (right.length > 2)) {
+            results += Transaction(right.sets ++ List(left.sets.last))  // {1}{2} & {4} => {1}{2}{4}
+            results.last.minMisItem = right.minMisItem
+        }
+
+        if (results.size > 0) Some(results.toList) else None
     }
 
     /**
@@ -237,14 +290,14 @@ class MsGeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
      * @return optionally a joined candidate set
      */
 	private def candidateJoinRegular(left:Transaction[T], right:Transaction[T],
-		frequent:FrequentSet[T]) : Option[Transaction[T]] = {
+		frequent:FrequentSet[T]) : Option[List[Transaction[T]]] = {
 
 		left.join(right) match {
 			case Some(result) => {
-				if (result.subsequences.forall { s =>
-					frequent.transactions.exists { t => t contains s }}) {
-					return Some(result)
-				}
+                result.minMisItem = left.minMisItem
+				val isGood = result.subsequences.forall { s =>
+					frequent.transactions.exists { t => t contains s }}
+				if (isGood) { return Some(List(result)) }
 			}
 			case None =>  // could not join the two
 		}
@@ -260,8 +313,19 @@ class MsGeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
      * @param right The right transaction to join
      * @return optionally a joined candidate set
      */
-	private def candidatePrune(join:Transaction[T], frequent:FrequentSet[T])
-        : Transaction[T] = {
-        join
+	private def candidatePrune(joins:List[Transaction[T]], frequent:FrequentSet[T])
+        : Option[List[Transaction[T]]] = {
+        val results = ListBuffer[Transaction[T]]()
+
+        joins.foreach { join => 
+            val isGood = join.subsequences.forall { s =>
+                val minimum = Transaction(join.minMisItem)
+                (frequent.transactions.exists { t => t contains s }) ||
+                (!s.contains(minimum)) // missing lowest mis-item is okay
+            }
+            if (isGood) { results += join }
+        }
+
+        if (results.size > 0) Some(results.toList) else None
     }
 }

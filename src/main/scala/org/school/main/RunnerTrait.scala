@@ -101,7 +101,7 @@ trait RunnerTrait {
         "debug"   -> false,
         "input"   -> "data.txt",
         "support" -> "para.txt",
-        "output"  -> (mainName + "results.txt"))
+        "output"  -> (mainName.toLowerCase + "-results.txt"))
 
     /**
      * Helper method to print the current version and exit

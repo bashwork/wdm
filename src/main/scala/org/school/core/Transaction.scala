@@ -51,6 +51,31 @@ class Transaction[T] private (val sets:List[ItemSet[T]],
     }
 
     /**
+     * Remove an the item to the left or right of the list (max 2)
+     *
+     * @param support The support lookup table
+     * @return The minimum support for this collection
+     */
+    def without(index:Int) : Transaction[T] = {
+        val id = index match {
+            case i if index >= 0 => {
+                if (sets.head.size >= i) (0, i)
+                else (1, i - sets.head.size)
+            }
+            case _ if index  < 0 => {
+                val i = math.abs(index)
+                if (sets.last.size >= i) (sets.size - 1, sets.last.size - i)
+                else (sets.size - 2, (sets(sets.size - 2).size) - (i - sets.last.size))
+            }
+        }
+
+        val (l, (m :: r)) = sets.splitAt(id._1)
+        val middle = if (m.size == 1) List[ItemSet[T]]()
+            else List(ItemSet(m.items.filterNot { m.items.indexOf(_) == id._2 }))
+        Transaction(l ++ middle ++ r)
+    }
+
+    /**
      * Retrieve the minimum support for this transaction set
      *
      * @param support The support lookup table
@@ -120,4 +145,10 @@ class Transaction[T] private (val sets:List[ItemSet[T]],
 object Transaction {
     def apply[T](items:ItemSet[T]*) = new Transaction[T](items.toList, 0, 0)
     def apply[T](items:List[ItemSet[T]], count:Int = 0) = new Transaction[T](items, count, 0)
+    def apply[T](copy:Transaction[T]) = {
+        val transaction = new Transaction[T](copy.sets, copy.count, copy.restCount)
+        transaction.support = copy.support
+        transaction.minMisItem = copy.minMisItem
+        transaction
+    }
 }
