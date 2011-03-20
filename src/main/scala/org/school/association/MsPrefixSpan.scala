@@ -16,7 +16,7 @@ import org.school.utility.Stopwatch
  * @param sequences The collection of transactions to process
  * @param support The support lookup table for each item
  */
-class PrefixSpan[T](val sequences:List[Transaction[T]],
+class MsPrefixSpan[T](val sequences:List[Transaction[T]],
     val support:AbstractSupport[T]) {
 
     /** This is N represented in the gsp algorithm */
@@ -83,13 +83,14 @@ class PrefixSpan[T](val sequences:List[Transaction[T]],
         val frequents = ListBuffer[FrequentSet[T]](candidate)
 
 		candidate.transactions.foreach { transaction =>
-	        val sk = initializeProjections(transaction)                 // projections
-            val count = math.ceil(transaction.minsup(support) * sizeN).intValue  // count(MIS(ik))
-            val frequent = removeInfrequent(sk, count)                  // local frequent
+	        val sk = initializePotentials(transaction)          // projections
+            val count = math.ceil(transaction.minsup(support)   // count(MIS(ik))
+                * sizeN).intValue
+           // val frequent = removeInfrequent(sk, count)          // local frequent
 
-            frequent.foreach { ik =>
-                val result = restrictedPrefixSpan(ik, sk, count) 
-            }
+           // frequent.foreach { ik =>
+           //     val result = restrictedPrefixSpan(ik, sk, count) 
+           // }
 		}
 
         frequents.toList
@@ -124,13 +125,8 @@ class PrefixSpan[T](val sequences:List[Transaction[T]],
      * @param candidate The initial candidate to explore
      * @return The frequent candidate list
      */
-    private def initializeProjections(transaction:Transaction[T], frequents:FrequentSet[T])
-		: List[Transaction[T]] = {
-		def extract(needle:ItemSet[T], source:ItemSet[T]) : ItemSet[T] = {
-
-		}
-
-        val possible = ListBuffer[Transaction[T]]()
+    private def initializePotentials(transaction:Transaction[T]) : List[Transaction[T]] = {
+        val potential = ListBuffer[Transaction[T]]()
         val ik = transaction.sets.head.items.head                       // current frequent item
 
 		sequences.foreach { sequence =>                                 // check every sequence for possible match
@@ -141,12 +137,12 @@ class PrefixSpan[T](val sequences:List[Transaction[T]],
                     ItemSet(filtered)                                   // new filtered itemset
                 }
                 if ((pruned.size > 1) || (pruned.head.size > 1)) {      // eliminate prefix only patterns
-                    possible += Transaction(pruned)
+                    potential += Transaction(pruned)
                 }
 			}
 		}
 
-		possible.toList
+		potential.toList
 	}
 
     /**
@@ -156,7 +152,20 @@ class PrefixSpan[T](val sequences:List[Transaction[T]],
      * @param candidate The initial candidate to explore
      * @return The frequent candidate list
      */
+    //private def restrictedPrefixSpan(ik:Transaction[T], sk:List[Transaction[T]],
+    //    minsup:Int) = {
+    //    None
+    //}
+
+    /**
+     * Given a possible candidate set, search the sequences to see if any
+     * of the candidates are frequent
+     *
+     * @param candidate The initial candidate to explore
+     * @return The frequent candidate list
+     */
     private def restrictedPrefixSpan(ik:Transaction[T], sk:List[Transaction[T]],
-        minsup:Int) : {
+        minsup:Int) = {
+        None
     }
 }

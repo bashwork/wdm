@@ -166,16 +166,13 @@ class MsGeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
         val candidates = ListBuffer[Transaction[T]]()
         val transactions = frequent.transactions
 
-        transactions.zipWithIndex.foreach { case(left, lindex) => {
-        	transactions.zipWithIndex.foreach {
-				case(right, rindex) if lindex != rindex => {
-					candidateCheck(left, right, frequent) match {
-						case Some(candidate) => candidates ++= candidate
-						case None => // these two did not join
-					}
+        transactions.foreach { left => {
+        	transactions.foreach { right => {
+				candidateCheck(left, right, frequent) match {
+					case Some(candidate) => candidates ++= candidate
+					case None => // these two did not join
 				}
-				case _ => // we can't join the same transaction
-			}
+			} }
         } }
     
         logger.debug("generated candidatesN: " + candidates.toList)

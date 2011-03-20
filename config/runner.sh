@@ -2,8 +2,8 @@
 #------------------------------------------------------------ #
 # script variables
 #------------------------------------------------------------ #
-INPUT="config/data.txt"
-SUPPORT="config/para.txt"
+INPUT="config/database.txt"
+SUPPORT="config/supports.txt"
 
 #------------------------------------------------------------ #
 # script runner

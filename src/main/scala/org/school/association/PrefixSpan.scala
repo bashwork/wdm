@@ -82,15 +82,15 @@ class PrefixSpan[T](val sequences:List[Transaction[T]],
 
         val frequents = ListBuffer[FrequentSet[T]](candidate)
 
-		candidate.transactions.foreach { transaction =>
-	        val sk = initializeProjections(transaction)                 // projections
-            val count = math.ceil(transaction.minsup(support) * sizeN).intValue  // count(MIS(ik))
-            val frequent = removeInfrequent(sk, count)                  // local frequent
+		//candidate.transactions.foreach { transaction =>
+	    //    val sk = initializeProjections(transaction)                 // projections
+        //    val count = math.ceil(transaction.minsup(support) * sizeN).intValue  // count(MIS(ik))
+        //    val frequent = removeInfrequent(sk, count)                  // local frequent
 
-            frequent.foreach { ik =>
-                val result = restrictedPrefixSpan(ik, sk, count) 
-            }
-		}
+        //    frequent.foreach { ik =>
+        //        val result = restrictedPrefixSpan(ik, sk, count) 
+        //    }
+		//}
 
         frequents.toList
     }
@@ -117,48 +117,48 @@ class PrefixSpan[T](val sequences:List[Transaction[T]],
     private def evaluateSdc(left:T, right:T) =
         math.abs { support.get(left) - support.get(right) } <= support.sdc
 
-    /**
-     * Given a possible candidate set, search the sequences to see if any
-     * of the candidates are frequent
-     *
-     * @param candidate The initial candidate to explore
-     * @return The frequent candidate list
-     */
-    private def initializeProjections(transaction:Transaction[T], frequents:FrequentSet[T])
-		: List[Transaction[T]] = {
-		def extract(needle:ItemSet[T], source:ItemSet[T]) : ItemSet[T] = {
+    ///**
+    // * Given a possible candidate set, search the sequences to see if any
+    // * of the candidates are frequent
+    // *
+    // * @param candidate The initial candidate to explore
+    // * @return The frequent candidate list
+    // */
+    //private def initializeProjections(transaction:Transaction[T], frequents:FrequentSet[T])
+	//	: List[Transaction[T]] = {
+	//	def extract(needle:ItemSet[T], source:ItemSet[T]) : ItemSet[T] = {
 
-		}
+	//	}
 
-        val possible = ListBuffer[Transaction[T]]()
-        val ik = transaction.sets.head.items.head
+    //    val possible = ListBuffer[Transaction[T]]()
+    //    val ik = transaction.sets.head.items.head
 
-		sequences.foreach { sequence =>
-			if (sequence contains transaction) {
-                val pruned = sequence.sets.map { set  =>
-                    set.items.filter { item => evaluateSdc(ik, item) }
-                }
-                possible += Transaction(pruned)
-				val last  = transaction.last // since we know the rest is there
-				val index = sequence.sets.findIndexOf { set => set contains last }
-				val (set :: list) = sequence.sets.drop(index)
-				val projection = if (set.size == 1) list
-					else (set -- last) :: list
-				//possible += projection.filter { }
-			}
-		}
+	//	sequences.foreach { sequence =>
+	//		if (sequence contains transaction) {
+    //            val pruned = sequence.sets.map { set  =>
+    //                set.items.filter { item => evaluateSdc(ik, item) }
+    //            }
+    //            possible += Transaction(pruned)
+	//			val last  = transaction.last // since we know the rest is there
+	//			val index = sequence.sets.findIndexOf { set => set contains last }
+	//			val (set :: list) = sequence.sets.drop(index)
+	//			val projection = if (set.size == 1) list
+	//				else (set -- last) :: list
+	//			//possible += projection.filter { }
+	//		}
+	//	}
 
-		possible.toList
-	}
+	//	possible.toList
+	//}
 
-    /**
-     * Given a possible candidate set, search the sequences to see if any
-     * of the candidates are frequent
-     *
-     * @param candidate The initial candidate to explore
-     * @return The frequent candidate list
-     */
-    private def restrictedPrefixSpan(ik:Transaction[T], sk:List[Transaction[T]],
-        minsup:Int) : {
-    }
+    ///**
+    // * Given a possible candidate set, search the sequences to see if any
+    // * of the candidates are frequent
+    // *
+    // * @param candidate The initial candidate to explore
+    // * @return The frequent candidate list
+    // */
+    //private def restrictedPrefixSpan(ik:Transaction[T], sk:List[Transaction[T]],
+    //    minsup:Int) : {
+    //}
 }
