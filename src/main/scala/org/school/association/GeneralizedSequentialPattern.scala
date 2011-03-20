@@ -92,7 +92,7 @@ class GeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
 
         logger.debug("GSP frequent generation took " + stopwatch.toString)
         FrequentSet(candidates.filter { c =>
-            (c.count / sizeN) >= c.minsup(support) }) // <{Fn}>
+            c.support >= c.minsup(support) }) // <{Fn}>
     }
 
     /**
@@ -118,9 +118,9 @@ class GeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
 		implicit def transToType(t:Transaction[T]) : T = t.sets.head.items.head	
 
         transactions.zipWithIndex.foreach {
-			case(l, index) if (l.count / sizeN) >= l.minsup(support) => {
-            	transactions.takeRight(transactions.size - (index + 1)).foreach { h =>
-            	    if ((h.count / sizeN) >= h.minsup(support) && evaluateSdc(l, h)) {
+			case(l, index) if l.support >= l.minsup(support) => {   // i must meet minsup
+            	transactions.drop(index + 1).foreach { h =>         // join items afer i
+            	    if (h.support >= h.minsup(support) && evaluateSdc(l, h)) {
             	        candidates += Transaction(ItemSet[T](l, h)) // <{1,  2}>
             	        candidates += Transaction(l.sets ++ h.sets) // <{1},{2}>
             	    }
@@ -130,7 +130,7 @@ class GeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
         }
     
         logger.debug("generated candidates2: " + candidates.toList)
-        candidates.toList
+        candidates.toList.distinct // remove duplicates
     }
     
     /**

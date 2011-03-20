@@ -80,7 +80,7 @@ class PrefixSpan[T](val sequences:List[Transaction[T]],
      * @return The result of the test
      */
     private def evaluateSdc(left:Transaction[T], right:Transaction[T]) =
-        math.abs { left.minsup(support) - right.minsup(support) } >= support.sdc
+        math.abs { left.support - right.support } <= support.sdc
 
     /**
      * Given a possible candidate set, search the sequences to see if any

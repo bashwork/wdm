@@ -75,11 +75,17 @@ class MsGeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
 
         logger.debug("initialization took " + stopwatch.toString)
         logger.debug("generated initial candidates: " + filtered)
-        initialL = FrequentSet(level1.map { x => Transaction(List(ItemSet(x)), counts(x)) })
+        initialL = FrequentSet(level1.map { x => {
+            val transaction = Transaction(List(ItemSet(x)), counts(x))
+            transaction.support = actual(x)
+            transaction.minMisItem = ItemSet(x)
+            transaction
+        }})
 
         FrequentSet(filtered.map { x => {                                           // <{F1}>
 			val transaction = Transaction(List(ItemSet(x)), counts(x))
             transaction.support = actual(x)
+            transaction.minMisItem = ItemSet(x) // not needed
             transaction
        }})
     }
@@ -116,7 +122,7 @@ class MsGeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
      * @return The result of the test
      */
     private def evaluateSdc(left:Transaction[T], right:Transaction[T]) =
-        math.abs { left.minsup(support) - right.minsup(support) } >= support.sdc
+        math.abs { left.support - right.support } <= support.sdc
 
     /**
      * Helper method to generate the 2-length candidate set
@@ -125,25 +131,26 @@ class MsGeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
      * @return A possible candidate set to process
      */
     private def candidateGen2(frequent:FrequentSet[T]) : List[Transaction[T]] = {
+		implicit def transToType(t:Transaction[T]) : T = t.sets.head.items.head	
+
         val candidates = ListBuffer[Transaction[T]]()
         val transactions = frequent.transactions
-		implicit def transToType(t:Transaction[T]) : T = t.sets.head.items.head	
 
         transactions.zipWithIndex.foreach {
 			case(l, index) if l.support >= l.minsup(support) => {
-            	transactions.takeRight(transactions.size - (index + 1)).foreach { h =>
-            	    if (h.support >= h.minsup(support) && evaluateSdc(l, h)) {
+            	transactions.drop(index + 1).foreach { h =>
+            	    if (h.support >= l.minsup(support) && evaluateSdc(l, h)) {
             	        candidates += Transaction(ItemSet[T](l, h)) // <{1,  2}>
             	        candidates += Transaction(l.sets ++ h.sets) // <{1},{2}>
-            	        //candidates += Transaction(h.sets ++ l.sets) // <{2},{1}>
+            	        candidates += Transaction(h.sets ++ l.sets) // <{2},{1}>
             	    }
             	}
 			}
-			case(l, index) => logger.debug("candidate2 support({}) not met: {}", (l.count / sizeN), l.sets)
+			case(l, index) => logger.debug("candidate2 support({}) not met: {}", l.support, l)
         }
     
-        logger.debug("generated candidates2: " + candidates.toList)
-        candidates.toList
+        logger.debug("generated candidates2: " + candidates.toList.distinct)
+        candidates.toList.distinct  // remove duplicates
     }
     
     /**
@@ -183,6 +190,55 @@ class MsGeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
 	private def candidateCheck(left:Transaction[T], right:Transaction[T],
 		frequent:FrequentSet[T]) : Option[Transaction[T]] = {
 
+        val result = if (left.minMisItem == left.sets.head.items.head)
+                 candidateJoinLeft(left, right, frequent)
+            else if (right.minMisItem == right.sets.last.items.last)
+                 candidateJoinRight(left, right, frequent)
+            else candidateJoinRegular(left, right, frequent)
+
+        return result match {
+            case Some(join) => None//candidatePrune(join, frequent)
+            case _          => None
+        }
+	}
+
+    /**
+     * Helper to test each possible candidate set and return the
+     * merged result.
+     *
+     * @param left The left transaction to join
+     * @param right The right transaction to join
+     * @return optionally a joined candidate set
+     */
+	private def candidateJoinLeft(left:Transaction[T], right:Transaction[T],
+		frequent:FrequentSet[T]) : Option[Transaction[T]] = {
+        None
+    }
+
+    /**
+     * Helper to test each possible candidate set and return the
+     * merged result.
+     *
+     * @param left The left transaction to join
+     * @param right The right transaction to join
+     * @return optionally a joined candidate set
+     */
+	private def candidateJoinRight(left:Transaction[T], right:Transaction[T],
+		frequent:FrequentSet[T]) : Option[Transaction[T]] = {
+        None
+    }
+
+    /**
+     * Helper to test each possible candidate set and return the
+     * merged result.
+     *
+     * @param left The left transaction to join
+     * @param right The right transaction to join
+     * @return optionally a joined candidate set
+     */
+	private def candidateJoinRegular(left:Transaction[T], right:Transaction[T],
+		frequent:FrequentSet[T]) : Option[Transaction[T]] = {
+
 		left.join(right) match {
 			case Some(result) => {
 				if (result.subsequences.forall { s =>
@@ -193,6 +249,19 @@ class MsGeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
 			case None =>  // could not join the two
 		}
 
-		None
-	}
+		return None
+    }
+
+    /**
+     * Helper to test each possible candidate set and return the
+     * merged result.
+     *
+     * @param left The left transaction to join
+     * @param right The right transaction to join
+     * @return optionally a joined candidate set
+     */
+	private def candidatePrune(join:Transaction[T], frequent:FrequentSet[T])
+        : Transaction[T] = {
+        join
+    }
 }

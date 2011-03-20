@@ -17,6 +17,9 @@ class Transaction[T] private (val sets:List[ItemSet[T]],
     /** The current support of this transaction */
     var support = 0.0
 
+    /** The lowest minimum support allowable */
+    var minMisItem = ItemSet[T]()
+
     /** The number of itemsets in this transaction */
     def size()     = sets.size
 
