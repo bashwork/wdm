@@ -60,6 +60,17 @@ class PrefixSpan[T](val sequences:List[Transaction[T]],
 			Transaction(List(ItemSet(x)), counts(x)) })
     }
 
+    /**
+     * Helper method to test that two items exceed the support
+     * difference constraint.
+     *
+     * @param left The left item to test
+     * @param right The right item to test
+     * @return The result of the test
+     */
+    private def evaluateSdc(left:Transaction[T], right:Transaction[T]) =
+        math.abs { left.minsup(support) - right.minsup(support) } >= support.sdc
+
     private var default:T = _
 
     /**
@@ -71,6 +82,49 @@ class PrefixSpan[T](val sequences:List[Transaction[T]],
      */
     private def buildFrequents(candidate:FrequentSet[T]) : List[FrequentSet[T]] = {
 
+		//candidate.transactions.foreach { transaction =>
+		//	sequences.foreach { sequence =>
+		//		if (sequence contains transaction) {
+		//			for (i <- 0 to sequence.size) {
+		//			  
+		//			    
+		//			}
+		//		}
+		//	}
+		//}
+
         List(FrequentSet(Transaction(ItemSet(default))))
     }
+
+    /**
+     * Given a possible candidate set, search the sequences to see if any
+     * of the candidates are frequent
+     *
+     * @param candidate The initial candidate to explore
+     * @return The frequent candidate list
+     */
+    private def buildProjections(source:Transaction[T], frequents:Frequent[T])
+		: List[Trancactions[T]] = {
+		private def extract(needle:ItemSet[T], source:ItemSet[T]) : ItemSet[T] = {
+
+		}
+
+		private def infrequent(source:Transaction[T]) : Transaction[T] = {
+			source
+		}
+        val possible = ListBuffer[Transaction[T]]()
+
+		sequences.foreach { sequence =>
+			if (sequence contains transaction) {
+				val last  = transaction.last // since we know the rest is there
+				val index = sequence.sets.findIndexOf { set => set contains last }
+				val (set :: list) = sequence.sets.drop(index)
+				val projection = if (set.size == 1) list
+					else (set -- last) :: list
+				possible += projection.filter { 
+			}
+		}
+
+		possible.toList
+	}
 }

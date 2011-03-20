@@ -1,9 +1,12 @@
-package org.school.association
+package org.school.main
 
 import org.apache.commons.cli._
 import org.slf4j.{Logger, LoggerFactory}
 
+import org.school.core._
 import org.school.core.loader.LoaderFactory
+import org.school.core.output.SequentialFormatter
+import org.school.core.format.SequentialFormat
 
 
 /**
@@ -17,8 +20,39 @@ import org.school.core.loader.LoaderFactory
  */
 trait RunnerTrait {
 
-    val Version = "1.0.0"
     private val logger = LoggerFactory.getLogger(this.getClass)
+    val version : String
+    val mainName : String
+
+	/**
+     * Process the given input data with the given algorithm
+     *
+     * @param database The dataset to process
+     * @param support The support lookup table
+     * @return A list of the frequentsets found
+     */
+	def algorithm[T](database:List[Transaction[T]], support:AbstractSupport[T])
+		: List[FrequentSet[T]]
+
+	/**
+     * Processes the command line arguments
+     *
+     * @param options The options to parse
+     */
+	def process(options: Map[String,Any], error: Unit) {
+        implicit def _atos(a:Any) = a.asInstanceOf[String]
+        implicit def _atoi(a:Any) = a.toString.toInt
+
+		val sploader = LoaderFactory(options("support")).get
+		val support  = MultipleSupport(sploader.load)
+
+		val dbloader = LoaderFactory(options("input")).get
+		val database = SequentialFormat.process(dbloader)
+
+		val results  = algorithm(database, support)
+		val outputer = new SequentialFormatter(results)  
+		outputer.toFile(options("output"))
+	}
 
     /**
      * Main program start
@@ -33,14 +67,14 @@ trait RunnerTrait {
           o.getOpt match {
               case "d" | "debug"    => defaults += ("debug" -> true)
               case "i" | "input"    => defaults += ("input" -> o.getValue())
+              case "o" | "output"   => defaults += ("output" -> o.getValue())
+              case "s" | "support"  => defaults += ("support" -> o.getValue())
               case "v" | "version"  => printVersion
               case "h" | "help" | _ => printHelp(options)
           }
         }
-        implicit def _atos(a:Any) = a.asInstanceOf[String]
-        implicit def _atoi(a:Any) = a.toString.toInt
 
-        // algorithm implementation
+        process(defaults, () => printHelp(options))
     }
 
     /**
@@ -53,6 +87,8 @@ trait RunnerTrait {
         options.addOption("h", "help", false, "print this help text")
         options.addOption("v", "version", false, "print the version of the server")
         options.addOption("i", "input", true, "specify the input data to parse")
+        options.addOption("s", "support", true, "specify the support data to parse")
+        options.addOption("o", "output", true, "specify the output file")
         options.addOption("d", "debug", true, "turn on the internal debuggging")
     }
 
@@ -62,18 +98,18 @@ trait RunnerTrait {
      * @return The default options map
      */
     private def createDefaults() = Map[String,Any](
-        "debug" -> false,
-        "input" -> null)
+        "debug"   -> false,
+        "input"   -> "data.txt",
+        "support" -> "para.txt",
+        "output"  -> (mainName + "results.txt"))
 
     /**
      * Helper method to print the current version and exit
      */
     private def printVersion() = {
-        println("WDM Version " + "1.0")
+        println("WDM Version " + version)
         exit
     }
-
-    def mainName() : String
 
     /**
      * Helper method to print the option help and exit
