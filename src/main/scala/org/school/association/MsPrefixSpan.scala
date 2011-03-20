@@ -131,20 +131,18 @@ class PrefixSpan[T](val sequences:List[Transaction[T]],
 		}
 
         val possible = ListBuffer[Transaction[T]]()
-        val ik = transaction.sets.head.items.head
+        val ik = transaction.sets.head.items.head                       // current frequent item
 
-		sequences.foreach { sequence =>
-			if (sequence contains transaction) {
-                val pruned = sequence.sets.map { set  =>
-                    set.items.filter { item => evaluateSdc(ik, item) }
+		sequences.foreach { sequence =>                                 // check every sequence for possible match
+			if (sequence contains transaction) {                        // only sequences with ik
+                val pruned = sequence.sets.map { set =>                 // remove all items that don't meet
+                    val filtered = set.items.filter { item =>           // the minimum support (sdc)
+                        evaluateSdc(ik, item) }
+                    ItemSet(filtered)                                   // new filtered itemset
                 }
-                possible += Transaction(pruned)
-				val last  = transaction.last // since we know the rest is there
-				val index = sequence.sets.findIndexOf { set => set contains last }
-				val (set :: list) = sequence.sets.drop(index)
-				val projection = if (set.size == 1) list
-					else (set -- last) :: list
-				//possible += projection.filter { }
+                if ((pruned.size > 1) || (pruned.head.size > 1)) {      // eliminate prefix only patterns
+                    possible += Transaction(pruned)
+                }
 			}
 		}
 

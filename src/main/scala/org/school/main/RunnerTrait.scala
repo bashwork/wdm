@@ -16,7 +16,6 @@ import org.school.core.format.SequentialFormat
  * - h | help    : prints this help text
  * - v | version : prints the version of the server
  * - i | input   : specify the input data to parse
- * - d | debug   : turn on the internal debuggging
  */
 trait RunnerTrait {
 
@@ -65,7 +64,6 @@ trait RunnerTrait {
 
         results.getOptions.foreach { o:Option =>
           o.getOpt match {
-              case "d" | "debug"    => defaults += ("debug" -> true)
               case "i" | "input"    => defaults += ("input" -> o.getValue())
               case "o" | "output"   => defaults += ("output" -> o.getValue())
               case "s" | "support"  => defaults += ("support" -> o.getValue())
@@ -89,7 +87,6 @@ trait RunnerTrait {
         options.addOption("i", "input", true, "specify the input data to parse")
         options.addOption("s", "support", true, "specify the support data to parse")
         options.addOption("o", "output", true, "specify the output file")
-        options.addOption("d", "debug", true, "turn on the internal debuggging")
     }
 
     /**
@@ -98,7 +95,6 @@ trait RunnerTrait {
      * @return The default options map
      */
     private def createDefaults() = Map[String,Any](
-        "debug"   -> false,
         "input"   -> "data.txt",
         "support" -> "para.txt",
         "output"  -> (mainName.toLowerCase + "-results.txt"))

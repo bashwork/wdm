@@ -8,4 +8,4 @@ REM ------------------------------------------------------------
 REM script runner
 REM ------------------------------------------------------------ 
 %JAVA% -cp wdm.jar org.school.main.GeneralizedSequentialPatternMain -i %1 -s %2
-%JAVA% -cp wdm.jar org.school.main.PrefixSpanMain -i %1 -s %2
+%JAVA% -cp wdm.jar org.school.main.MsPrefixSpanMain -i %1 -s %2
