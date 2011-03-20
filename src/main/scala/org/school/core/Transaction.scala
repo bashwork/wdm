@@ -14,6 +14,9 @@ import scala.collection.mutable.ListBuffer
 class Transaction[T] private (val sets:List[ItemSet[T]],
     var count:Int, var restCount:Int) extends Serializable {
 
+    /** The current support of this transaction */
+    var support = 0.0
+
     /** The number of itemsets in this transaction */
     def size()     = sets.size
 

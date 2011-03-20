@@ -13,6 +13,9 @@ class ItemSet[T] private (val items:List[T])
 	/** The size of the ItemSet */
 	def size = items.size
 
+	/** The support of the ItemSet */
+	var support = 0.0
+
     /**
      * Retrieve the minimum support for this transaction set
      *

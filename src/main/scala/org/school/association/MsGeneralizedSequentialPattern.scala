@@ -61,20 +61,27 @@ class MsGeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
     private def initialize() : FrequentSet[T] = {
         val allItems = sequences.map { _.unique }.flatten                           // I with repeats
         val counts   = allItems groupBy identity mapValues { _.size }               // I.count
+        val actual   = HashMap[T,Double]()                                          // I.support
         val unique   = counts.keys.toList                                           // I
         val sorted   = unique.sortWith { (a,b) => support.get(a) < support.get(b) } // M
+        sorted.foreach { s => actual(s) = counts(s) / sizeN }                       // populate supports
 
-        val start    = sorted.findIndexOf { s  => (counts(s) / sizeN) >= support.get(s) }
-		val minsup   = support.get(sorted(start))
-        val level1   = sorted.slice(start, sorted.size).filter { i => (counts(i) / sizeN) >= minsup }  // L
-        val filtered = level1.filter { i => (counts(i) / sizeN) >= support.get(i) } // <F1>
+        val start    = sorted.findIndexOf { s  => actual(s) >= support.get(s) }     // first support > minsup
+		val minsup   = support.get(sorted(start))                                   // its index
+
+        val level1   = sorted.slice(start, sorted.size).filter { s =>               // L
+            actual(s) >= minsup }
+        val filtered = level1.filter { s => actual(s) >= support.get(s) }           // <F1>
 
         logger.debug("initialization took " + stopwatch.toString)
         logger.debug("generated initial candidates: " + filtered)
         initialL = FrequentSet(level1.map { x => Transaction(List(ItemSet(x)), counts(x)) })
 
-        FrequentSet(filtered.map { x =>
-			Transaction(List(ItemSet(x)), counts(x)) })
+        FrequentSet(filtered.map { x => {                                           // <{F1}>
+			val transaction = Transaction(List(ItemSet(x)), counts(x))
+            transaction.support = actual(x)
+            transaction
+       }})
     }
 
     /**
@@ -90,15 +97,14 @@ class MsGeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
                 if (sequence contains candidate) {
                     candidate.count += 1
                 }
-                // if (candidate - minsup(item) in sequence) {
-                //    candidate.restCount += 1
-                // } this is only used for rule generation TODO
             }
         }
+        candidates.foreach { candidate =>       // populate support
+            candidate.support = candidate.count / sizeN }
 
         logger.debug("frequent generation took " + stopwatch.toString)
         FrequentSet(candidates.filter { c =>
-            (c.count / sizeN) >= c.minsup(support) }) // <{Fn}>
+            c.support >= c.minsup(support) })   // <{Fn}>
     }
 
     /**
@@ -115,7 +121,7 @@ class MsGeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
     /**
      * Helper method to generate the 2-length candidate set
      *
-     * @param frequent The previous frequent items to build with
+     * @param frequent The previous frequent items to build with(L)
      * @return A possible candidate set to process
      */
     private def candidateGen2(frequent:FrequentSet[T]) : List[Transaction[T]] = {
@@ -124,11 +130,12 @@ class MsGeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
 		implicit def transToType(t:Transaction[T]) : T = t.sets.head.items.head	
 
         transactions.zipWithIndex.foreach {
-			case(l, index) if (l.count / sizeN) >= l.minsup(support) => {
+			case(l, index) if l.support >= l.minsup(support) => {
             	transactions.takeRight(transactions.size - (index + 1)).foreach { h =>
-            	    if ((h.count / sizeN) >= h.minsup(support) && evaluateSdc(l, h)) {
+            	    if (h.support >= h.minsup(support) && evaluateSdc(l, h)) {
             	        candidates += Transaction(ItemSet[T](l, h)) // <{1,  2}>
             	        candidates += Transaction(l.sets ++ h.sets) // <{1},{2}>
+            	        //candidates += Transaction(h.sets ++ l.sets) // <{2},{1}>
             	    }
             	}
 			}

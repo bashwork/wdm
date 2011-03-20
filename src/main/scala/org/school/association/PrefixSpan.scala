@@ -32,10 +32,10 @@ class PrefixSpan[T](val sequences:List[Transaction[T]],
      */
     def process() : List[FrequentSet[T]] = {
         stopwatch.start
-        val frequent = initialize()
+        val frequent  = initialize()
         val frequents = buildFrequents(frequent)
 
-        logger.info("PrefixSpan processing took " + stopwatch.toString)
+        logger.debug("processing took " + stopwatch.toString)
         frequents
     }
 
@@ -50,14 +50,25 @@ class PrefixSpan[T](val sequences:List[Transaction[T]],
     private def initialize() : FrequentSet[T] = {
         val allItems = sequences.map { _.unique }.flatten                           // I with repeats
         val counts   = allItems groupBy identity mapValues { _.size }               // I.count
+        val actual   = HashMap[T,Double]()                                          // I.support
         val unique   = counts.keys.toList                                           // I
-        val sorted   = unique.sortWith { (a,b) => support.get(a) < support.get(b) } // L
-        val filtered = sorted.filter { i => (counts(i) / sizeN) >= support.get(i) } // <F1>
+        val sorted   = unique.sortWith { (a,b) => support.get(a) < support.get(b) } // M
+        sorted.foreach { s => actual(s) = counts(s) / sizeN }                       // populate supports
 
-        logger.debug("PrefixSpan initialization took " + stopwatch.toString)
+        val start    = sorted.findIndexOf { s  => actual(s) >= support.get(s) }     // first support > minsup
+		val minsup   = support.get(sorted(start))                                   // its index
+
+        val level1   = sorted.slice(start, sorted.size).filter { s =>               // L
+            actual(s) >= minsup }
+        val filtered = level1.filter { s => actual(s) >= support.get(s) }           // <F1>
+
+        logger.debug("initialization took " + stopwatch.toString)
         logger.debug("generated initial candidates: " + filtered)
-        FrequentSet(filtered.map { x =>												// <{F1}>
-			Transaction(List(ItemSet(x)), counts(x)) })
+        FrequentSet(filtered.map { x => {                                           // <{F1}>
+			val transaction = Transaction(List(ItemSet(x)), counts(x))
+            transaction.support = actual(x)
+            transaction
+       }})
     }
 
     /**
@@ -71,8 +82,6 @@ class PrefixSpan[T](val sequences:List[Transaction[T]],
     private def evaluateSdc(left:Transaction[T], right:Transaction[T]) =
         math.abs { left.minsup(support) - right.minsup(support) } >= support.sdc
 
-    private var default:T = _
-
     /**
      * Given a possible candidate set, search the sequences to see if any
      * of the candidates are frequent
@@ -82,49 +91,47 @@ class PrefixSpan[T](val sequences:List[Transaction[T]],
      */
     private def buildFrequents(candidate:FrequentSet[T]) : List[FrequentSet[T]] = {
 
-		//candidate.transactions.foreach { transaction =>
-		//	sequences.foreach { sequence =>
-		//		if (sequence contains transaction) {
-		//			for (i <- 0 to sequence.size) {
-		//			  
-		//			    
-		//			}
-		//		}
-		//	}
-		//}
+        val frequents = ListBuffer[FrequentSet[T]]()
 
-        List(FrequentSet(Transaction(ItemSet(default))))
+		//candidate.transactions.foreach { transaction =>
+	    //    val sk = buildProjections(transaction)                      // projections
+        //    val count = math.ceil(transaction.minsup(support) * sizeN).intValue  // count(MIS(ik))
+        //    val frequent = removeInfrequent(sk, count)                  // local frequent
+
+        //    frequent.foreach { f =>
+        //    }
+		//}
+        frequents += candidate
+
+        frequents.toList
     }
 
-    /**
-     * Given a possible candidate set, search the sequences to see if any
-     * of the candidates are frequent
-     *
-     * @param candidate The initial candidate to explore
-     * @return The frequent candidate list
-     */
-    private def buildProjections(source:Transaction[T], frequents:Frequent[T])
-		: List[Trancactions[T]] = {
-		private def extract(needle:ItemSet[T], source:ItemSet[T]) : ItemSet[T] = {
+    ///**
+    // * Given a possible candidate set, search the sequences to see if any
+    // * of the candidates are frequent
+    // *
+    // * @param candidate The initial candidate to explore
+    // * @return The frequent candidate list
+    // */
+    //private def buildProjections(source:Transaction[T], frequents:FrequentSet[T])
+	//	: List[Transaction[T]] = {
+	//	def extract(needle:ItemSet[T], source:ItemSet[T]) : ItemSet[T] = {
 
-		}
+	//	}
 
-		private def infrequent(source:Transaction[T]) : Transaction[T] = {
-			source
-		}
-        val possible = ListBuffer[Transaction[T]]()
+    //    val possible = ListBuffer[Transaction[T]]()
 
-		sequences.foreach { sequence =>
-			if (sequence contains transaction) {
-				val last  = transaction.last // since we know the rest is there
-				val index = sequence.sets.findIndexOf { set => set contains last }
-				val (set :: list) = sequence.sets.drop(index)
-				val projection = if (set.size == 1) list
-					else (set -- last) :: list
-				possible += projection.filter { 
-			}
-		}
+	//	sequences.foreach { sequence =>
+	//		if (sequence contains transaction) {
+	//			val last  = transaction.last // since we know the rest is there
+	//			val index = sequence.sets.findIndexOf { set => set contains last }
+	//			val (set :: list) = sequence.sets.drop(index)
+	//			val projection = if (set.size == 1) list
+	//				else (set -- last) :: list
+	//			//possible += projection.filter { }
+	//		}
+	//	}
 
-		possible.toList
-	}
+	//	possible.toList
+	//}
 }

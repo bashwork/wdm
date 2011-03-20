@@ -60,6 +60,7 @@ class GeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
     private def initialize() : FrequentSet[T] = {
         val allItems = sequences.map { _.unique }.flatten                           // I with repeats
         val counts   = allItems groupBy identity mapValues { _.size }               // I.count
+        //val actual   = allItems groupBy identity mapValues { 0.0 }               // I.support
         val unique   = counts.keys.toList                                           // I
         val sorted   = unique.sortWith { (a,b) => support.get(a) < support.get(b) } // L
         val filtered = sorted.filter { i => (counts(i) / sizeN) >= support.get(i) } // <F1>
