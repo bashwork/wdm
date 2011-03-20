@@ -258,21 +258,21 @@ class MsGeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
         if ((left.without(0) != right.without(-2)) && // check if we will be frequent
              right.minsup(support) < left.minsup(support)) return None
 
-        val lastLeft  = left.sets.last.items
-        val lastRight = right.sets.last.items
-        if (lastLeft.size == 1) { // {1}{2} & {3} => {1}{2}{3}
-            results += Transaction(right.sets ++ List(ItemSet(lastLeft.last)))
+        val firstLeft  = left.sets.head.items
+        val firstRight = right.sets.head.items
+        if (firstLeft.size == 1) { // {1}{2} & {3} => {1}{2}{3}
+            results += Transaction(right.sets ++ List(ItemSet(firstLeft.last)))
             results.last.minMisItem = right.minMisItem
 
             if (((right.size == 2) && (right.length == 2)) &&
-                (lastRight.last.toString > lastLeft.last.toString)) {   // fuck type erasure
+                (firstRight.last.toString < firstLeft.last.toString)) {   // fuck type erasure
                 results += Transaction(right.sets.head,                 // {1}{2} & {4} => {1}{2,4}
-                    ItemSet(right.sets.last.items.last, lastLeft.last))
+                    ItemSet(right.sets.last.items.last, firstLeft.last))
                 results.last.minMisItem = right.minMisItem
             }
         }
         else if (((right.size == 1) && (right.length == 2)) &&
-            (lastRight.last.toString > lastLeft.last.toString) ||       // fuck type erasure
+            (firstLeft.last.toString < firstRight.last.toString) ||       // fuck type erasure
             (right.length > 2)) {
             results += Transaction(right.sets ++ List(left.sets.last))  // {1}{2} & {4} => {1}{2}{4}
             results.last.minMisItem = right.minMisItem
