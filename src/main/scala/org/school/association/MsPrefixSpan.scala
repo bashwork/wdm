@@ -23,6 +23,8 @@ class MsPrefixSpan[T](val sequences:List[Transaction[T]],
     private val sizeN = sequences.size.doubleValue
 	private val logger = LoggerFactory.getLogger(this.getClass)
 	private val stopwatch = new Stopwatch()
+    /** so that we don't have to pass state around */
+	private val frequentDb = HashMap[Int, ListBuffer[Transaction[T]]]()
 
     /**
      * Processes the current sequence list to produce all the
@@ -32,16 +34,17 @@ class MsPrefixSpan[T](val sequences:List[Transaction[T]],
      */
     def process() : List[FrequentSet[T]] = {
         stopwatch.start
-        val frequent  = initialize()
-        val frequents = buildFrequents(frequent)
+        val frequent = initialize()
+        buildFrequents(frequent)
 
         logger.debug("processing took " + stopwatch.toString)
-        frequents
+        frequentDb.map { case(count, buffer) => {    // convert map to ordered frequent list
+            FrequentSet(buffer.toList) }}.toList
     }
 
     /**
      * Generate all the unique items in the list of transactions
-     * Note: this comprises the following portions of the algorith:
+     * Note: this comprises the following portions of the algorithm:
      * * M: sort(I,MS)
      * * L: init-pass(M, S)
      *
@@ -67,14 +70,15 @@ class MsPrefixSpan[T](val sequences:List[Transaction[T]],
 
         FrequentSet(filtered.map { x => {                                           // <{F1}>
 			val transaction = Transaction(List(ItemSet(x)), counts(x))
-            transaction.support = actual(x)
+            transaction.support = actual(x) // so we don't have to scan again
+            addFrequent(1, transaction)     // add frequent items to the database
             transaction
        }})
     }
 
     /**
      * Given a possible candidate set, search the sequences to see if any
-     * of the candidates are frequent
+     * of the candidates are frequent.
      *
      * @param candidate The initial candidate to explore
      * @return The frequent candidate list
@@ -96,7 +100,7 @@ class MsPrefixSpan[T](val sequences:List[Transaction[T]],
            } }
 		}
 
-        logger.info("built frequents: " + frequents.toList)
+        logger.debug("built frequents: " + frequents.toList)
         frequents.toList
     }
 
@@ -146,7 +150,7 @@ class MsPrefixSpan[T](val sequences:List[Transaction[T]],
 			}
 		}
 
-        logger.info("built potentials: " + potentials.toList)
+        logger.debug("built potentials: " + potentials.toList)
 		potentials.toList
 	}
 
@@ -192,12 +196,14 @@ class MsPrefixSpan[T](val sequences:List[Transaction[T]],
      * @param ik The transaction to build a projection for
      * @param sk The potentials for this transaction
      * @param mincount The minimum count that must be met
-     * @return The frequent candidate list
      */
     private def restrictedPrefixSpan(ik:Transaction[T], sk:List[Transaction[T]],
-        mincount:Int) : List[FrequentSet[T]] = {
+        mincount:Int) {
 
-        List(FrequentSet[T]())
+        val projections = projectDatabase(ik, sk, mincount)
+        if (!projections.isEmpty) {
+            extendPrefix(projections, ik, sk, mincount)
+        }
     }
 
     /**
@@ -214,13 +220,57 @@ class MsPrefixSpan[T](val sequences:List[Transaction[T]],
         val projections = ListBuffer[Transaction[T]]()
 
         sk.foreach { sequence =>
-            val projection = Transaction[T]() // to build
+            val projection = Transaction[T]() // TODO
             val isCritical = (ik.contains(ik.critical) && projection.size > 0) ||
                 projection.contains(ik.critical)
             if (isCritical) { projections += projection }
         }
 
-        logger.info("built projections: " + projections.toList)
+        logger.debug("built projections: " + projections.toList)
         projections.toList
+    }
+
+    /**
+     * Builds the projection database for the given transaction
+     *
+     * @param ik The transaction to build a projection for
+     * @param sk The potentials for this transaction
+     * @param mincount The minimum count that must be met
+     */
+    private def extendPrefix(projections:List[Transaction[T]],
+        ik:Transaction[T], sk:List[Transaction[T]], mincount:Int) {
+
+        val patterns = ListBuffer[Transaction[T]]()
+
+        projections.foreach { projection =>
+            // TODO
+        }
+
+        sk.foreach { sequence =>            // check the pattern against sk        
+            patterns.foreach { pattern =>   // build the pattern support count
+                if (sequence contains pattern) {
+                    pattern.count += 1
+                }
+            }
+        }
+
+        // for each frequent pattern
+        patterns.filter { _.count >= mincount }.foreach { pattern =>
+            addFrequent(pattern.length, pattern)        // add the frequent pattern
+            restrictedPrefixSpan(pattern, sk, mincount) // find further extensions
+        }
+    }
+
+    /**
+     * A little helper to deal with frequentDb initialization
+     *
+     * @param count The frequent count to store this under
+     * @param transaction The transaction to append
+     */
+    private def addFrequent(count:Int, transaction:Transaction[T]) {
+        val buffer = frequentDb.getOrElseUpdate(count, ListBuffer[Transaction[T]]())
+        if (!buffer.exists { _ == transaction }) {  // prevent duplicates
+            buffer += transaction
+        }
     }
 }
