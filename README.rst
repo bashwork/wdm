@@ -44,7 +44,10 @@ start to finish::
     ant package && ./config/runner.sh
 
 ============================================================
-License
+Collaboration
 ============================================================
 
-Steal and be happy
+For this project, I worked alone, however I did compare
+results with Mandi Reis as we really had no metric to see
+if our programs were working correctly. We did not code
+together or share code.
