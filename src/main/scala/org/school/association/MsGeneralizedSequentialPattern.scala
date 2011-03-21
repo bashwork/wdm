@@ -167,12 +167,12 @@ class MsGeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
         val transactions = frequent.transactions
 
         transactions.foreach { left => {
-        	transactions.foreach { right => {
-				candidateCheck(left, right, frequent) match {
-					case Some(candidate) => candidates ++= candidate
-					case None => // these two did not join
-				}
-			} }
+            transactions.foreach { right => {
+                candidateCheck(left, right, frequent) match {
+                    case Some(candidate) => candidates ++= candidate
+                    case None => // these two did not join
+                }
+            } }
         } }
     
         logger.debug("generated candidatesN: " + candidates.toList)
@@ -204,6 +204,21 @@ class MsGeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
 	}
 
     /**
+     * So scala generics are pretty pathetic. Basically they use type
+     * erasure to maintain backwards compatability with the legacy JVM.
+     * This means that we actually cannot compare the inner types directly
+     * as we don't know what they are! Since we know that we are comparing
+     * something of digits (at least for this class) we can just:
+     * Any.toString.toInt and compare that
+     *
+     * @param l The left list to check
+     * @param r the right list to check
+     * @return true if l is greater than r
+     */
+    private def erasureCheck(l:List[T], r:List[T]) =
+        (l.last.toString.toInt > r.last.toString.toInt)
+
+    /**
      * If the first item in the sequence is the minMisItem, we perform
      * this join step.
      *
@@ -225,10 +240,12 @@ class MsGeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
             results.last.minMisItem = left.minMisItem
 
             if (((left.size == 2) && (left.length == 2)) &&
-                (lastRight.last.toString > lastLeft.last.toString)) {   // scala type erasure
+                (erasureCheck(lastRight, lastLeft))) {
+                logger.info("L{} join {}", left, right)
                 results += Transaction(left.sets.head,                  // {1}{2} & {4} => {1}{2,4}
                     ItemSet(left.sets.last.items.last, lastRight.last))
                 results.last.minMisItem = left.minMisItem
+                logger.info("result: {}", results)
             }
         } else if (((left.size == 1) && (left.length == 2)) &&
             (lastRight.last.toString > lastLeft.last.toString) ||       // scala type erasure
@@ -262,10 +279,12 @@ class MsGeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
             results.last.minMisItem = right.minMisItem
 
             if (((right.size == 2) && (right.length == 2)) &&
-                (firstRight.last.toString < firstLeft.last.toString)) { // scala type erasure
+                (erasureCheck(firstLeft, firstRight))) {
+                logger.info("R{} join {}", left, right)
                 results += Transaction(right.sets.head,                 // {1}{2} & {4} => {1}{2,4}
                     ItemSet(right.sets.last.items.last, firstLeft.last))
                 results.last.minMisItem = right.minMisItem
+                logger.info("result: {}", results)
             }
         } else if (((right.size == 1) && (right.length == 2)) &&
             (firstLeft.last.toString < firstRight.last.toString) ||     // scala type erasure

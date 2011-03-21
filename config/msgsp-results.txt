@@ -61,8 +61,8 @@ The number of length 2 sequential patterns is 11
 The number of length 3 sequential patterns is 5
 <{2}{5}{7}> Count: 1
 <{2}{5}{14}> Count: 1
+<{2}{9,25}> Count: 1
 <{2}{14}{7}> Count: 1
-<{2}{25,9}> Count: 1
 <{5}{14}{7}> Count: 1
 
 The number of length 4 sequential patterns is 1
