@@ -2,7 +2,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html>
         <head>
-          <title>org.school.core.ItemSet</title>
+          <title>org.school.association.MsPrefixSpan</title>
           <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
           
       <link href="../../../lib/template.css" rel="stylesheet" type="text/css" media="screen" />
@@ -14,27 +14,28 @@
         </head>
         <body class="type" onload="windowTitle();">
 
-      <p id="owner"><a href="../../package.html" class="extype" name="org">org</a>.<a href="../package.html" class="extype" name="org.school">school</a>.<a href="package.html" class="extype" name="org.school.core">core</a></p>
+      <p id="owner"><a href="../../package.html" class="extype" name="org">org</a>.<a href="../package.html" class="extype" name="org.school">school</a>.<a href="package.html" class="extype" name="org.school.association">association</a></p>
 
       <div id="definition">
         <img src="../../../lib/class_big.png" />
-        <h1>ItemSet</h1>
+        <h1>MsPrefixSpan</h1>
       </div>
 
       <h4 class="signature" id="signature">
       <span class="kind">class</span>
       <span class="symbol">
-        <span class="name">ItemSet</span>
+        <span class="name">MsPrefixSpan</span>
         <span class="tparams">[<span name="T">T</span>]</span>
         
-        <span class="result"> extends <span class="extype" name="java.io.Serializable">Serializable</span></span>
+        <span class="result"> extends AnyRef</span>
       </span>
       </h4>
-      <div class="fullcomment" id="comment"><div class="comment cmt"><p>Represents a set of items from the dataset
+      <div class="fullcomment" id="comment"><div class="comment cmt"><p>This is an implementation of the Minimum Support Prefix Span algorithm
+outlined in WDM. Given a collection of transactions * and an item
+support lookup table, it will generate a a listing of frequent
+transactions as well as their support count.
 </p></div><div class="block">
-            go to: <a href="ItemSet$.html">companion</a>
-          </div><div class="block">
-            linear super types: <span class="extype" name="java.io.Serializable">Serializable</span>, AnyRef, <span class="extype" name="scala.Any">Any</span>
+            linear super types: AnyRef, <span class="extype" name="scala.Any">Any</span>
           </div>
             
             
@@ -52,7 +53,7 @@
           <div id="ancestors">
                 <span class="filtertype">Inherited</span>
                 <ol><li class="hideall">Hide All</li><li class="showall">Show all</li></ol>
-                <ol id="linearization"><li class="in" name="org.school.core.ItemSet">ItemSet</li><li class="in" name="java.io.Serializable">Serializable</li><li class="in" name="scala.AnyRef">AnyRef</li><li class="in" name="scala.Any">Any</li></ol>
+                <ol id="linearization"><li class="in" name="org.school.association.MsPrefixSpan">MsPrefixSpan</li><li class="in" name="scala.AnyRef">AnyRef</li><li class="in" name="scala.Any">Any</li></ol>
               </div>
           <div id="visbl">
               <span class="filtertype">Visibility</span>
@@ -64,7 +65,30 @@
             </div>
         </div>
 
+        <div class="members" id="constructors">
+              <h3>Instance constructors</h3>
+              <ol><li visbl="pub" data-isabs="false" name="org.school.association.MsPrefixSpan#this">
+      <a id="this:MsPrefixSpan[T]"></a>
+      <h4 class="signature">
+      <span class="kind">new</span>
+      <span class="symbol">
+        <span class="name">MsPrefixSpan</span>
         
+        <span class="params">(<span name="sequences">sequences: List[<a href="../core/Transaction.html" class="extype" name="org.school.core.Transaction">Transaction</a>[T]]</span>, <span name="support">support: <a href="../core/AbstractSupport.html" class="extype" name="org.school.core.AbstractSupport">AbstractSupport</a>[T]</span>)</span>
+        
+      </span>
+      </h4>
+      
+            <p class="shortcomment cmt"></p>
+            <div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">sequences</dt><dd class="cmt"><p>The collection of transactions to process</p></dd><dt class="param">support</dt><dd class="cmt"><p>The support lookup table for each item
+</p></dd></dl>
+            
+            
+            
+          </div>
+          
+    </li></ol>
+            </div>
 
         
 
@@ -267,29 +291,6 @@ part of compilation it is not possible to check whether the contents of the list
             
           </div>
           
-    </li><li visbl="pub" data-isabs="false" name="org.school.core.ItemSet#contains">
-      <a id="contains(ItemSet[T]):Boolean"></a>
-      <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol">
-        <span class="name">contains</span>
-        
-        <span class="params">(<span name="other">other: <a href="" class="extype" name="org.school.core.ItemSet">ItemSet</a>[T]</span>)</span>
-        <span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
-      </span>
-      </h4>
-      
-            <p class="shortcomment cmt">Checks if the supplied itemset is contained
-in this one.</p>
-            <div class="fullcomment"><div class="comment cmt"><p>Checks if the supplied itemset is contained
-in this one.
-</p></div><dl class="paramcmts block"><dt class="param">other</dt><dd class="cmt"><p>The other itemset to test</p></dd><dt>returns</dt><dd class="cmt"><p>true if successful, false otherwise
-</p></dd></dl>
-            
-            
-            
-          </div>
-          
     </li><li visbl="pub" data-isabs="false" name="scala.AnyRef#eq">
       <a id="eq(AnyRef):Boolean"></a>
       <h4 class="signature">
@@ -327,14 +328,14 @@ should be equal to each other (<code>o1 == o2</code>) and they should hash to th
             
           </div>
           
-    </li><li visbl="pub" data-isabs="false" name="org.school.core.ItemSet#equals">
+    </li><li visbl="pub" data-isabs="false" name="scala.AnyRef#equals">
       <a id="equals(Any):Boolean"></a>
       <h4 class="signature">
       <span class="kind">def</span>
       <span class="symbol">
         <span class="name">equals</span>
         
-        <span class="params">(<span name="other">other: <span class="extype" name="scala.Any">Any</span></span>)</span>
+        <span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span>
         <span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
@@ -351,8 +352,8 @@ Additionally, when overriding this method it is often necessary to override <cod
 that are &quot;equal&quot; (<code>o1.equals(o2)</code> returns <code>true</code>) hash to the same 
 scala.Int
 (<code>o1.hashCode.equals(o2.hashCode)</code>).
-</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p><code>true</code> if the receiver object is equivalent to the argument; <code>false</code> otherwise.</p></dd></dl><div class="block">
-          definition classes: <a href="" class="extype" name="org.school.core.ItemSet">ItemSet</a> → AnyRef → Any
+</p></div><dl class="paramcmts block"><dt class="param">arg0</dt><dd class="cmt"><p>the object to compare against this object for equality.</p></dd><dt>returns</dt><dd class="cmt"><p><code>true</code> if the receiver object is equivalent to the argument; <code>false</code> otherwise.</p></dd></dl><div class="block">
+          definition classes: AnyRef → Any
         </div>
             
             
@@ -408,7 +409,7 @@ there are no more references to the object.</p><p>The details of when and if the
             
           </div>
           
-    </li><li visbl="pub" data-isabs="false" name="org.school.core.ItemSet#hashCode">
+    </li><li visbl="pub" data-isabs="false" name="scala.AnyRef#hashCode">
       <a id="hashCode():Int"></a>
       <h4 class="signature">
       <span class="kind">def</span>
@@ -427,7 +428,7 @@ However, it is required that if two objects are equal (<code>o1.equals(o2)</code
 identical hash codes (<code>o1.hashCode.equals(o2.hashCode)</code>).  Therefore, when overriding this method, be sure
 to verify that the behavior is consistent with the <code>equals</code> method.
 </p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>the hash code value for the object.</p></dd></dl><div class="block">
-          definition classes: <a href="" class="extype" name="org.school.core.ItemSet">ItemSet</a> → AnyRef → Any
+          definition classes: AnyRef → Any
         </div>
             
             
@@ -455,73 +456,6 @@ possible to check whether the contents of the list are of the requested typed.
         </div><div class="block">
           definition classes: Any
         </div>
-            
-            
-            
-          </div>
-          
-    </li><li visbl="pub" data-isabs="false" name="org.school.core.ItemSet#isTemplate">
-      <a id="isTemplate(T):Boolean"></a>
-      <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol">
-        <span class="name">isTemplate</span>
-        
-        <span class="params">(<span name="item">item: T</span>)</span>
-        <span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
-      </span>
-      </h4>
-      
-            <p class="shortcomment cmt">Helper method to check if an item is a template index
-(used for prefix span).</p>
-            <div class="fullcomment"><div class="comment cmt"><p>Helper method to check if an item is a template index
-(used for prefix span). Note, although the value may
-not be 0, it may still be a template value.
-</p></div><dl class="paramcmts block"><dt class="param">item</dt><dd class="cmt"><p>The item to check</p></dd><dt>returns</dt><dd class="cmt"><p>true if template, false otherwise
-</p></dd></dl>
-            
-            
-            
-          </div>
-          
-    </li><li visbl="pub" data-isabs="false" name="org.school.core.ItemSet#items">
-      <a id="items:List[T]"></a>
-      <h4 class="signature">
-      <span class="kind">val</span>
-      <span class="symbol">
-        <span class="name">items</span>
-        
-        
-        <span class="result">: List[T]</span>
-      </span>
-      </h4>
-      
-            <p class="shortcomment cmt">The items composing this Item set
-</p>
-            <div class="fullcomment"><div class="comment cmt"><p>The items composing this Item set
-</p></div>
-            
-            
-            
-          </div>
-          
-    </li><li visbl="pub" data-isabs="false" name="org.school.core.ItemSet#minsup">
-      <a id="minsup(AbstractSupport[T]):Double"></a>
-      <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol">
-        <span class="name">minsup</span>
-        
-        <span class="params">(<span name="support">support: <a href="AbstractSupport.html" class="extype" name="org.school.core.AbstractSupport">AbstractSupport</a>[T]</span>)</span>
-        <span class="result">: <span class="extype" name="scala.Double">Double</span></span>
-      </span>
-      </h4>
-      
-            <p class="shortcomment cmt">Retrieve the minimum support for this transaction set
-</p>
-            <div class="fullcomment"><div class="comment cmt"><p>Retrieve the minimum support for this transaction set
-</p></div><dl class="paramcmts block"><dt class="param">support</dt><dd class="cmt"><p>The support lookup table</p></dd><dt>returns</dt><dd class="cmt"><p>The minimum support for this collection
-</p></dd></dl>
             
             
             
@@ -597,39 +531,64 @@ not be 0, it may still be a template value.
             
           </div>
           
-    </li><li visbl="pub" data-isabs="false" name="org.school.core.ItemSet#size">
-      <a id="size:Int"></a>
+    </li><li visbl="pub" data-isabs="false" name="org.school.association.MsPrefixSpan#process">
+      <a id="process():List[FrequentSet[T]]"></a>
       <h4 class="signature">
       <span class="kind">def</span>
       <span class="symbol">
-        <span class="name">size</span>
+        <span class="name">process</span>
         
-        
-        <span class="result">: <span class="extype" name="scala.Int">Int</span></span>
+        <span class="params">()</span>
+        <span class="result">: List[<a href="../core/FrequentSet.html" class="extype" name="org.school.core.FrequentSet">FrequentSet</a>[T]]</span>
       </span>
       </h4>
       
-            <p class="shortcomment cmt">The size of the ItemSet</p>
-            <div class="fullcomment"><div class="comment cmt"><p>The size of the ItemSet</p></div>
+            <p class="shortcomment cmt">Processes the current sequence list to produce all the
+frequent sequences with the supplied support.</p>
+            <div class="fullcomment"><div class="comment cmt"><p>Processes the current sequence list to produce all the
+frequent sequences with the supplied support.
+</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>A list of frequent itemsets
+</p></dd></dl>
             
             
             
           </div>
           
-    </li><li visbl="pub" data-isabs="false" name="org.school.core.ItemSet#support">
-      <a id="support:Double"></a>
+    </li><li visbl="pub" data-isabs="false" name="org.school.association.MsPrefixSpan#sequences">
+      <a id="sequences:List[Transaction[T]]"></a>
       <h4 class="signature">
-      <span class="kind">var</span>
+      <span class="kind">val</span>
+      <span class="symbol">
+        <span class="name">sequences</span>
+        
+        
+        <span class="result">: List[<a href="../core/Transaction.html" class="extype" name="org.school.core.Transaction">Transaction</a>[T]]</span>
+      </span>
+      </h4>
+      
+            <p class="shortcomment cmt">The collection of transactions to process</p>
+            <div class="fullcomment"><div class="comment cmt"><p>The collection of transactions to process</p></div>
+            
+            
+            
+          </div>
+          
+    </li><li visbl="pub" data-isabs="false" name="org.school.association.MsPrefixSpan#support">
+      <a id="support:AbstractSupport[T]"></a>
+      <h4 class="signature">
+      <span class="kind">val</span>
       <span class="symbol">
         <span class="name">support</span>
         
         
-        <span class="result">: <span class="extype" name="scala.Double">Double</span></span>
+        <span class="result">: <a href="../core/AbstractSupport.html" class="extype" name="org.school.core.AbstractSupport">AbstractSupport</a>[T]</span>
       </span>
       </h4>
       
-            <p class="shortcomment cmt">The support of the ItemSet</p>
-            <div class="fullcomment"><div class="comment cmt"><p>The support of the ItemSet</p></div>
+            <p class="shortcomment cmt">The support lookup table for each item
+</p>
+            <div class="fullcomment"><div class="comment cmt"><p>The support lookup table for each item
+</p></div>
             
             
             
@@ -654,26 +613,7 @@ not be 0, it may still be a template value.
           definition classes: AnyRef
         </div></div>
           
-    </li><li visbl="pub" data-isabs="false" name="org.school.core.ItemSet#templateIndex">
-      <a id="templateIndex:Int"></a>
-      <h4 class="signature">
-      <span class="kind">var</span>
-      <span class="symbol">
-        <span class="name">templateIndex</span>
-        
-        
-        <span class="result">: <span class="extype" name="scala.Int">Int</span></span>
-      </span>
-      </h4>
-      
-            <p class="shortcomment cmt">If a template variable exists, its index</p>
-            <div class="fullcomment"><div class="comment cmt"><p>If a template variable exists, its index</p></div>
-            
-            
-            
-          </div>
-          
-    </li><li visbl="pub" data-isabs="false" name="org.school.core.ItemSet#toString">
+    </li><li visbl="pub" data-isabs="false" name="scala.AnyRef#toString">
       <a id="toString():String"></a>
       <h4 class="signature">
       <span class="kind">def</span>
@@ -681,14 +621,14 @@ not be 0, it may still be a template value.
         <span class="name">toString</span>
         
         <span class="params">()</span>
-        <span class="result">: String</span>
+        <span class="result">: <span class="extype" name="java.lang.String">String</span></span>
       </span>
       </h4>
       
             <p class="shortcomment cmt">Returns a string representation of the object.</p>
             <div class="fullcomment"><div class="comment cmt"><p>Returns a string representation of the object.</p><p>The default representation is platform dependent.
 </p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>a string representation of the object.</p></dd></dl><div class="block">
-          definition classes: <a href="" class="extype" name="org.school.core.ItemSet">ItemSet</a> → AnyRef → Any
+          definition classes: AnyRef → Any
         </div>
             
             
@@ -755,9 +695,7 @@ not be 0, it may still be a template value.
     </li></ol>
             </div>
 
-        <div class="parent" name="java.io.Serializable">
-              <h3>Inherited from <span class="extype" name="java.io.Serializable">Serializable</span></h3>
-            </div><div class="parent" name="scala.AnyRef">
+        <div class="parent" name="scala.AnyRef">
               <h3>Inherited from AnyRef</h3>
             </div><div class="parent" name="scala.Any">
               <h3>Inherited from <span class="extype" name="scala.Any">Any</span></h3>

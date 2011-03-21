@@ -288,6 +288,29 @@ part of compilation it is not possible to check whether the contents of the list
           </div>
           
     </li><li visbl="pub" data-isabs="false" name="org.school.core.Transaction#contains">
+      <a id="contains(ItemSet[T]):Boolean"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol">
+        <span class="name">contains</span>
+        
+        <span class="params">(<span name="other">other: <a href="ItemSet.html" class="extype" name="org.school.core.ItemSet">ItemSet</a>[T]</span>)</span>
+        <span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      </h4>
+      
+            <p class="shortcomment cmt">Checks if the supplied transaction is a contiguous
+subset of this transaction.</p>
+            <div class="fullcomment"><div class="comment cmt"><p>Checks if the supplied transaction is a contiguous
+subset of this transaction.
+</p></div><dl class="paramcmts block"><dt class="param">other</dt><dd class="cmt"><p>The other transaction to test</p></dd><dt>returns</dt><dd class="cmt"><p>true if successful, false otherwise
+</p></dd></dl>
+            
+            
+            
+          </div>
+          
+    </li><li visbl="pub" data-isabs="false" name="org.school.core.Transaction#contains">
       <a id="contains(Transaction[T]):Boolean"></a>
       <h4 class="signature">
       <span class="kind">def</span>
@@ -499,6 +522,32 @@ possible to check whether the contents of the list are of the requested typed.
             
           </div>
           
+    </li><li visbl="pub" data-isabs="false" name="org.school.core.Transaction#join">
+      <a id="join(Transaction[T]):Option[Transaction[T]]"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol">
+        <span class="name">join</span>
+        
+        <span class="params">(<span name="right">right: <a href="" class="extype" name="org.school.core.Transaction">Transaction</a>[T]</span>)</span>
+        <span class="result">: <span class="extype" name="scala.Option">Option</span>[<a href="" class="extype" name="org.school.core.Transaction">Transaction</a>[T]]</span>
+      </span>
+      </h4>
+      
+            <p class="shortcomment cmt">Performs the join specified in GSP
+To test if we can join, we perform the following:
+1.</p>
+            <div class="fullcomment"><div class="comment cmt"><p>Performs the join specified in GSP
+To test if we can join, we perform the following:
+1. Is the first element of the join list the same
+2. Is the first element of the join list the same
+</p></div><dl class="paramcmts block"><dt class="param">right</dt><dd class="cmt"><p>The other transaction to join</p></dd><dt>returns</dt><dd class="cmt"><p>The new joined transaction
+</p></dd></dl>
+            
+            
+            
+          </div>
+          
     </li><li visbl="pub" data-isabs="false" name="org.school.core.Transaction#length">
       <a id="length():Int"></a>
       <h4 class="signature">
@@ -513,6 +562,25 @@ possible to check whether the contents of the list are of the requested typed.
       
             <p class="shortcomment cmt">The total number of items in all the itemsets</p>
             <div class="fullcomment"><div class="comment cmt"><p>The total number of items in all the itemsets</p></div>
+            
+            
+            
+          </div>
+          
+    </li><li visbl="pub" data-isabs="false" name="org.school.core.Transaction#minMisItem">
+      <a id="minMisItem:ItemSet[T]"></a>
+      <h4 class="signature">
+      <span class="kind">var</span>
+      <span class="symbol">
+        <span class="name">minMisItem</span>
+        
+        
+        <span class="result">: <a href="ItemSet.html" class="extype" name="org.school.core.ItemSet">ItemSet</a>[T]</span>
+      </span>
+      </h4>
+      
+            <p class="shortcomment cmt">The lowest minimum support allowable</p>
+            <div class="fullcomment"><div class="comment cmt"><p>The lowest minimum support allowable</p></div>
             
             
             
@@ -610,6 +678,28 @@ possible to check whether the contents of the list are of the requested typed.
             
           </div>
           
+    </li><li visbl="pub" data-isabs="false" name="org.school.core.Transaction#project">
+      <a id="project(Transaction[T]):Option[Transaction[T]]"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol">
+        <span class="name">project</span>
+        
+        <span class="params">(<span name="pattern">pattern: <a href="" class="extype" name="org.school.core.Transaction">Transaction</a>[T]</span>)</span>
+        <span class="result">: <span class="extype" name="scala.Option">Option</span>[<a href="" class="extype" name="org.school.core.Transaction">Transaction</a>[T]]</span>
+      </span>
+      </h4>
+      
+            <p class="shortcomment cmt">Remove an the item to the left or right of the list (max 2)
+</p>
+            <div class="fullcomment"><div class="comment cmt"><p>Remove an the item to the left or right of the list (max 2)
+</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>The minimum support for this collection
+</p></dd></dl>
+            
+            
+            
+          </div>
+          
     </li><li visbl="pub" data-isabs="false" name="org.school.core.Transaction#restCount">
       <a id="restCount:Int"></a>
       <h4 class="signature">
@@ -664,6 +754,47 @@ possible to check whether the contents of the list are of the requested typed.
       
             <p class="shortcomment cmt">The number of itemsets in this transaction</p>
             <div class="fullcomment"><div class="comment cmt"><p>The number of itemsets in this transaction</p></div>
+            
+            
+            
+          </div>
+          
+    </li><li visbl="pub" data-isabs="false" name="org.school.core.Transaction#subsequences">
+      <a id="subsequences:List[Transaction[T]]"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol">
+        <span class="name">subsequences</span>
+        
+        
+        <span class="result">: List[<a href="" class="extype" name="org.school.core.Transaction">Transaction</a>[T]]</span>
+      </span>
+      </h4>
+      
+            <p class="shortcomment cmt">Returns all the subsequence permutations
+</p>
+            <div class="fullcomment"><div class="comment cmt"><p>Returns all the subsequence permutations
+</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>The list of subsequence permutations
+</p></dd></dl>
+            
+            
+            
+          </div>
+          
+    </li><li visbl="pub" data-isabs="false" name="org.school.core.Transaction#support">
+      <a id="support:Double"></a>
+      <h4 class="signature">
+      <span class="kind">var</span>
+      <span class="symbol">
+        <span class="name">support</span>
+        
+        
+        <span class="result">: <span class="extype" name="scala.Double">Double</span></span>
+      </span>
+      </h4>
+      
+            <p class="shortcomment cmt">The current support of this transaction</p>
+            <div class="fullcomment"><div class="comment cmt"><p>The current support of this transaction</p></div>
             
             
             
@@ -785,6 +916,28 @@ possible to check whether the contents of the list are of the requested typed.
         </div><div class="block">
           definition classes: AnyRef
         </div></div>
+          
+    </li><li visbl="pub" data-isabs="false" name="org.school.core.Transaction#without">
+      <a id="without(Int):Transaction[T]"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol">
+        <span class="name">without</span>
+        
+        <span class="params">(<span name="index">index: <span class="extype" name="scala.Int">Int</span></span>)</span>
+        <span class="result">: <a href="" class="extype" name="org.school.core.Transaction">Transaction</a>[T]</span>
+      </span>
+      </h4>
+      
+            <p class="shortcomment cmt">Remove an the item to the left or right of the list (max 2)
+</p>
+            <div class="fullcomment"><div class="comment cmt"><p>Remove an the item to the left or right of the list (max 2)
+</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>The minimum support for this collection
+</p></dd></dl>
+            
+            
+            
+          </div>
           
     </li></ol>
             </div>

@@ -31,7 +31,7 @@
       </span>
       </h4>
       <div class="fullcomment" id="comment"><div class="comment cmt"><p>This is an implementation of the Minimum Support Generalized Sequential
-Pattern algorith outlined in WDM. Given a collection of transactions
+Pattern algorithm outlined in WDM. Given a collection of transactions
 and an item support lookup table, it will generate a a listing of frequent
 transactions as well as their support count.
 </p></div><div class="block">
@@ -262,6 +262,52 @@ part of compilation it is not possible to check whether the contents of the list
         </div><div class="block">
           definition classes: Any
         </div>
+            
+            
+            
+          </div>
+          
+    </li><li visbl="pub" data-isabs="false" name="org.school.association.GeneralizedSequentialPattern#buildFrequent">
+      <a id="buildFrequent(List[Transaction[T]]):FrequentSet[T]"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol">
+        <span class="name">buildFrequent</span>
+        
+        <span class="params">(<span name="candidates">candidates: List[<a href="../core/Transaction.html" class="extype" name="org.school.core.Transaction">Transaction</a>[T]]</span>)</span>
+        <span class="result">: <a href="../core/FrequentSet.html" class="extype" name="org.school.core.FrequentSet">FrequentSet</a>[T]</span>
+      </span>
+      </h4>
+      
+            <p class="shortcomment cmt">Given a possible candidate set, search the sequences to see if any
+of the candidates are frequent
+</p>
+            <div class="fullcomment"><div class="comment cmt"><p>Given a possible candidate set, search the sequences to see if any
+of the candidates are frequent
+</p></div><dl class="paramcmts block"><dt class="param">candidates</dt><dd class="cmt"><p>A collection of possible candidates</p></dd><dt>returns</dt><dd class="cmt"><p>The frequent candidate list
+</p></dd></dl>
+            
+            
+            
+          </div>
+          
+    </li><li visbl="pub" data-isabs="false" name="org.school.association.GeneralizedSequentialPattern#candidateGenN">
+      <a id="candidateGenN(FrequentSet[T]):List[Transaction[T]]"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol">
+        <span class="name">candidateGenN</span>
+        
+        <span class="params">(<span name="frequent">frequent: <a href="../core/FrequentSet.html" class="extype" name="org.school.core.FrequentSet">FrequentSet</a>[T]</span>)</span>
+        <span class="result">: List[<a href="../core/Transaction.html" class="extype" name="org.school.core.Transaction">Transaction</a>[T]]</span>
+      </span>
+      </h4>
+      
+            <p class="shortcomment cmt">Helper method to generate the N-length candidate set
+</p>
+            <div class="fullcomment"><div class="comment cmt"><p>Helper method to generate the N-length candidate set
+</p></div><dl class="paramcmts block"><dt class="param">frequent</dt><dd class="cmt"><p>The previous frequent items to build with</p></dd><dt>returns</dt><dd class="cmt"><p>A possible candidate set to process
+</p></dd></dl>
             
             
             
