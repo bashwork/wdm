@@ -38,8 +38,9 @@ class MsPrefixSpan[T](val sequences:List[Transaction[T]],
         buildFrequents(frequent)
 
         logger.debug("processing took " + stopwatch.toString)
-        frequentDb.map { case(count, buffer) => {    // convert map to ordered frequent list
-            FrequentSet(buffer.toList) }}.toList
+        frequentDb.map { case(count, buffer) => {
+            FrequentSet(buffer.toList) }			// convert map to frequent list
+		}.toList.sortWith { _.length < _.length }	// order by frequent length
     }
 
     /**
@@ -220,13 +221,13 @@ class MsPrefixSpan[T](val sequences:List[Transaction[T]],
         val projections = ListBuffer[Transaction[T]]()
 
         sk.foreach { sequence =>
-            val projection = Transaction[T]() // TODO
-            val isCritical = (ik.contains(ik.critical) && projection.size > 0) ||
-                projection.contains(ik.critical)
-            if (isCritical) { projections += projection }
+            sequence.project(ik) match {
+				case Some(projection) => projections += projection
+				case None =>
+			}
         }
 
-        logger.info("built projections: " + projections.toList)
+        logger.info("built projections({}): {} ", ik, projections.toList)
         projections.toList
     }
 
@@ -258,8 +259,8 @@ class MsPrefixSpan[T](val sequences:List[Transaction[T]],
             }
         }
 
-        sk.foreach { sequence =>            // check the pattern against sk        
-            patterns.foreach { pattern =>   // build the pattern support count
+        sk.foreach { sequence =>            			// check the pattern against sk        
+            patterns.foreach { pattern =>   			// build the pattern support count
                 if (sequence contains pattern) {
                     pattern.count += 1
                 }

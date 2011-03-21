@@ -1,6 +1,7 @@
 package org.school.core
 
 import java.io.Serializable
+import org.slf4j.{Logger, LoggerFactory}
 import scala.collection.mutable.ListBuffer
 
 /**
@@ -14,6 +15,7 @@ import scala.collection.mutable.ListBuffer
 class Transaction[T] private (val sets:List[ItemSet[T]],
     var count:Int, var restCount:Int) extends Serializable {
 
+	private val logger = LoggerFactory.getLogger(this.getClass)
     /** The current support of this transaction */
     var support = 0.0
 
@@ -62,6 +64,36 @@ class Transaction[T] private (val sets:List[ItemSet[T]],
      */
 	def contains(other:ItemSet[T]) =
         sets.exists { set => set contains other }
+
+    /**
+     * Remove an the item to the left or right of the list (max 2)
+     *
+     * @param support The support lookup table
+     * @return The minimum support for this collection
+     */
+    def project(pattern:Transaction[T]) : Option[Transaction[T]] = {
+		if (!contains(pattern)) { return None }
+
+		// since we know we are contained, just find the last index of our last
+		// element and we can drop the beggining of the set	
+		val index = sets findIndexOf { _ contains pattern.sets.last }
+
+		val form1 = Transaction(sets.drop(index).filterNot {	// attempt {ik}{x} match
+			pattern.sets contains _ })							// prune all {ik} matches
+
+		if (!form1.contains(pattern.sets.last)) {				// if we do not contain ik
+			return if (form1.length > 0) Some(form1)			// then we are a {ik}{x} match
+			else None											// skip empty projections
+		}
+			
+		form1.sets.foreach { set =>								// otherwise we are a {ik, x} match
+			val index = set.items.findIndexOf {					// find which set has our match
+				_ == pattern.sets.last.items.last } 
+			if (index >= 0) { set.templateIndex = index }		// set that index to _
+		}
+		if (form1.length > 0) Some(form1) else None				// skip empty projections
+	}
+	
 
     /**
      * Remove an the item to the left or right of the list (max 2)
