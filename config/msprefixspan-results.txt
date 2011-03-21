@@ -45,27 +45,25 @@ The number of length 1 sequential patterns is 44
 <{48}> Count: 16
 <{49}> Count: 15
 
-The number of length 2 sequential patterns is 13
-<{5}{14}> Count: 1
-<{5}{7}> Count: 1
+The number of length 2 sequential patterns is 11
 <{2}{5}> Count: 1
 <{2}{14}> Count: 1
 <{2}{7}> Count: 1
 <{2}{21}> Count: 1
 <{2}{9}> Count: 1
 <{2}{25}> Count: 1
---<{9,25}> Count: 1
---<{14}{7}> Count: 1
 <{4}{22}> Count: 1
+<{5}{14}> Count: 1
+<{5}{7}> Count: 1
 <{5}{33}> Count: 1
 <{10}{24}> Count: 2
 
 The number of length 3 sequential patterns is 5
-<{5}{14}{7}> Count: 1
 <{2}{5}{14}> Count: 1
 <{2}{5}{7}> Count: 1
 <{2}{14}{7}> Count: 1
 <{2}{9,25}> Count: 1
+<{5}{14}{7}> Count: 1
 
 The number of length 4 sequential patterns is 1
 <{2}{5}{14}{7}> Count: 1

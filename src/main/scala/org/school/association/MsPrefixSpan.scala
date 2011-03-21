@@ -94,12 +94,12 @@ class MsPrefixSpan[T](val sequences:List[Transaction[T]],
 	        val s = initializePotentials(transaction)           // projections
             val count = math.ceil(transaction.minsup(support)   // count(MIS(ik))
                 * sizeN).intValue
-        	logger.debug("{}: {}", transaction,  s)
 			val (frequent, sk) = removeInfrequent(s, count)      // local frequents
 
 			frequent.foreach { case(i, icount) => {
-               val ik = Transaction(List(ItemSet(i)), icount)
-               val result  = restrictedPrefixSpan(ik, sk, count) 
+                val ik = Transaction(List(ItemSet(i)), icount)
+                ik.root = transaction.sets.head
+                val result  = restrictedPrefixSpan(ik, sk, count) 
            } }
 		}
 
@@ -249,6 +249,7 @@ class MsPrefixSpan[T](val sequences:List[Transaction[T]],
 
         val patterns = ListBuffer[Transaction[T]]()
 
+        logger.debug("{} extend {} ", ik, projections.toList)
         projections.foreach { projection =>         // extend our prefix with any possible projections
             projection.sets.foreach { set =>        // extend one item at a time
                 set.items.zipWithIndex.foreach {
@@ -275,8 +276,10 @@ class MsPrefixSpan[T](val sequences:List[Transaction[T]],
 
         // for each frequent pattern
         patterns.filter { _.count >= mincount }.foreach { pattern =>
-            addFrequent(pattern.length, pattern)        // add the frequent pattern
-            restrictedPrefixSpan(pattern, sk, mincount) // find further extensions
+	        if (pattern contains ik.root) {                 // we must still contain the root
+                addFrequent(pattern.length, pattern)        // add the frequent pattern
+                restrictedPrefixSpan(pattern, sk, mincount) // find further extensions
+            }
         }
     }
 

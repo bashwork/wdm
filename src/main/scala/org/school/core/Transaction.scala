@@ -1,7 +1,6 @@
 package org.school.core
 
 import java.io.Serializable
-import org.slf4j.{Logger, LoggerFactory}
 import scala.collection.mutable.ListBuffer
 
 /**
@@ -15,9 +14,11 @@ import scala.collection.mutable.ListBuffer
 class Transaction[T] private (val sets:List[ItemSet[T]],
     var count:Int, var restCount:Int) extends Serializable {
 
-	private val logger = LoggerFactory.getLogger(this.getClass)
     /** The current support of this transaction */
     var support = 0.0
+
+    /** Every prefix span extension should contain this */
+    var root = ItemSet[T]()
 
     /** The lowest minimum support allowable */
     var minMisItem = ItemSet[T]()
@@ -70,7 +71,6 @@ class Transaction[T] private (val sets:List[ItemSet[T]],
      */
     def project(pattern:Transaction[T]) : Option[Transaction[T]] = {
 		if (!contains(pattern)) { return None }
-		logger.debug("{} project {}", pattern, sets)
 
 		// since we know we are contained, just find the last index of our last
 		// element and we can drop the beggining of the set	
