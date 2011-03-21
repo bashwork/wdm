@@ -23,12 +23,29 @@
   <property name="ivy.dep.file" value="${basedir}/ivy/ivy.xml"/>
   <property name="ivy.settings.file" value="${basedir}/ivy/ivysettings.xml"/>
 
+
   <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
   <!-- define the global classpath -->
   <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
   <path id="classpath">
     <fileset dir="${lib.dir}" includes="**/*.jar"/>
   </path>
+
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <!-- define filename-friendly names for the OS variants -->
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <condition property="os.libsname" value="osx">
+    <os name="Mac OS X" />
+  </condition>
+  <condition property="os.jni.ext" value="jnilib">
+    <os name="Mac OS X" />
+  </condition>
+  <condition property="os.libsname" value="linux">
+    <os name="Linux" />
+  </condition>
+  <condition property="os.jni.ext" value="so">
+    <os name="Linux" />
+  </condition>
 
   <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
   <!-- import our various commands -->

@@ -31,9 +31,8 @@ Building
 In order to build wdm, you will need the following::
 
     * some jdk (your pick, but tested on Oracle's...)
-    * git (to pull down the source)
+    * git (to pull down the source, or just download)
     * ant (to run the build files)
-    * ivy (to pull down dependencies)
 
 With those dependencies met, this will get you running from
 start to finish::

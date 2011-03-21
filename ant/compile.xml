@@ -1,4 +1,12 @@
-<project xmlns:ivy="antlib:fr.jayasoft.ivy.ant">
+<project xmlns:ivy="antlib:org.apache.ivy.ant">
+
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <!-- retrieves all the dependencies using ivy -->
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <target name="resolve" depends="ivy.bootstrap" description="retrieve all the project dependencies">
+    <mkdir dir="${lib.dir}" />
+    <ivy:retrieve />
+  </target>
 
   <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
   <!-- compiles all the samples -->

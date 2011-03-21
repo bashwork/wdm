@@ -1,20 +1,43 @@
-<project xmlns:ivy="antlib:fr.jayasoft.ivy.ant">
+<project xmlns:ivy="antlib:org.apache.ivy.ant">
 
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <!-- ivy and jsch properties -->
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <property name="ivy.dir" value="${user.home}/.ivy2"/>
+  <property name="ivy.version" value="2.2.0"/>
+  <property name="ivy.jar.name" value="ivy-${ivy.version}.jar"/>
+  <available property="ivy.installed" file="${ivy.dir}/${ivy.jar.name}"/>
+  
+  <property name="jsch.version" value="0.1.29"/>
+  <property name="jsch.jar.name" value="jsch-${jsch.version}.jar"/>
+  <available property="jsch.installed" file="${ivy.dir}/${jsch.jar.name}"/>
+  
   <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
   <!-- get and install ivy -->
   <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-  <target name="download-ivy" description="retrieve ivy installation">
+  <target name="ivy.install" unless="ivy.installed">
+    <mkdir dir="${ivy.dir}"/>
+    <get src="http://repo1.maven.org/maven2/org/apache/ivy/ivy/${ivy.version}/${ivy.jar.name}"
+    	 dest="${ivy.dir}/${ivy.jar.name}"/>
   </target>
-
-  <target name="install-ivy" description="install the new ivy download">
+  
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <!-- get and install jsch -->
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <target name="jsch.install" unless="jsch.installed">
+    <get src="http://repo1.maven.org/maven2/jsch/jsch/${jsch.version}/${jsch.jar.name}"
+    	 dest="${ivy.dir}/${jsch.jar.name}"/>
   </target>
 
   <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-  <!-- retrieves all the dependencies using ivy -->
+  <!-- import ivy's ant tasks -->
   <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-  <target name="resolve" description="retrieve all the project dependencies">
-    <mkdir dir="${lib.dir}" />
-    <ivy:retrieve />
+  <target name="ivy.bootstrap" depends="ivy.install, jsch.install">
+    <path id="ivy.lib.path">
+      <fileset dir="${ivy.dir}" includes="${ivy.jar.name} ${jsch.jar.name}"/>
+    </path>
+    <taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant"
+    	classpathref="ivy.lib.path" />
   </target>
 
   <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
