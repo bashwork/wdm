@@ -1,0 +1,57 @@
+=== Run information ===
+
+Scheme:       weka.classifiers.functions.SMO -C 0.0 -L 0.0010 -P 0.0 -N 0 -V -1 -W 1 -K "weka.classifiers.functions.supportVector.RBFKernel -C 250007 -G 0.01"
+Relation:     homework
+Instances:    9
+Attributes:   2
+              Value
+               Sign
+Test mode:    9-fold cross-validation
+
+=== Classifier model (full training set) ===
+
+SMO
+
+Kernel used:
+  RBF kernel: K(x,y) = e^-(0.01* <x-y,x-y>^2)
+
+Classifier for classes:  POSITIVE,  NEGATIVE
+
+BinarySMO
+
+ +       0     
+
+Number of support vectors: 0
+
+Number of kernel evaluations: 0
+
+
+
+Time taken to build model: 0.02 seconds
+
+=== Stratified cross-validation ===
+=== Summary ===
+
+Correctly Classified Instances           4               44.4444 %
+Incorrectly Classified Instances         5               55.5556 %
+Kappa statistic                          0     
+Mean absolute error                      0.5556
+Root mean squared error                  0.7454
+Relative absolute error                102.0408 %
+Root relative squared error            136.3355 %
+Total Number of Instances                9     
+
+=== Detailed Accuracy By Class ===
+
+               TP Rate   FP Rate   Precision   Recall  F-Measure   ROC Area  Class
+                 1         1          0.444     1         0.615      0.5       POSITIVE
+                 0         0          0         0         0          0.5       NEGATIVE
+Weighted Avg.    0.444     0.444      0.198     0.444     0.274      0.5  
+
+=== Confusion Matrix ===
+
+ a b   <-- classified as
+ 4 0 | a =  POSITIVE
+ 5 0 | b =  NEGATIVE
+
+

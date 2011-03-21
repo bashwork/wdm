@@ -1,0 +1,65 @@
+=== Run information ===
+
+Scheme:       weka.classifiers.functions.SMO -C 1.0 -L 0.0010 -P 1.0E-10 -N 0 -V -1 -W 3 -K "weka.classifiers.functions.supportVector.NormalizedPolyKernel -C 250007 -E 2.0"
+Relation:     homework
+Instances:    9
+Attributes:   2
+              Value
+               Sign
+Test mode:    9-fold cross-validation
+
+=== Classifier model (full training set) ===
+
+SMO
+
+Kernel used:
+  Normalized Poly Kernel: K(x,y) = <x,y>^2.0/(<x,x>^2.0*<y,y>^2.0)^(1/2)
+
+Classifier for classes:  POSITIVE,  NEGATIVE
+
+BinarySMO
+
+      1      * <0.73913 > * X]
+ +       1      * <1 > * X]
+ -       1      * <0 > * X]
+ -       1      * <0.391304 > * X]
+ -       1      * <0.521739 > * X]
+ -       1      * <0.173913 > * X]
+ +       1      * <0.26087 > * X]
+ +       1      * <0.217391 > * X]
+ -       0     
+
+Number of support vectors: 8
+
+Number of kernel evaluations: 37 (93.173% cached)
+
+
+
+Time taken to build model: 0.02 seconds
+
+=== Stratified cross-validation ===
+=== Summary ===
+
+Correctly Classified Instances           5               55.5556 %
+Incorrectly Classified Instances         4               44.4444 %
+Kappa statistic                          0     
+Mean absolute error                      0.4444
+Root mean squared error                  0.6667
+Relative absolute error                 81.6327 %
+Root relative squared error            121.9422 %
+Total Number of Instances                9     
+
+=== Detailed Accuracy By Class ===
+
+               TP Rate   FP Rate   Precision   Recall  F-Measure   ROC Area  Class
+                 0         0          0         0         0          0.5       POSITIVE
+                 1         1          0.556     1         0.714      0.5       NEGATIVE
+Weighted Avg.    0.556     0.556      0.309     0.556     0.397      0.5  
+
+=== Confusion Matrix ===
+
+ a b   <-- classified as
+ 0 4 | a =  POSITIVE
+ 0 5 | b =  NEGATIVE
+
+

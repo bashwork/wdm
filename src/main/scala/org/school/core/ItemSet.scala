@@ -16,6 +16,20 @@ class ItemSet[T] private (val items:List[T])
 	/** The support of the ItemSet */
 	var support = 0.0
 
+	/** If a template variable exists, its index */
+    var templateIndex = -1234 // poisoned
+
+    /**
+     * Helper method to check if an item is a template index
+     * (used for prefix span). Note, although the value may
+     * not be 0, it may still be a template value.
+     *
+     * @param item The item to check
+     * @return true if template, false otherwise
+     */
+    def isTemplate(item:T) =
+        items.findIndexOf { _ == item } == templateIndex
+
     /**
      * Retrieve the minimum support for this transaction set
      *

@@ -226,7 +226,7 @@ class MsPrefixSpan[T](val sequences:List[Transaction[T]],
             if (isCritical) { projections += projection }
         }
 
-        logger.debug("built projections: " + projections.toList)
+        logger.info("built projections: " + projections.toList)
         projections.toList
     }
 
@@ -243,7 +243,21 @@ class MsPrefixSpan[T](val sequences:List[Transaction[T]],
         val patterns = ListBuffer[Transaction[T]]()
 
         projections.foreach { projection =>
-            // TODO
+            projection.sets.foreach { set =>
+                set.items.filter { !set.isTemplate(_) }.foreach { item =>
+                    // TODO see if there is a _ before us
+                    val sequence = if (true) {  // Form <{30, x}>
+                        Transaction(ik.sets.init ++ List(ItemSet(
+                            ik.sets.last.items ++ List(item))))
+                    } else {                      // Form <{30}{x}>
+                        Transaction(ik.sets ++ List(ItemSet(item)))
+                    }
+
+                    if (!patterns.exists { _ == sequence }) {
+                        patterns += sequence
+                    }
+                }
+            }
         }
 
         sk.foreach { sequence =>            // check the pattern against sk        

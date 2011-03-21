@@ -190,11 +190,12 @@ class MsGeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
 	private def candidateCheck(left:Transaction[T], right:Transaction[T],
 		frequent:FrequentSet[T]) : Option[List[Transaction[T]]] = {
 
-        val result = if (left.minMisItem.items.head == left.sets.head.items.head)
+        val result =
+            if (left.minMisItem.items.head == left.sets.head.items.head) {
                  candidateJoinLeft(left, right, frequent)
-            else if (right.minMisItem.items.last == right.sets.last.items.last)
+            } else if (right.minMisItem.items.last == right.sets.last.items.last) {
                  candidateJoinRight(left, right, frequent)
-            else candidateJoinRegular(left, right, frequent)
+            } else { candidateJoinRegular(left, right, frequent) }
 
         result match {
             case Some(joins) => candidatePrune(joins, frequent)
@@ -229,8 +230,7 @@ class MsGeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
                     ItemSet(left.sets.last.items.last, lastRight.last))
                 results.last.minMisItem = left.minMisItem
             }
-        }
-        else if (((left.size == 1) && (left.length == 2)) &&
+        } else if (((left.size == 1) && (left.length == 2)) &&
             (lastRight.last.toString > lastLeft.last.toString) ||       // scala type erasure
             (left.length > 2)) {
             results += Transaction(left.sets ++ List(right.sets.last)) // {1}{2} & {4} => {1}{2}{4}
@@ -267,8 +267,7 @@ class MsGeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
                     ItemSet(right.sets.last.items.last, firstLeft.last))
                 results.last.minMisItem = right.minMisItem
             }
-        }
-        else if (((right.size == 1) && (right.length == 2)) &&
+        } else if (((right.size == 1) && (right.length == 2)) &&
             (firstLeft.last.toString < firstRight.last.toString) ||     // scala type erasure
             (right.length > 2)) {
             results += Transaction(right.sets ++ List(left.sets.last))  // {1}{2} & {4} => {1}{2}{4}
