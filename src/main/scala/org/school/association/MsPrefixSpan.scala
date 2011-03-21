@@ -242,21 +242,19 @@ class MsPrefixSpan[T](val sequences:List[Transaction[T]],
 
         val patterns = ListBuffer[Transaction[T]]()
 
-        projections.foreach { projection =>
-            projection.sets.foreach { set =>
-                set.items.filter { !set.isTemplate(_) }.foreach { item =>
-                    // TODO see if there is a _ before us
-                    val sequence = if (true) {  // Form <{30, x}>
-                        Transaction(ik.sets.init ++ List(ItemSet(
-                            ik.sets.last.items ++ List(item))))
-                    } else {                      // Form <{30}{x}>
-                        Transaction(ik.sets ++ List(ItemSet(item)))
-                    }
-
-                    if (!patterns.exists { _ == sequence }) {
-                        patterns += sequence
-                    }
-                }
+        projections.foreach { projection =>         // extend our prefix with any possible projections
+            projection.sets.foreach { set =>        // extend one item at a time
+                set.items.zipWithIndex.foreach {
+                    case(_, index) if index == set.templateIndex =>     // skip "_" item
+                    case(item, index) => {
+                        val ext = if (index > set.templateIndex) {      // Form <{30, x}>
+                            Transaction(ik.sets.init ++ List(ItemSet(
+                                ik.sets.last.items ++ List(item))))
+                        } else {                                        // Form <{30}{x}>
+                            Transaction(ik.sets ++ List(ItemSet(item)))
+                        }
+                        if (!patterns.exists { _ == ext }) { patterns += ext }
+                } }
             }
         }
 

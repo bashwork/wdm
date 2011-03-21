@@ -17,7 +17,7 @@ class ItemSet[T] private (val items:List[T])
 	var support = 0.0
 
 	/** If a template variable exists, its index */
-    var templateIndex = -1234 // poisoned
+    var templateIndex = 0xbadbeef // poisoned to never be less than
 
     /**
      * Helper method to check if an item is a template index
