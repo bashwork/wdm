@@ -42,7 +42,7 @@ class GeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
                 case _ => candidateGenN(frequents.last)
             }
             frequents += buildFrequent(ck)
-            logger.info("generated frequent set {}: size({})", k, frequents.last.size)
+            logger.debug("generated frequent set {}: size({})", k, frequents.last.size)
         }
 
         logger.debug("GSP processing took " + stopwatch.toString)

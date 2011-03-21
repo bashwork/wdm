@@ -70,7 +70,7 @@ class Transaction[T] private (val sets:List[ItemSet[T]],
      */
     def project(pattern:Transaction[T]) : Option[Transaction[T]] = {
 		if (!contains(pattern)) { return None }
-		logger.info("{} project {}", pattern, sets)
+		logger.debug("{} project {}", pattern, sets)
 
 		// since we know we are contained, just find the last index of our last
 		// element and we can drop the beggining of the set	
