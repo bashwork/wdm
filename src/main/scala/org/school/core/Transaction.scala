@@ -20,6 +20,9 @@ class Transaction[T] private (val sets:List[ItemSet[T]],
     /** The lowest minimum support allowable */
     var minMisItem = ItemSet[T]()
 
+    /** the ik that must appear in each subset */
+    var critical  = ItemSet[T]()
+
     /** The number of itemsets in this transaction */
     def size()     = sets.size
 
@@ -49,6 +52,16 @@ class Transaction[T] private (val sets:List[ItemSet[T]],
 
         result
     }
+
+    /**
+     * Checks if the supplied transaction is a contiguous
+     * subset of this transaction.
+     *
+     * @param other The other transaction to test
+     * @return true if successful, false otherwise
+     */
+	def contains(other:ItemSet[T]) =
+        sets.exists { set => set contains other }
 
     /**
      * Remove an the item to the left or right of the list (max 2)

@@ -2,7 +2,9 @@
 Web Data Mining
 ============================================================
 
-This is basically my "working through WDM algorithms" repository
+This is basically my "working through WDM algorithms"
+repository. As of right now it contains implementations of 
+ms-gsp and ms-prefix-span.
 
 ============================================================
 Structures
@@ -29,8 +31,9 @@ Building
 In order to build wdm, you will need the following::
 
     * some jdk (your pick, but tested on Oracle's...)
-    * ant
-    * ivy (trying to make ant do this for you)
+    * git (to pull down the source)
+    * ant (to run the build files)
+    * ivy (to pull down dependencies)
 
 With those dependencies met, this will get you running from
 start to finish::
@@ -39,22 +42,6 @@ start to finish::
     cd wdm
     ant resolve
     ant package && ./config/runner.sh
-
-============================================================
-Notes
-============================================================
-
-At the moment, Scala is just a wasteland:
-
-  * The BCL is poluted, inconsistent, and unorganized
-  * Everything is a method is cute, but in practice just
-    produces more bullshit that requires more linenoise to
-    deal with.
-  * Working with lists is just awful unless you have a PH.D
-    in combinators.
-
-Also, the state of static typing as well as Generics (f***
-type erasure) is just kind of embarrassing.
 
 ============================================================
 License

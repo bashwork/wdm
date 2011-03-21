@@ -64,6 +64,7 @@ class MsPrefixSpan[T](val sequences:List[Transaction[T]],
 
         logger.debug("initialization took " + stopwatch.toString)
         logger.debug("generated initial candidates: " + filtered)
+
         FrequentSet(filtered.map { x => {                                           // <{F1}>
 			val transaction = Transaction(List(ItemSet(x)), counts(x))
             transaction.support = actual(x)
@@ -83,25 +84,28 @@ class MsPrefixSpan[T](val sequences:List[Transaction[T]],
         val frequents = ListBuffer[FrequentSet[T]](candidate)
 
 		candidate.transactions.foreach { transaction =>
-	        val sk = initializePotentials(transaction)          // projections
+	        val s = initializePotentials(transaction)           // projections
             val count = math.ceil(transaction.minsup(support)   // count(MIS(ik))
                 * sizeN).intValue
-           // val frequent = removeInfrequent(sk, count)          // local frequent
+           val (frequent, sk) = removeInfrequent(s, count)      // local frequents
 
-           // frequent.foreach { ik =>
-           //     val result = restrictedPrefixSpan(ik, sk, count) 
-           // }
+           frequent.foreach { case(i, icount) => {
+               val ik = Transaction(List(ItemSet(i)), icount)
+               ik.critical = ik.sets.head  // all lower sets must contain this
+               val result  = restrictedPrefixSpan(ik, sk, count) 
+           } }
 		}
 
+        logger.info("built frequents: " + frequents.toList)
         frequents.toList
     }
 
     /**
-     * Helper method to test that two items exceed the support
+     * Helper method to test that two transactions exceed the support
      * difference constraint.
      *
-     * @param left The left item to test
-     * @param right The right item to test
+     * @param left The left transaction to test
+     * @param right The right transaction to test
      * @return The result of the test
      */
     private def evaluateSdc(left:Transaction[T], right:Transaction[T]) =
@@ -119,14 +123,14 @@ class MsPrefixSpan[T](val sequences:List[Transaction[T]],
         math.abs { support.get(left) - support.get(right) } <= support.sdc
 
     /**
-     * Given a possible candidate set, search the sequences to see if any
-     * of the candidates are frequent
+     * Given a frequent item, produce a list of potential projections
+     * to be used by the prefix span.
      *
-     * @param candidate The initial candidate to explore
-     * @return The frequent candidate list
+     * @param transaction The transaction to build projections for
+     * @return A list of possible projections
      */
     private def initializePotentials(transaction:Transaction[T]) : List[Transaction[T]] = {
-        val potential = ListBuffer[Transaction[T]]()
+        val potentials = ListBuffer[Transaction[T]]()
         val ik = transaction.sets.head.items.head                       // current frequent item
 
 		sequences.foreach { sequence =>                                 // check every sequence for possible match
@@ -135,37 +139,88 @@ class MsPrefixSpan[T](val sequences:List[Transaction[T]],
                     val filtered = set.items.filter { item =>           // the minimum support (sdc)
                         evaluateSdc(ik, item) }
                     ItemSet(filtered)                                   // new filtered itemset
-                }
+                }.filter { _.size > 0 }
                 if ((pruned.size > 1) || (pruned.head.size > 1)) {      // eliminate prefix only patterns
-                    potential += Transaction(pruned)
+                    potentials += Transaction(pruned)
                 }
 			}
 		}
 
-		potential.toList
+        logger.info("built potentials: " + potentials.toList)
+		potentials.toList
 	}
 
     /**
-     * Given a possible candidate set, search the sequences to see if any
-     * of the candidates are frequent
+     * The book says perform this step in a later stage, however it seems
+     * easier to just do it before we enter rPrefixSpan.
      *
-     * @param candidate The initial candidate to explore
-     * @return The frequent candidate list
+     * @param s The local database to remove infrequent items from
+     * @param mincount The minimum count that must be met
+     * @return (frequency-table, Sk-cleaned)
      */
-    //private def restrictedPrefixSpan(ik:Transaction[T], sk:List[Transaction[T]],
-    //    minsup:Int) = {
-    //    None
-    //}
+    private def removeInfrequent(s:List[Transaction[T]], mincount:Int)
+        : (HashMap[T, Int], List[Transaction[T]]) = {
+
+        val local = HashMap[T, Int]()
+        val filtered = ListBuffer[Transaction[T]]()
+
+		s.foreach { sequence =>                 // build our frequency database
+            sequence.sets.foreach { set =>
+                set.items.foreach { item =>     // for every item in the sequnce
+                    local(item) = local.getOrElse(item, 0) + 1
+                }
+            }
+        }
+
+        val frequents = local.filter {          // get our frequency database
+            case(k,v) => v >= mincount }
+
+        s.foreach { sequence =>                 // in the local database
+            val items = sequence.sets.map { set =>
+                ItemSet(set.items.filter {      // remove infrequent values
+                    frequents.contains(_) })
+            }.filter { _.size > 0 }             // remove empty itemsets
+            filtered += Transaction(items)
+        }
+
+        (frequents, filtered.toList)            // (support, database)
+    }
 
     /**
-     * Given a possible candidate set, search the sequences to see if any
-     * of the candidates are frequent
+     * Performs the recursive prefix span
      *
-     * @param candidate The initial candidate to explore
+     * @param ik The transaction to build a projection for
+     * @param sk The potentials for this transaction
+     * @param mincount The minimum count that must be met
      * @return The frequent candidate list
      */
     private def restrictedPrefixSpan(ik:Transaction[T], sk:List[Transaction[T]],
-        minsup:Int) = {
-        None
+        mincount:Int) : List[FrequentSet[T]] = {
+
+        List(FrequentSet[T]())
+    }
+
+    /**
+     * Builds the projection database for the given transaction
+     *
+     * @param ik The transaction to build a projection for
+     * @param sk The potentials for this transaction
+     * @param mincount The minimum count that must be met
+     * @return The projection database
+     */
+    private def projectDatabase(ik:Transaction[T], sk:List[Transaction[T]],
+        mincount:Int) : List[Transaction[T]] = {
+
+        val projections = ListBuffer[Transaction[T]]()
+
+        sk.foreach { sequence =>
+            val projection = Transaction[T]() // to build
+            val isCritical = (ik.contains(ik.critical) && projection.size > 0) ||
+                projection.contains(ik.critical)
+            if (isCritical) { projections += projection }
+        }
+
+        logger.info("built projections: " + projections.toList)
+        projections.toList
     }
 }

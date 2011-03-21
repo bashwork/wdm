@@ -224,14 +224,14 @@ class MsGeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
             results.last.minMisItem = left.minMisItem
 
             if (((left.size == 2) && (left.length == 2)) &&
-                (lastRight.last.toString > lastLeft.last.toString)) {   // fuck type erasure
+                (lastRight.last.toString > lastLeft.last.toString)) {   // scala type erasure
                 results += Transaction(left.sets.head,                  // {1}{2} & {4} => {1}{2,4}
                     ItemSet(left.sets.last.items.last, lastRight.last))
                 results.last.minMisItem = left.minMisItem
             }
         }
         else if (((left.size == 1) && (left.length == 2)) &&
-            (lastRight.last.toString > lastLeft.last.toString) ||       // fuck type erasure
+            (lastRight.last.toString > lastLeft.last.toString) ||       // scala type erasure
             (left.length > 2)) {
             results += Transaction(left.sets ++ List(right.sets.last)) // {1}{2} & {4} => {1}{2}{4}
             results.last.minMisItem = left.minMisItem
@@ -262,14 +262,14 @@ class MsGeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
             results.last.minMisItem = right.minMisItem
 
             if (((right.size == 2) && (right.length == 2)) &&
-                (firstRight.last.toString < firstLeft.last.toString)) {   // fuck type erasure
+                (firstRight.last.toString < firstLeft.last.toString)) { // scala type erasure
                 results += Transaction(right.sets.head,                 // {1}{2} & {4} => {1}{2,4}
                     ItemSet(right.sets.last.items.last, firstLeft.last))
                 results.last.minMisItem = right.minMisItem
             }
         }
         else if (((right.size == 1) && (right.length == 2)) &&
-            (firstLeft.last.toString < firstRight.last.toString) ||       // fuck type erasure
+            (firstLeft.last.toString < firstRight.last.toString) ||     // scala type erasure
             (right.length > 2)) {
             results += Transaction(right.sets ++ List(left.sets.last))  // {1}{2} & {4} => {1}{2}{4}
             results.last.minMisItem = right.minMisItem
