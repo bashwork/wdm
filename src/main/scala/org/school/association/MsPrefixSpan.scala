@@ -25,6 +25,8 @@ class MsPrefixSpan[T](val sequences:List[Transaction[T]],
 	private val stopwatch = new Stopwatch()
     /** so that we don't have to pass state around */
 	private val frequentDb = HashMap[Int, ListBuffer[Transaction[T]]]()
+    /** the actual support for all the items in the dataset */
+	private val actual = HashMap[T, Double]()
 
     /**
      * Processes the current sequence list to produce all the
@@ -35,6 +37,7 @@ class MsPrefixSpan[T](val sequences:List[Transaction[T]],
     def process() : List[FrequentSet[T]] = {
         stopwatch.start
         val frequent = initialize()
+        logger.debug("actuals: ", actual)
         buildFrequents(frequent)
 
         logger.debug("processing took " + stopwatch.toString)
@@ -54,7 +57,6 @@ class MsPrefixSpan[T](val sequences:List[Transaction[T]],
     private def initialize() : FrequentSet[T] = {
         val allItems = sequences.map { _.unique }.flatten                           // I with repeats
         val counts   = allItems groupBy identity mapValues { _.size }               // I.count
-        val actual   = HashMap[T,Double]()                                          // I.support
         val unique   = counts.keys.toList                                           // I
         val sorted   = unique.sortWith { (a,b) => support.get(a) < support.get(b) } // M
         sorted.foreach { s => actual(s) = counts(s) / sizeN }                       // populate supports
@@ -92,16 +94,16 @@ class MsPrefixSpan[T](val sequences:List[Transaction[T]],
 	        val s = initializePotentials(transaction)           // projections
             val count = math.ceil(transaction.minsup(support)   // count(MIS(ik))
                 * sizeN).intValue
-           val (frequent, sk) = removeInfrequent(s, count)      // local frequents
+        	logger.info("{}: {}", transaction,  s)
+			val (frequent, sk) = removeInfrequent(s, count)      // local frequents
 
-           frequent.foreach { case(i, icount) => {
+			frequent.foreach { case(i, icount) => {
                val ik = Transaction(List(ItemSet(i)), icount)
-               ik.critical = ik.sets.head  // all lower sets must contain this
                val result  = restrictedPrefixSpan(ik, sk, count) 
            } }
 		}
 
-        logger.debug("built frequents: " + frequents.toList)
+        logger.info("built frequents: " + frequents.toList)
         frequents.toList
     }
 
@@ -125,7 +127,8 @@ class MsPrefixSpan[T](val sequences:List[Transaction[T]],
      * @return The result of the test
      */
     private def evaluateSdc(left:T, right:T) =
-        math.abs { support.get(left) - support.get(right) } <= support.sdc
+        math.abs { actual.getOrElse(left, 0.0) - actual.getOrElse(right, 0.0) } <= support.sdc
+        //math.abs { support.get(left) - support.get(right0000<= support.sdc
 
     /**
      * Given a frequent item, produce a list of potential projections
@@ -140,18 +143,20 @@ class MsPrefixSpan[T](val sequences:List[Transaction[T]],
 
 		sequences.foreach { sequence =>                                 // check every sequence for possible match
 			if (sequence contains transaction) {                        // only sequences with ik
+        		logger.info("{} contains {} ",sequence, transaction)
                 val pruned = sequence.sets.map { set =>                 // remove all items that don't meet
                     val filtered = set.items.filter { item =>           // the minimum support (sdc)
                         evaluateSdc(ik, item) }
                     ItemSet(filtered)                                   // new filtered itemset
                 }.filter { _.size > 0 }
+        		logger.info("pruned {} ",pruned)
                 if ((pruned.size > 1) || (pruned.head.size > 1)) {      // eliminate prefix only patterns
                     potentials += Transaction(pruned)
                 }
 			}
 		}
 
-        logger.debug("built potentials: " + potentials.toList)
+        logger.info("built potentials: " + potentials.toList)
 		potentials.toList
 	}
 
@@ -177,6 +182,7 @@ class MsPrefixSpan[T](val sequences:List[Transaction[T]],
             }
         }
 
+		logger.info("counts {}", local)	
         val frequents = local.filter {          // get our frequency database
             case(k,v) => v >= mincount }
 

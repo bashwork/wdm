@@ -22,9 +22,6 @@ class Transaction[T] private (val sets:List[ItemSet[T]],
     /** The lowest minimum support allowable */
     var minMisItem = ItemSet[T]()
 
-    /** the ik that must appear in each subset */
-    var critical  = ItemSet[T]()
-
     /** The number of itemsets in this transaction */
     def size()     = sets.size
 
@@ -73,6 +70,7 @@ class Transaction[T] private (val sets:List[ItemSet[T]],
      */
     def project(pattern:Transaction[T]) : Option[Transaction[T]] = {
 		if (!contains(pattern)) { return None }
+		logger.info("{} project {}", pattern, sets)
 
 		// since we know we are contained, just find the last index of our last
 		// element and we can drop the beggining of the set	
