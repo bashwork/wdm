@@ -10,13 +10,13 @@ import java.io.Serializable
 class ItemSet[T] private (val items:List[T])
     extends Serializable {
 
-	/** The size of the ItemSet */
-	def size = items.size
+    /** The size of the ItemSet */
+    def size = items.size
 
-	/** The support of the ItemSet */
-	var support = 0.0
+    /** The support of the ItemSet */
+    var support = 0.0
 
-	/** If a template variable exists, its index */
+    /** If a template variable exists, its index */
     var templateIndex = 0xbadbeef // poisoned to never be less than
 
     /**
@@ -46,8 +46,8 @@ class ItemSet[T] private (val items:List[T])
      * @param other The other itemset to test
      * @return true if successful, false otherwise
      */
-	def contains(other:ItemSet[T]) =
-		other.items.forall { o => items.contains(o) }
+    def contains(other:ItemSet[T]) =
+        other.items.forall { o => items.contains(o) }
 
     override def hashCode() = items.hashCode
     override def equals(other:Any) = other match {
@@ -55,9 +55,8 @@ class ItemSet[T] private (val items:List[T])
         case _ => false
     }
 
-	override def toString() = items.mkString("{", ",", "}")
+    override def toString() = items.mkString("{", ",", "}")
 }
-
 
 object ItemSet {
     def apply[T](items:List[T]) = new ItemSet[T](items.distinct)

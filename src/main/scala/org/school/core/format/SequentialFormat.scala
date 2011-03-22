@@ -18,31 +18,31 @@ object SequentialFormat extends AbstractFormat {
      * @return The processed list iterator
      */
     def process(source:Iterator[String]) : List[Transaction[String]] = {
-		val transactions = ListBuffer[Transaction[String]]()
+        val transactions = ListBuffer[Transaction[String]]()
 
-		source foreach { _ match {
-			case line if line.trim.isEmpty =>
-			case line => transactions += buildTransaction(line)
-		}}
+        source foreach { _ match {
+            case line if line.trim.isEmpty =>
+            case line => transactions += buildTransaction(line)
+        }}
 
-		transactions.toList
+        transactions.toList
     }
 
-	/**
-	 * A helper method that extracts the next sequential rule
-     *
-	 * @param line The line to parse for the next rule
-	 * @return A transaction for the specified line
-	 */
-	private def buildTransaction(line:String) : Transaction[String] = {
-		val itemsets = ListBuffer[ItemSet[String]]()
-		val captures = (matcher findAllIn line).matchData
+    /**
+     * A helper method that extracts the next sequential rule
+       *
+     * @param line The line to parse for the next rule
+     * @return A transaction for the specified line
+     */
+    private def buildTransaction(line:String) : Transaction[String] = {
+        val itemsets = ListBuffer[ItemSet[String]]()
+        val captures = (matcher findAllIn line).matchData
 
-		captures.foreach { matches =>
-			val items = matches.group(1).split(", ")
-			itemsets += ItemSet[String](items.toList)
-		}
+        captures.foreach { matches =>
+            val items = matches.group(1).split(", ")
+            itemsets += ItemSet[String](items.toList)
+        }
 
-		Transaction[String](itemsets.toList)
-	}
+        Transaction[String](itemsets.toList)
+    }
 }

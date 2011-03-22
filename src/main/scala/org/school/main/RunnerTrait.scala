@@ -23,35 +23,35 @@ trait RunnerTrait {
     val version : String
     val mainName : String
 
-	/**
+    /**
      * Process the given input data with the given algorithm
      *
      * @param database The dataset to process
      * @param support The support lookup table
      * @return A list of the frequentsets found
      */
-	def algorithm[T](database:List[Transaction[T]], support:AbstractSupport[T])
-		: List[FrequentSet[T]]
-
-	/**
+    def algorithm[T](database:List[Transaction[T]], support:AbstractSupport[T])
+        : List[FrequentSet[T]]
+    
+    /**
      * Processes the command line arguments
      *
      * @param options The options to parse
      */
-	def process(options: Map[String,Any], error: Unit) {
+    def process(options: Map[String,Any], error: Unit) {
         implicit def _atos(a:Any) = a.asInstanceOf[String]
         implicit def _atoi(a:Any) = a.toString.toInt
 
-		val sploader = LoaderFactory(options("support")).get
-		val support  = MultipleSupport(sploader.load)
-
-		val dbloader = LoaderFactory(options("input")).get
-		val database = SequentialFormat.process(dbloader)
-
-		val results  = algorithm(database, support)
-		val outputer = new SequentialFormatter(results)  
-		outputer.toFile(options("output"))
-	}
+        val sploader = LoaderFactory(options("support")).get
+        val support  = MultipleSupport(sploader.load)
+        
+        val dbloader = LoaderFactory(options("input")).get
+        val database = SequentialFormat.process(dbloader)
+        
+        val results  = algorithm(database, support)
+        val outputer = new SequentialFormatter(results)  
+        outputer.toFile(options("output"))
+    }
 
     /**
      * Main program start

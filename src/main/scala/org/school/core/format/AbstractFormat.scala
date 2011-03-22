@@ -16,6 +16,6 @@ trait AbstractFormat {
      */
     def process(source:Iterator[String]) : List[Transaction[String]]
     def process(source:AbstractLoader) : List[Transaction[String]] = {
-		process(source.load)
-	}
+        process(source.load)
+    }
 }

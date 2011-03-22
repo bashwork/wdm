@@ -26,7 +26,7 @@ object FileLoader extends AbstractLoaderFactory {
      */
     override def supports(location:String) =
         location.startsWith("file://") ||
-		!location.contains("://")
+        !location.contains("://")
 
     /**
      * Creates a loader for the specified location

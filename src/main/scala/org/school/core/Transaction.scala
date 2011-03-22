@@ -42,7 +42,7 @@ class Transaction[T] private (val sets:List[ItemSet[T]],
      * @param other The other transaction to test
      * @return true if successful, false otherwise
      */
-	def contains(other:Transaction[T]) : Boolean = {
+    def contains(other:Transaction[T]) : Boolean = {
         val initial = other.sets.map { o =>
             sets.findIndexOf { t => t contains o } }
         var result = !initial.contains(-1) && !initial.isEmpty
@@ -60,7 +60,7 @@ class Transaction[T] private (val sets:List[ItemSet[T]],
      * @param other The other transaction to test
      * @return true if successful, false otherwise
      */
-	def contains(other:ItemSet[T]) =
+    def contains(other:ItemSet[T]) =
         sets.exists { set => set contains other }
 
     /**
@@ -70,28 +70,28 @@ class Transaction[T] private (val sets:List[ItemSet[T]],
      * @return The minimum support for this collection
      */
     def project(pattern:Transaction[T]) : Option[Transaction[T]] = {
-		if (!contains(pattern)) { return None }
+        if (!contains(pattern)) { return None }
 
-		// since we know we are contained, just find the last index of our last
-		// element and we can drop the beggining of the set	
-		val index = sets findIndexOf { _ contains pattern.sets.last }
+        // since we know we are contained, just find the last index of our last
+        // element and we can drop the beggining of the set
+        val index = sets findIndexOf { _ contains pattern.sets.last }
 
-		val form1 = Transaction(sets.drop(index).filterNot {	// attempt {ik}{x} match
-			pattern.sets contains _ })							// prune all {ik} matches
+        val form1 = Transaction(sets.drop(index).filterNot {        // attempt {ik}{x} match
+            pattern.sets contains _ })                              // prune all {ik} matches
 
-		if (!form1.contains(pattern.sets.last)) {				// if we do not contain ik
-			return if (form1.length > 0) Some(form1)			// then we are a {ik}{x} match
-			else None											// skip empty projections
-		}
-			
-		form1.sets.foreach { set =>								// otherwise we are a {ik, x} match
-			val index = set.items.findIndexOf {					// find which set has our match
-				_ == pattern.sets.last.items.last } 
-			if (index >= 0) { set.templateIndex = index }		// set that index to _
-		}
-		if (form1.length > 0) Some(form1) else None				// skip empty projections
-	}
-	
+        if (!form1.contains(pattern.sets.last)) {                   // if we do not contain ik
+            return if (form1.length > 0) Some(form1)                // then we are a {ik}{x} match
+            else None                                               // skip empty projections
+        }
+
+        form1.sets.foreach { set =>                                 // otherwise we are a {ik, x} match
+            val index = set.items.findIndexOf {                     // find which set has our match
+                _ == pattern.sets.last.items.last } 
+            if (index >= 0) { set.templateIndex = index }           // set that index to _
+        }
+        if (form1.length > 0) Some(form1) else None                 // skip empty projections
+    }
+    
 
     /**
      * Remove an the item to the left or right of the list (max 2)
@@ -136,45 +136,45 @@ class Transaction[T] private (val sets:List[ItemSet[T]],
      * @param right The other transaction to join
      * @return The new joined transaction
      */
-	def join(right:Transaction[T]) : Option[Transaction[T]] = {
-		val jleft = if (sets.head.size == 1) sets.tail
-			else ItemSet(sets.head.items.tail) :: sets.tail
-		val jright = if (right.sets.last.size == 1) right.sets.init
-			else right.sets.init ++ List(ItemSet(right.sets.last.items.init))
-
-		def joiner = {
-			val (r, l) = (right.sets.last, sets.last)
-			val post = if (r contains l) List(r)	            // {3}    & {3, 4}
-				else if (l.items.last == r.items.head)			// {3, 4} & {4, 5}
-					List(ItemSet(l.items ++ List(r.items.last)))
-				else List(l, r)					                // {3}    & {4}
-			
-			Transaction(sets.init ++ post)
-		}
-
-		if (jleft == jright) Some(joiner) else None
-	}
+    def join(right:Transaction[T]) : Option[Transaction[T]] = {
+        val jleft = if (sets.head.size == 1) sets.tail
+            else ItemSet(sets.head.items.tail) :: sets.tail
+        val jright = if (right.sets.last.size == 1) right.sets.init
+            else right.sets.init ++ List(ItemSet(right.sets.last.items.init))
+        
+        def joiner = {
+            val (r, l) = (right.sets.last, sets.last)
+            val post = if (r contains l) List(r)            // {3}    & {3, 4}
+                else if (l.items.last == r.items.head)      // {3, 4} & {4, 5}
+                    List(ItemSet(l.items ++ List(r.items.last)))
+                else List(l, r)                             // {3}    & {4}
+            
+            Transaction(sets.init ++ post)
+        }
+        
+        if (jleft == jright) Some(joiner) else None
+    }
 
     /**
      * Returns all the subsequence permutations
      *
      * @return The list of subsequence permutations
      */
-	def subsequences : List[Transaction[T]] = {
+    def subsequences : List[Transaction[T]] = {
         val possible = ListBuffer[Transaction[T]]()
 
-		for (i <- 0 to sets.size - 1) {
-			val (left, middle :: right) = sets.splitAt(i)
-			for (j <- 0 to middle.size - 1) {
-				val (il, im :: ir) = middle.items.splitAt(j)
-				val set = if ((il.size + ir.size) != 0)
-					List(ItemSet(il ++ ir)) else List[ItemSet[T]]()
-				possible += Transaction(left ++ set ++ right)
-			}
-		}
+        for (i <- 0 to sets.size - 1) {
+            val (left, middle :: right) = sets.splitAt(i)
+            for (j <- 0 to middle.size - 1) {
+                val (il, im :: ir) = middle.items.splitAt(j)
+                val set = if ((il.size + ir.size) != 0)
+                    List(ItemSet(il ++ ir)) else List[ItemSet[T]]()
+                possible += Transaction(left ++ set ++ right)
+            }
+        }
 
-		possible.toList
-	}
+        possible.toList
+    }
 
     override def hashCode = sets.hashCode
     override def equals(other:Any) = other match {
@@ -182,7 +182,7 @@ class Transaction[T] private (val sets:List[ItemSet[T]],
         case _ => false
     }
 
-	override def toString() = sets.mkString("<", "", ">")
+    override def toString() = sets.mkString("<", "", ">")
 }
 
 object Transaction {
