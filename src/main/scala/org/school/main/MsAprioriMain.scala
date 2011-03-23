@@ -2,18 +2,18 @@ package org.school.main
 
 import org.school.core.{Transaction, FrequentSet}
 import org.school.core.support.AbstractSupport
-import org.school.association.MsGeneralizedSequentialPattern
+import org.school.association.MsApriori
 
 /**
- * The main runner for the ms-gsp algorithm 
+ * The main runner for the ms-apriori algorithm
  */ 
-object MsGeneralizedSequentialPatternMain extends RunnerTrait { 
+object MsAprioriMain extends RunnerTrait { 
 
     val version  = "0.1.0"
-    val mainName = "MsGSP"
+    val mainName = "MsApriori"
 
     /**
-     * Process the given input data with the GSP algorithm
+     * Process the given input data with the ms apriori algorithm
      *
      * @param database The dataset to process
      * @param support The support lookup table
@@ -22,7 +22,7 @@ object MsGeneralizedSequentialPatternMain extends RunnerTrait {
     def algorithm[T](database:List[Transaction[T]], support:AbstractSupport[T])
         : List[FrequentSet[T]] = {
     
-        val associator = new MsGeneralizedSequentialPattern(database, support)
+        val associator = new MsApriori(database, support)
         associator.process
     }
 }

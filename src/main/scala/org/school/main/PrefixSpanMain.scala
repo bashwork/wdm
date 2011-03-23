@@ -5,7 +5,7 @@ import org.school.core.support.AbstractSupport
 import org.school.association.PrefixSpan
 
 /**
- * 
+ * The main runner for the prefix span algorithm 
  */ 
 object PrefixSpanMain extends RunnerTrait { 
 

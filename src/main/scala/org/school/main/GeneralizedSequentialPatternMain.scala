@@ -5,7 +5,7 @@ import org.school.core.support.AbstractSupport
 import org.school.association.GeneralizedSequentialPattern
 
 /**
- * 
+ * The main runner for the ms-gsp algorithm 
  */ 
 object GeneralizedSequentialPatternMain extends RunnerTrait { 
 

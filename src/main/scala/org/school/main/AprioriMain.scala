@@ -2,18 +2,18 @@ package org.school.main
 
 import org.school.core.{Transaction, FrequentSet}
 import org.school.core.support.AbstractSupport
-import org.school.association.MsPrefixSpan
+import org.school.association.Apriori
 
 /**
- * 
+ * The main runner for the apriori algorithm 
  */ 
-object MsPrefixSpanMain extends RunnerTrait { 
+object AprioriMain extends RunnerTrait { 
 
     val version  = "0.1.0"
-    val mainName = "MsPrefixSpan"
+    val mainName = "Apriori"
 
     /**
-     * Process the given input data with the prefix span algorithm
+     * Process the given input data with the apriori algorithm
      *
      * @param database The dataset to process
      * @param support The support lookup table
@@ -22,7 +22,7 @@ object MsPrefixSpanMain extends RunnerTrait {
     def algorithm[T](database:List[Transaction[T]], support:AbstractSupport[T])
         : List[FrequentSet[T]] = {
     
-        val associator = new MsPrefixSpan(database, support)
+        val associator = new Apriori(database, support)
         associator.process
     }
 }
