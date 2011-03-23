@@ -2,7 +2,8 @@ package org.school.core.loader
 
 object LoaderFactory {
 
-    private val loaders = List[AbstractLoaderFactory](FileLoader, HttpLoader)
+    private val loaders = List[AbstractLoaderFactory](
+        ZipLoader, JarLoader, FileLoader, HttpLoader, MemoryLoader)
 
     /**
     * Generate a loader that can handle the specified location
