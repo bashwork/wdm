@@ -50,3 +50,16 @@ For this project, I worked alone, however I did compare
 results with Mandi Reis as we really had no metric to see
 if our programs were working correctly. We did not code
 together or share code.
+
+============================================================
+Todo
+============================================================
+
+Implement the non-ms versions of the algorithms and implement
+the following association algorithms:
+
+  * apriori
+  * ms-apriori
+  
+Also add more datasets and testing for validation (plus a bit
+of cleanup and correct functional reworks).
