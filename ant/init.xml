@@ -15,7 +15,7 @@
   <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
   <!-- get and install ivy -->
   <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-  <target name="ivy.install" unless="ivy.installed">
+  <target name="install.ivy" unless="ivy.installed">
     <mkdir dir="${ivy.dir}"/>
     <get src="http://repo1.maven.org/maven2/org/apache/ivy/ivy/${ivy.version}/${ivy.jar.name}"
     	 dest="${ivy.dir}/${ivy.jar.name}"/>
@@ -24,7 +24,7 @@
   <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
   <!-- get and install jsch -->
   <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-  <target name="jsch.install" unless="jsch.installed">
+  <target name="install.jsch" unless="jsch.installed">
     <get src="http://repo1.maven.org/maven2/jsch/jsch/${jsch.version}/${jsch.jar.name}"
     	 dest="${ivy.dir}/${jsch.jar.name}"/>
   </target>
@@ -32,7 +32,7 @@
   <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
   <!-- import ivy's ant tasks -->
   <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-  <target name="ivy.bootstrap" depends="ivy.install, jsch.install">
+  <target name="init.ivy" depends="install.ivy, install.jsch">
     <path id="ivy.lib.path">
       <fileset dir="${ivy.dir}" includes="${ivy.jar.name} ${jsch.jar.name}"/>
     </path>

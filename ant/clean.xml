@@ -11,7 +11,7 @@
   <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
   <!-- clean up all the ivy libs -->
   <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-  <target name="clean-ivy" depends="init" description="cleans up after ivy" >
+  <target name="clean.ivy" depends="init" description="cleans up after ivy" >
     <delete dir="${lib.dir}" />
     <ivy:cleancache />
   </target>
@@ -19,7 +19,7 @@
   <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
   <!-- clean up everything -->
   <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-  <target name="distclean" depends="clean, clean-ivy" description="cleans up everything" />
+  <target name="clean.dist" depends="clean, clean.ivy" description="cleans up everything" />
 
 </project>
 

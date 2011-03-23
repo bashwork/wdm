@@ -17,11 +17,13 @@ import org.school.core.format.SequentialFormat
  * - h | help    : prints this help text
  * - v | version : prints the version of the server
  * - i | input   : specify the input data to parse
+ * - s | support : specify the support database to parse
+ * - o | output  : specify the output file of results
  */
 trait RunnerTrait {
 
     private val logger = LoggerFactory.getLogger(this.getClass)
-    val version : String
+    val version  : String
     val mainName : String
 
     /**
@@ -38,13 +40,14 @@ trait RunnerTrait {
      * Processes the command line arguments
      *
      * @param options The options to parse
+     * @param error The error callback
      */
     def process(options: Map[String,Any], error: Unit) {
         implicit def _atos(a:Any) = a.asInstanceOf[String]
         implicit def _atoi(a:Any) = a.toString.toInt
 
         val sploader = LoaderFactory(options("support")).get
-        val support  = MultipleSupport(sploader.load)
+        val support  = MultipleSupport(sploader)
         
         val dbloader = LoaderFactory(options("input")).get
         val database = SequentialFormat.process(dbloader)
@@ -56,6 +59,8 @@ trait RunnerTrait {
 
     /**
      * Main program start
+     *
+     * @params args The command line arguments
      */
     def main(args: Array[String]) = {
         var defaults = createDefaults
@@ -65,8 +70,8 @@ trait RunnerTrait {
 
         results.getOptions.foreach { o:Option =>
           o.getOpt match {
-              case "i" | "input"    => defaults += ("input" -> o.getValue())
-              case "o" | "output"   => defaults += ("output" -> o.getValue())
+              case "i" | "input"    => defaults += ("input"   -> o.getValue())
+              case "o" | "output"   => defaults += ("output"  -> o.getValue())
               case "s" | "support"  => defaults += ("support" -> o.getValue())
               case "v" | "version"  => printVersion
               case "h" | "help" | _ => printHelp(options)
@@ -96,8 +101,8 @@ trait RunnerTrait {
      * @return The default options map
      */
     private def createDefaults() = Map[String,Any](
-        "input"   -> "data.txt",
-        "support" -> "para.txt",
+        "input"   -> "database.txt",
+        "support" -> "support.txt",
         "output"  -> (mainName.toLowerCase + "-results.txt"))
 
     /**
@@ -110,6 +115,8 @@ trait RunnerTrait {
 
     /**
      * Helper method to print the option help and exit
+     *
+     * @param options The options for the program
      */
     private def printHelp(options: Options) = {
         val format = new HelpFormatter()

@@ -3,7 +3,7 @@
   <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
   <!-- retrieves all the dependencies using ivy -->
   <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-  <target name="resolve" depends="ivy.bootstrap" description="retrieve all the project dependencies">
+  <target name="resolve" depends="init.ivy" description="retrieve all the project dependencies">
     <mkdir dir="${lib.dir}" />
     <ivy:retrieve />
   </target>
@@ -21,5 +21,10 @@
       <include name="**/*.scala" />
     </scalac>
   </target>
+
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <!-- aliases -->
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <target name="build" depends="compile" description="compiles all the samples" />
 
 </project>

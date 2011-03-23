@@ -3,7 +3,7 @@
   <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
   <!-- run the test server -->
   <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-  <target name="run" depends="package" description="run the test server">
+  <target name="run" depends="package" description="run the application main">
     <java fork='true' classname="${main.class}">
       <classpath>
         <path location="${jar.dir}/${ant.project.name}.jar"/>

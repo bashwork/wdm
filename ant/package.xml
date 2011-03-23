@@ -31,7 +31,7 @@
   <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
   <!-- build a source jar of the code -->
   <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-  <target name="package-src" depends="compile" description="generate the distribution" >
+  <target name="package.src" depends="compile" description="generate the distribution" >
     <mkdir dir="${jar.dir}/"/>
     <jar jarfile="${jar.dir}/${ant.project.name}-src.jar" basedir="${src.dir}">
       <manifest>
