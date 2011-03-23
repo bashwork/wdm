@@ -1,6 +1,5 @@
 package org.school.core.support
 
-import org.school.core.MultipleSupport
 import org.school.core.Transaction
 
 trait AbstractSupportBuilder[T] {

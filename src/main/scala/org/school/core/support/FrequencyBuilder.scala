@@ -1,6 +1,5 @@
 package org.school.core.support
 
-import org.school.core.MultipleSupport
 import org.school.core.Transaction
 
 class FrequencyBuilder[T](val sdcScale:Double = 10.0)

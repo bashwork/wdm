@@ -1,6 +1,7 @@
 package org.school.core
 
 import java.io.Serializable
+import org.school.core.support.AbstractSupport
 
 /**
  * Represents a set of items from the dataset

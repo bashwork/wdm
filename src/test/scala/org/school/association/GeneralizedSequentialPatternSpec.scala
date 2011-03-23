@@ -2,9 +2,8 @@ package org.school.association
 
 import org.scalatest.{FlatSpec,PrivateMethodTester}
 import org.scalatest.matchers.ShouldMatchers
-import org.school.core.{MultipleSupport, SingleSupport}
+import org.school.core.support.{MultipleSupport, SingleSupport}
 import org.school.core.{ItemSet, Transaction, FrequentSet}
-import scala.tools.nsc.Interpreter._
 
 class GeneralizedSequentialPatternSpec extends FlatSpec
 	with ShouldMatchers with PrivateMethodTester {

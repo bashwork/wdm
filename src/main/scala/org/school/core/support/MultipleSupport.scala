@@ -1,8 +1,8 @@
-package org.school.core
+package org.school.core.support
 
 import scala.collection.mutable.HashMap
 import org.slf4j.{Logger, LoggerFactory}
-import org.school.core.loader.LoaderFactory
+import org.school.core.loader.AbstractLoader
 
 /**
  * Implements a support lookup that has multiple support values
@@ -40,4 +40,6 @@ object MultipleSupport {
         support.sdc = sdc
         support
     }
+    def apply(source:AbstractLoader) : MultipleSupport[String] =
+        apply(source.load)
 }

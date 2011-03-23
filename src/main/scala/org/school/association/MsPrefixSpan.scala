@@ -3,7 +3,7 @@ package org.school.association
 import org.slf4j.{Logger, LoggerFactory}
 import scala.collection.mutable.HashMap
 import scala.collection.mutable.ListBuffer
-import org.school.core.{AbstractSupport}
+import org.school.core.support.AbstractSupport
 import org.school.core.{ItemSet, Transaction, FrequentSet}
 import org.school.utility.Stopwatch
 

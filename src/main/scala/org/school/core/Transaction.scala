@@ -2,6 +2,7 @@ package org.school.core
 
 import java.io.Serializable
 import scala.collection.mutable.ListBuffer
+import org.school.core.support.AbstractSupport
 
 /**
  * Represents an ordered sequence of itemsets.

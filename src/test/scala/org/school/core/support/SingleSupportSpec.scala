@@ -1,4 +1,4 @@
-package org.school.core
+package org.school.core.support
 
 import org.scalatest.FlatSpec
 import org.scalatest.matchers.ShouldMatchers

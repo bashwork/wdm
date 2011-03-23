@@ -1,6 +1,7 @@
 package org.school.main
 
-import org.school.core._
+import org.school.core.{Transaction, FrequentSet}
+import org.school.core.support.AbstractSupport
 import org.school.association.MsGeneralizedSequentialPattern
 
 /**

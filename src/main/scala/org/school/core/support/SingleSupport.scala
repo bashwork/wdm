@@ -1,4 +1,4 @@
-package org.school.core
+package org.school.core.support
 
 /**
  * Implements a support lookup that has a single support value

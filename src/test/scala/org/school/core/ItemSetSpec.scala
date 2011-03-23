@@ -2,6 +2,7 @@ package org.school.core
 
 import org.scalatest.FlatSpec
 import org.scalatest.matchers.ShouldMatchers
+import org.school.core.support.MultipleSupport
 
 class ItemSetSpec extends FlatSpec with ShouldMatchers {
 

@@ -3,7 +3,8 @@ package org.school.main
 import org.apache.commons.cli._
 import org.slf4j.{Logger, LoggerFactory}
 
-import org.school.core._
+import org.school.core.{Transaction, FrequentSet}
+import org.school.core.support.{AbstractSupport, MultipleSupport}
 import org.school.core.loader.LoaderFactory
 import org.school.core.output.SequentialFormatter
 import org.school.core.format.SequentialFormat

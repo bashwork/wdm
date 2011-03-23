@@ -1,6 +1,6 @@
 package org.school.core.format
 
-import org.school.core.{Transaction,AbstractSupport}
+import org.school.core.Transaction
 import org.school.core.loader.AbstractLoader
 
 /**

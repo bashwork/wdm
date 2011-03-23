@@ -1,7 +1,7 @@
 package org.school.core.format
 
 import scala.collection.mutable.ListBuffer
-import org.school.core.{ItemSet, Transaction, AbstractSupport}
+import org.school.core.{ItemSet, Transaction}
 
 /**
  * Format processor for the sequential format presented by the WDM

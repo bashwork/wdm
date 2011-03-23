@@ -1,4 +1,4 @@
-package org.school.core
+package org.school.core.support
 
 trait AbstractSupport[T] {
 
