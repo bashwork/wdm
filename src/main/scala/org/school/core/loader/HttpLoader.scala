@@ -1,7 +1,7 @@
 package org.school.core.loader
 
 /**
- *
+ * A loader that returns an iterator around a web resource
  */
 class HttpLoader (val location:String) extends AbstractLoader {
 
@@ -14,12 +14,12 @@ class HttpLoader (val location:String) extends AbstractLoader {
 }
 
 /**
- *
+ * A factory that is used to test and load a web resource
  */
 object HttpLoader extends AbstractLoaderFactory {
 
     /**
-     * Tests if this loader supports loading the file
+     * Tests if this loader supports loading the resource
      * at the referenced location.
      *
      * @param location The URI that should be tested

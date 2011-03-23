@@ -1,7 +1,7 @@
 package org.school.core.loader
 
 /**
- *
+ * A loader that returns an iterator around a file resource
  */
 class FileLoader (val location:String) extends AbstractLoader {
 
@@ -12,13 +12,14 @@ class FileLoader (val location:String) extends AbstractLoader {
      */
     override def load() = io.Source.fromFile(location).getLines
 }
+
 /**
- *
+ * A factory that is used to test and load a file resource
  */
 object FileLoader extends AbstractLoaderFactory {
 
     /**
-     * Tests if this loader supports loading the file
+     * Tests if this loader supports loading the resource
      * at the referenced location.
      *
      * @param location The URI that should be tested

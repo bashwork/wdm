@@ -1,7 +1,7 @@
 package org.school.core.loader
 
 /**
- * This loads an example string into a string iterator
+ * A loader that returns an iterator around a string resource
  */
 class MemoryLoader (val example:String) extends AbstractLoader {
 
@@ -12,14 +12,16 @@ class MemoryLoader (val example:String) extends AbstractLoader {
      */
     override def load() = io.Source.fromString(example).getLines
 }
+
 /**
- *
+ * A factory that is used to test and load a string resource
  */
 object MemoryLoader extends AbstractLoaderFactory {
 
     /**
-     * Tests if this loader supports loading the file
-     * at the referenced location.
+     * Tests if this loader supports loading the specified
+     * resource. Note, this will always return false as we
+     * should only use this loader in tests.
      *
      * @param location The URI that should be tested
      * @return true if this loader supports this location
