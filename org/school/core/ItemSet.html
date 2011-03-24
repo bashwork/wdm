@@ -460,15 +460,39 @@ possible to check whether the contents of the list are of the requested typed.
             
           </div>
           
+    </li><li visbl="pub" data-isabs="false" name="org.school.core.ItemSet#isTemplate">
+      <a id="isTemplate(T):Boolean"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol">
+        <span class="name">isTemplate</span>
+        
+        <span class="params">(<span name="item">item: T</span>)</span>
+        <span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      </h4>
+      
+            <p class="shortcomment cmt">Helper method to check if an item is a template index
+(used for prefix span).</p>
+            <div class="fullcomment"><div class="comment cmt"><p>Helper method to check if an item is a template index
+(used for prefix span). Note, although the value may
+not be 0, it may still be a template value.
+</p></div><dl class="paramcmts block"><dt class="param">item</dt><dd class="cmt"><p>The item to check</p></dd><dt>returns</dt><dd class="cmt"><p>true if template, false otherwise
+</p></dd></dl>
+            
+            
+            
+          </div>
+          
     </li><li visbl="pub" data-isabs="false" name="org.school.core.ItemSet#items">
-      <a id="items:Set[T]"></a>
+      <a id="items:List[T]"></a>
       <h4 class="signature">
       <span class="kind">val</span>
       <span class="symbol">
         <span class="name">items</span>
         
         
-        <span class="result">: Set[T]</span>
+        <span class="result">: List[T]</span>
       </span>
       </h4>
       
@@ -488,7 +512,7 @@ possible to check whether the contents of the list are of the requested typed.
       <span class="symbol">
         <span class="name">minsup</span>
         
-        <span class="params">(<span name="support">support: <a href="AbstractSupport.html" class="extype" name="org.school.core.AbstractSupport">AbstractSupport</a>[T]</span>)</span>
+        <span class="params">(<span name="support">support: <a href="support/AbstractSupport.html" class="extype" name="org.school.core.support.AbstractSupport">AbstractSupport</a>[T]</span>)</span>
         <span class="result">: <span class="extype" name="scala.Double">Double</span></span>
       </span>
       </h4>
@@ -573,6 +597,44 @@ possible to check whether the contents of the list are of the requested typed.
             
           </div>
           
+    </li><li visbl="pub" data-isabs="false" name="org.school.core.ItemSet#size">
+      <a id="size:Int"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol">
+        <span class="name">size</span>
+        
+        
+        <span class="result">: <span class="extype" name="scala.Int">Int</span></span>
+      </span>
+      </h4>
+      
+            <p class="shortcomment cmt">The size of the ItemSet</p>
+            <div class="fullcomment"><div class="comment cmt"><p>The size of the ItemSet</p></div>
+            
+            
+            
+          </div>
+          
+    </li><li visbl="pub" data-isabs="false" name="org.school.core.ItemSet#support">
+      <a id="support:Double"></a>
+      <h4 class="signature">
+      <span class="kind">var</span>
+      <span class="symbol">
+        <span class="name">support</span>
+        
+        
+        <span class="result">: <span class="extype" name="scala.Double">Double</span></span>
+      </span>
+      </h4>
+      
+            <p class="shortcomment cmt">The support of the ItemSet</p>
+            <div class="fullcomment"><div class="comment cmt"><p>The support of the ItemSet</p></div>
+            
+            
+            
+          </div>
+          
     </li><li visbl="pub" data-isabs="false" name="scala.AnyRef#synchronized">
       <a id="synchronized[T0](T0):T0"></a>
       <h4 class="signature">
@@ -591,6 +653,25 @@ possible to check whether the contents of the list are of the requested typed.
         </div><div class="block">
           definition classes: AnyRef
         </div></div>
+          
+    </li><li visbl="pub" data-isabs="false" name="org.school.core.ItemSet#templateIndex">
+      <a id="templateIndex:Int"></a>
+      <h4 class="signature">
+      <span class="kind">var</span>
+      <span class="symbol">
+        <span class="name">templateIndex</span>
+        
+        
+        <span class="result">: <span class="extype" name="scala.Int">Int</span></span>
+      </span>
+      </h4>
+      
+            <p class="shortcomment cmt">If a template variable exists, its index</p>
+            <div class="fullcomment"><div class="comment cmt"><p>If a template variable exists, its index</p></div>
+            
+            
+            
+          </div>
           
     </li><li visbl="pub" data-isabs="false" name="org.school.core.ItemSet#toString">
       <a id="toString():String"></a>

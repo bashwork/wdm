@@ -27,15 +27,15 @@
         <span class="name">GeneralizedSequentialPattern</span>
         <span class="tparams">[<span name="T">T</span>]</span>
         
-        <span class="result"> extends AnyRef</span>
+        <span class="result"> extends <a href="AbstractAssociation.html" class="extype" name="org.school.association.AbstractAssociation">AbstractAssociation</a>[T]</span>
       </span>
       </h4>
       <div class="fullcomment" id="comment"><div class="comment cmt"><p>This is an implementation of the Minimum Support Generalized Sequential
-Pattern algorith outlined in WDM. Given a collection of transactions
+Pattern algorithm outlined in WDM. Given a collection of transactions
 and an item support lookup table, it will generate a a listing of frequent
 transactions as well as their support count.
 </p></div><div class="block">
-            linear super types: AnyRef, <span class="extype" name="scala.Any">Any</span>
+            linear super types: <a href="AbstractAssociation.html" class="extype" name="org.school.association.AbstractAssociation">AbstractAssociation</a>[T], AnyRef, <span class="extype" name="scala.Any">Any</span>
           </div>
             
             
@@ -53,7 +53,7 @@ transactions as well as their support count.
           <div id="ancestors">
                 <span class="filtertype">Inherited</span>
                 <ol><li class="hideall">Hide All</li><li class="showall">Show all</li></ol>
-                <ol id="linearization"><li class="in" name="org.school.association.GeneralizedSequentialPattern">GeneralizedSequentialPattern</li><li class="in" name="scala.AnyRef">AnyRef</li><li class="in" name="scala.Any">Any</li></ol>
+                <ol id="linearization"><li class="in" name="org.school.association.GeneralizedSequentialPattern">GeneralizedSequentialPattern</li><li class="in" name="org.school.association.AbstractAssociation">AbstractAssociation</li><li class="in" name="scala.AnyRef">AnyRef</li><li class="in" name="scala.Any">Any</li></ol>
               </div>
           <div id="visbl">
               <span class="filtertype">Visibility</span>
@@ -74,7 +74,7 @@ transactions as well as their support count.
       <span class="symbol">
         <span class="name">GeneralizedSequentialPattern</span>
         
-        <span class="params">(<span name="sequences">sequences: List[<a href="../core/Transaction.html" class="extype" name="org.school.core.Transaction">Transaction</a>[T]]</span>, <span name="support">support: <a href="../core/AbstractSupport.html" class="extype" name="org.school.core.AbstractSupport">AbstractSupport</a>[T]</span>)</span>
+        <span class="params">(<span name="sequences">sequences: List[<a href="../core/Transaction.html" class="extype" name="org.school.core.Transaction">Transaction</a>[T]]</span>, <span name="support">support: <a href="../core/support/AbstractSupport.html" class="extype" name="org.school.core.support.AbstractSupport">AbstractSupport</a>[T]</span>)</span>
         
       </span>
       </h4>
@@ -267,6 +267,52 @@ part of compilation it is not possible to check whether the contents of the list
             
           </div>
           
+    </li><li visbl="pub" data-isabs="false" name="org.school.association.GeneralizedSequentialPattern#buildFrequent">
+      <a id="buildFrequent(List[Transaction[T]]):FrequentSet[T]"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol">
+        <span class="name">buildFrequent</span>
+        
+        <span class="params">(<span name="candidates">candidates: List[<a href="../core/Transaction.html" class="extype" name="org.school.core.Transaction">Transaction</a>[T]]</span>)</span>
+        <span class="result">: <a href="../core/FrequentSet.html" class="extype" name="org.school.core.FrequentSet">FrequentSet</a>[T]</span>
+      </span>
+      </h4>
+      
+            <p class="shortcomment cmt">Given a possible candidate set, search the sequences to see if any
+of the candidates are frequent
+</p>
+            <div class="fullcomment"><div class="comment cmt"><p>Given a possible candidate set, search the sequences to see if any
+of the candidates are frequent
+</p></div><dl class="paramcmts block"><dt class="param">candidates</dt><dd class="cmt"><p>A collection of possible candidates</p></dd><dt>returns</dt><dd class="cmt"><p>The frequent candidate list
+</p></dd></dl>
+            
+            
+            
+          </div>
+          
+    </li><li visbl="pub" data-isabs="false" name="org.school.association.GeneralizedSequentialPattern#candidateGenN">
+      <a id="candidateGenN(FrequentSet[T]):List[Transaction[T]]"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol">
+        <span class="name">candidateGenN</span>
+        
+        <span class="params">(<span name="frequent">frequent: <a href="../core/FrequentSet.html" class="extype" name="org.school.core.FrequentSet">FrequentSet</a>[T]</span>)</span>
+        <span class="result">: List[<a href="../core/Transaction.html" class="extype" name="org.school.core.Transaction">Transaction</a>[T]]</span>
+      </span>
+      </h4>
+      
+            <p class="shortcomment cmt">Helper method to generate the N-length candidate set
+</p>
+            <div class="fullcomment"><div class="comment cmt"><p>Helper method to generate the N-length candidate set
+</p></div><dl class="paramcmts block"><dt class="param">frequent</dt><dd class="cmt"><p>The previous frequent items to build with</p></dd><dt>returns</dt><dd class="cmt"><p>A possible candidate set to process
+</p></dd></dl>
+            
+            
+            
+          </div>
+          
     </li><li visbl="prt" data-isabs="false" name="scala.AnyRef#clone">
       <a id="clone():AnyRef"></a>
       <h4 class="signature">
@@ -285,6 +331,66 @@ part of compilation it is not possible to check whether the contents of the list
           attributes: protected 
         </div><div class="block">
           definition classes: AnyRef
+        </div>
+            
+            
+            
+          </div>
+          
+    </li><li visbl="prt" data-isabs="false" name="org.school.association.AbstractAssociation#compare">
+      <a id="compare(List[T],List[T]):Boolean"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol">
+        <span class="name">compare</span>
+        
+        <span class="params">(<span name="left">left: List[T]</span>, <span name="right">right: List[T]</span>)</span>
+        <span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      </h4>
+      
+            <p class="shortcomment cmt">So scala generics are pretty pathetic.</p>
+            <div class="fullcomment"><div class="comment cmt"><p>So scala generics are pretty pathetic. Basically they use type
+erasure to maintain backwards compatability with the legacy JVM.
+This means that we actually cannot compare the inner types directly
+as we don't know what they are! Since we know that we are comparing
+something of digits (at least for this class) we can just:
+Any.toString.toInt and compare that
+</p></div><dl class="paramcmts block"><dt class="param">left</dt><dd class="cmt"><p>The left list to check</p></dd><dt class="param">right</dt><dd class="cmt"><p>the right list to check</p></dd><dt>returns</dt><dd class="cmt"><p>true if left is greater than right
+</p></dd></dl><div class="block">
+          attributes: protected 
+        </div><div class="block">
+          definition classes: <a href="AbstractAssociation.html" class="extype" name="org.school.association.AbstractAssociation">AbstractAssociation</a>
+        </div>
+            
+            
+            
+          </div>
+          
+    </li><li visbl="prt" data-isabs="false" name="org.school.association.AbstractAssociation#compare">
+      <a id="compare(T,T):Boolean"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol">
+        <span class="name">compare</span>
+        
+        <span class="params">(<span name="left">left: T</span>, <span name="right">right: T</span>)</span>
+        <span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      </h4>
+      
+            <p class="shortcomment cmt">So scala generics are pretty pathetic.</p>
+            <div class="fullcomment"><div class="comment cmt"><p>So scala generics are pretty pathetic. Basically they use type
+erasure to maintain backwards compatability with the legacy JVM.
+This means that we actually cannot compare the inner types directly
+as we don't know what they are! Since we know that we are comparing
+something of digits (at least for this class) we can just:
+Any.toString.toInt and compare that
+</p></div><dl class="paramcmts block"><dt class="param">left</dt><dd class="cmt"><p>The left item to check</p></dd><dt class="param">right</dt><dd class="cmt"><p>the right item to check</p></dd><dt>returns</dt><dd class="cmt"><p>true if left is greater than right
+</p></dd></dl><div class="block">
+          attributes: protected 
+        </div><div class="block">
+          definition classes: <a href="AbstractAssociation.html" class="extype" name="org.school.association.AbstractAssociation">AbstractAssociation</a>
         </div>
             
             
@@ -548,7 +654,9 @@ frequent sequences with the supplied support.</p>
             <div class="fullcomment"><div class="comment cmt"><p>Processes the current sequence list to produce all the
 frequent sequences with the supplied support.
 </p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>A list of frequent itemsets
-</p></dd></dl>
+</p></dd></dl><div class="block">
+          definition classes: <a href="" class="extype" name="org.school.association.GeneralizedSequentialPattern">GeneralizedSequentialPattern</a> → <a href="AbstractAssociation.html" class="extype" name="org.school.association.AbstractAssociation">AbstractAssociation</a>
+        </div>
             
             
             
@@ -573,6 +681,29 @@ frequent sequences with the supplied support.
             
           </div>
           
+    </li><li visbl="prt" data-isabs="false" name="org.school.association.AbstractAssociation#stopwatch">
+      <a id="stopwatch:Stopwatch"></a>
+      <h4 class="signature">
+      <span class="kind">val</span>
+      <span class="symbol">
+        <span class="name">stopwatch</span>
+        
+        
+        <span class="result">: <a href="../utility/Stopwatch.html" class="extype" name="org.school.utility.Stopwatch">Stopwatch</a></span>
+      </span>
+      </h4>
+      
+            <p class="shortcomment cmt">A stopwatch used to time the algorithm processing</p>
+            <div class="fullcomment"><div class="comment cmt"><p>A stopwatch used to time the algorithm processing</p></div><div class="block">
+          attributes: protected 
+        </div><div class="block">
+          definition classes: <a href="AbstractAssociation.html" class="extype" name="org.school.association.AbstractAssociation">AbstractAssociation</a>
+        </div>
+            
+            
+            
+          </div>
+          
     </li><li visbl="pub" data-isabs="false" name="org.school.association.GeneralizedSequentialPattern#support">
       <a id="support:AbstractSupport[T]"></a>
       <h4 class="signature">
@@ -581,7 +712,7 @@ frequent sequences with the supplied support.
         <span class="name">support</span>
         
         
-        <span class="result">: <a href="../core/AbstractSupport.html" class="extype" name="org.school.core.AbstractSupport">AbstractSupport</a>[T]</span>
+        <span class="result">: <a href="../core/support/AbstractSupport.html" class="extype" name="org.school.core.support.AbstractSupport">AbstractSupport</a>[T]</span>
       </span>
       </h4>
       
@@ -695,7 +826,9 @@ frequent sequences with the supplied support.
     </li></ol>
             </div>
 
-        <div class="parent" name="scala.AnyRef">
+        <div class="parent" name="org.school.association.AbstractAssociation">
+              <h3>Inherited from <a href="AbstractAssociation.html" class="extype" name="org.school.association.AbstractAssociation">AbstractAssociation</a>[T]</h3>
+            </div><div class="parent" name="scala.AnyRef">
               <h3>Inherited from AnyRef</h3>
             </div><div class="parent" name="scala.Any">
               <h3>Inherited from <span class="extype" name="scala.Any">Any</span></h3>

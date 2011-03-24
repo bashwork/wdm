@@ -52,7 +52,44 @@
 
         <div class="types members" id="types">
               <h3>Type Members</h3>
-              <ol><li visbl="pub" data-isabs="false" name="org.school.association.GeneralizedSequentialPattern">
+              <ol><li visbl="pub" data-isabs="true" name="org.school.association.AbstractAssociation">
+      <a id="AbstractAssociation:AbstractAssociation[T]"></a>
+      <h4 class="signature"><a href="AbstractAssociation.html">
+      <span class="kind">trait</span>
+      <span class="symbol">
+        <span class="name">AbstractAssociation</span>
+        <span class="tparams">[<span name="T">T</span>]</span>
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </a></h4>
+      <p class="comment cmt">Represents an association pattern interface along with a number
+of helper methods.</p>
+    </li><li visbl="pub" data-isabs="false" name="org.school.association.Apriori">
+      <a id="Apriori:Apriori[T]"></a>
+      <h4 class="signature"><a href="Apriori.html">
+      <span class="kind">class</span>
+      <span class="symbol">
+        <span class="name">Apriori</span>
+        <span class="tparams">[<span name="T">T</span>]</span>
+        
+        <span class="result"> extends AbstractAssociation[T]</span>
+      </span>
+      </a></h4>
+      <p class="comment cmt">This is an implementation of the Apriori algorithm outlined in WDM.</p>
+    </li><li visbl="pub" data-isabs="false" name="org.school.association.AprioriSpec">
+      <a id="AprioriSpec:AprioriSpec"></a>
+      <h4 class="signature"><a href="AprioriSpec.html">
+      <span class="kind">class</span>
+      <span class="symbol">
+        <span class="name">AprioriSpec</span>
+        
+        
+        <span class="result"> extends FlatSpec with ShouldMatchers with PrivateMethodTester</span>
+      </span>
+      </a></h4>
+      
+    </li><li visbl="pub" data-isabs="false" name="org.school.association.GeneralizedSequentialPattern">
       <a id="GeneralizedSequentialPattern:GeneralizedSequentialPattern[T]"></a>
       <h4 class="signature"><a href="GeneralizedSequentialPattern.html">
       <span class="kind">class</span>
@@ -60,11 +97,11 @@
         <span class="name">GeneralizedSequentialPattern</span>
         <span class="tparams">[<span name="T">T</span>]</span>
         
-        <span class="result"> extends AnyRef</span>
+        <span class="result"> extends AbstractAssociation[T]</span>
       </span>
       </a></h4>
       <p class="comment cmt">This is an implementation of the Minimum Support Generalized Sequential
-Pattern algorith outlined in WDM.</p>
+Pattern algorithm outlined in WDM.</p>
     </li><li visbl="pub" data-isabs="false" name="org.school.association.GeneralizedSequentialPatternSpec">
       <a id="GeneralizedSequentialPatternSpec:GeneralizedSequentialPatternSpec"></a>
       <h4 class="signature"><a href="GeneralizedSequentialPatternSpec.html">
@@ -77,22 +114,113 @@ Pattern algorith outlined in WDM.</p>
       </span>
       </a></h4>
       
-    </li><li visbl="pub" data-isabs="true" name="org.school.association.RunnerTrait">
-      <a id="RunnerTrait:RunnerTrait"></a>
-      <h4 class="signature"><a href="RunnerTrait.html">
-      <span class="kind">trait</span>
+    </li><li visbl="pub" data-isabs="false" name="org.school.association.MsApriori">
+      <a id="MsApriori:MsApriori[T]"></a>
+      <h4 class="signature"><a href="MsApriori.html">
+      <span class="kind">class</span>
       <span class="symbol">
-        <span class="name">RunnerTrait</span>
+        <span class="name">MsApriori</span>
+        <span class="tparams">[<span name="T">T</span>]</span>
         
-        
-        <span class="result"> extends AnyRef</span>
+        <span class="result"> extends AbstractAssociation[T]</span>
       </span>
       </a></h4>
-      <p class="comment cmt">The main launcher script for the service.</p>
+      <p class="comment cmt">This is an implementation of the Minimum Support Apriori
+algorithm outlined in WDM.</p>
+    </li><li visbl="pub" data-isabs="false" name="org.school.association.MsAprioriSpecSpec">
+      <a id="MsAprioriSpecSpec:MsAprioriSpecSpec"></a>
+      <h4 class="signature"><a href="MsAprioriSpecSpec.html">
+      <span class="kind">class</span>
+      <span class="symbol">
+        <span class="name">MsAprioriSpecSpec</span>
+        
+        
+        <span class="result"> extends FlatSpec with ShouldMatchers with PrivateMethodTester</span>
+      </span>
+      </a></h4>
+      
+    </li><li visbl="pub" data-isabs="false" name="org.school.association.MsGeneralizedSequentialPattern">
+      <a id="MsGeneralizedSequentialPattern:MsGeneralizedSequentialPattern[T]"></a>
+      <h4 class="signature"><a href="MsGeneralizedSequentialPattern.html">
+      <span class="kind">class</span>
+      <span class="symbol">
+        <span class="name">MsGeneralizedSequentialPattern</span>
+        <span class="tparams">[<span name="T">T</span>]</span>
+        
+        <span class="result"> extends AbstractAssociation[T]</span>
+      </span>
+      </a></h4>
+      <p class="comment cmt">This is an implementation of the Minimum Support Generalized Sequential
+Pattern algorithm outlined in WDM.</p>
+    </li><li visbl="pub" data-isabs="false" name="org.school.association.MsGeneralizedSequentialPatternSpec">
+      <a id="MsGeneralizedSequentialPatternSpec:MsGeneralizedSequentialPatternSpec"></a>
+      <h4 class="signature"><a href="MsGeneralizedSequentialPatternSpec.html">
+      <span class="kind">class</span>
+      <span class="symbol">
+        <span class="name">MsGeneralizedSequentialPatternSpec</span>
+        
+        
+        <span class="result"> extends FlatSpec with ShouldMatchers with PrivateMethodTester</span>
+      </span>
+      </a></h4>
+      
+    </li><li visbl="pub" data-isabs="false" name="org.school.association.MsPrefixSpan">
+      <a id="MsPrefixSpan:MsPrefixSpan[T]"></a>
+      <h4 class="signature"><a href="MsPrefixSpan.html">
+      <span class="kind">class</span>
+      <span class="symbol">
+        <span class="name">MsPrefixSpan</span>
+        <span class="tparams">[<span name="T">T</span>]</span>
+        
+        <span class="result"> extends AbstractAssociation[T]</span>
+      </span>
+      </a></h4>
+      <p class="comment cmt">This is an implementation of the Minimum Support Prefix Span algorithm
+outlined in WDM.</p>
+    </li><li visbl="pub" data-isabs="false" name="org.school.association.PrefixSpan">
+      <a id="PrefixSpan:PrefixSpan[T]"></a>
+      <h4 class="signature"><a href="PrefixSpan.html">
+      <span class="kind">class</span>
+      <span class="symbol">
+        <span class="name">PrefixSpan</span>
+        <span class="tparams">[<span name="T">T</span>]</span>
+        
+        <span class="result"> extends AbstractAssociation[T]</span>
+      </span>
+      </a></h4>
+      <p class="comment cmt">This is an implementation of the Minimum Support Prefix Span algorithm
+outlined in WDM.</p>
+    </li><li visbl="pub" data-isabs="false" name="org.school.association.PrefixSpanSpec">
+      <a id="PrefixSpanSpec:PrefixSpanSpec"></a>
+      <h4 class="signature"><a href="PrefixSpanSpec.html">
+      <span class="kind">class</span>
+      <span class="symbol">
+        <span class="name">PrefixSpanSpec</span>
+        
+        
+        <span class="result"> extends FlatSpec with ShouldMatchers with PrivateMethodTester</span>
+      </span>
+      </a></h4>
+      
     </li></ol>
             </div>
 
+        <div class="values members" id="values">
+              <h3>Value Members</h3>
+              <ol><li visbl="pub" data-isabs="false" name="org.school.association.rule">
+      <a id="rule:rule"></a>
+      <h4 class="signature"><a href="rule/package.html">
+      <span class="kind">package</span>
+      <span class="symbol">
+        <span class="name">rule</span>
         
+        
+        
+      </span>
+      </a></h4>
+      
+    </li></ol>
+            </div>
 
         
 
