@@ -60,7 +60,7 @@ trait RunnerTrait {
     /**
      * Main program start
      *
-     * @params args The command line arguments
+     * @param args The command line arguments
      */
     def main(args: Array[String]) = {
         var defaults = createDefaults
