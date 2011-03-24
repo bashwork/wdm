@@ -35,7 +35,7 @@ class Apriori[T](val sequences:List[Transaction[T]],
         stopwatch.start
         frequents += initialize()
 
-        while(frequents.last.size > 0) {
+        while (frequents.last.size > 0) {
             val ck = candidateGen(frequents.last)
             frequents += buildFrequent(ck)
             logger.debug("generated frequent set: size({})", frequents.last.size)
@@ -117,7 +117,7 @@ class Apriori[T](val sequences:List[Transaction[T]],
      * @return A possible candidate set to process
      */
     def candidateGen(frequent:FrequentSet[T]) : List[Transaction[T]] = {
-        val candidates = ListBuffer[Transaction[T]]()
+        val candidates   = ListBuffer[Transaction[T]]()
         val transactions = frequent.transactions
 
         transactions.foreach { left => {
@@ -161,9 +161,11 @@ class Apriori[T](val sequences:List[Transaction[T]],
     private def candidateJoin(left:Transaction[T], right:Transaction[T],
         frequent:FrequentSet[T]) : Option[Transaction[T]] = {
 
-       //if (left < right) Some(Transaction(left.sets +
-       //    ItemSet(right.sets.last.items.last))) else None
-        None
+        val (l, r) = (left.sets.head.items, right.sets.head.items)
+
+        if ((l.init != r.init) ||                    // {i..n-1} == (j..n-1}
+            (!erasureCheck(l.last, r.last))) None    // (in < jn)
+        else Some(Transaction(ItemSet(l ++ List(r.last))))
     }
 
     /**
@@ -176,8 +178,9 @@ class Apriori[T](val sequences:List[Transaction[T]],
     private def candidatePrune(join:Transaction[T], frequent:FrequentSet[T])
         : Option[Transaction[T]] = {
 
-        val isGood = join.subsequences.forall { s =>
-            (frequent.transactions.exists { t => t contains s })
+        val isGood = join.subsequences.forall { subsequence =>
+            (frequent.transactions.exists { transaction =>
+                transaction contains subsequence })
         }
 
         if (isGood) Some(join) else None

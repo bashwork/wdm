@@ -48,11 +48,13 @@ class AprioriSpec extends FlatSpec
 		val apriori  = new Apriori(database, support)
         val actual   = apriori.process()
 
-        val f1 = FrequentSet(Transaction(ItemSet("1","2","3","5")))
+        val f1 = FrequentSet(
+            Transaction(ItemSet("1")),
+            Transaction(ItemSet("2")),
+            Transaction(ItemSet("3")),
+            Transaction(ItemSet("5")))
         val f2 = FrequentSet(
-            Transaction(ItemSet("1","2")),
             Transaction(ItemSet("1","3")),
-            Transaction(ItemSet("1","5")),
             Transaction(ItemSet("2","3")),
             Transaction(ItemSet("2","5")),
             Transaction(ItemSet("3","5")))
