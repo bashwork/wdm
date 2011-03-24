@@ -18,6 +18,9 @@ class FrequentSet[T] private (val transactions:List[Transaction[T]],
     override def toString() = transactions.mkString("\n")
 }
 
+/**
+ * Companion object for the frequent set class
+ */
 object FrequentSet {
     def apply[T](items:List[Transaction[T]]) = new FrequentSet[T](items,
         items.headOption.map { _.length }.getOrElse(0))

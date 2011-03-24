@@ -5,7 +5,6 @@ import scala.collection.mutable.HashMap
 import scala.collection.mutable.ListBuffer
 import org.school.core.support.AbstractSupport
 import org.school.core.{ItemSet, Transaction, FrequentSet}
-import org.school.utility.Stopwatch
 
 /**
  * This is an implementation of the Minimum Support Generalized Sequential
@@ -17,12 +16,11 @@ import org.school.utility.Stopwatch
  * @param support The support lookup table for each item
  */
 class MsGeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
-    val support:AbstractSupport[T]) {
+    val support:AbstractSupport[T]) extends AbstractAssociation[T] {
 
     /** This is N represented in the gsp algorithm */
     private val sizeN = sequences.size.doubleValue
     private val logger = LoggerFactory.getLogger(this.getClass)
-    private val stopwatch = new Stopwatch()
     private var initialL: FrequentSet[T] = _
 
     /**
@@ -204,21 +202,6 @@ class MsGeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
     }
 
     /**
-     * So scala generics are pretty pathetic. Basically they use type
-     * erasure to maintain backwards compatability with the legacy JVM.
-     * This means that we actually cannot compare the inner types directly
-     * as we don't know what they are! Since we know that we are comparing
-     * something of digits (at least for this class) we can just:
-     * Any.toString.toInt and compare that
-     *
-     * @param l The left list to check
-     * @param r the right list to check
-     * @return true if l is greater than r
-     */
-    private def erasureCheck(l:List[T], r:List[T]) =
-        (l.last.toString.toInt > r.last.toString.toInt)
-
-    /**
      * If the first item in the sequence is the minMisItem, we perform
      * this join step.
      *
@@ -240,13 +223,13 @@ class MsGeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
             results.last.minMisItem = left.minMisItem
 
             if (((left.size == 2) && (left.length == 2)) &&
-                (erasureCheck(lastRight, lastLeft))) {
+                (compare(lastRight, lastLeft))) {
                 results += Transaction(left.sets.head,                  // {1}{2} & {4} => {1}{2,4}
                     ItemSet(left.sets.last.items.last, lastRight.last))
                 results.last.minMisItem = left.minMisItem
             }
         } else if (((left.size == 1) && (left.length == 2)) &&
-            (lastRight.last.toString > lastLeft.last.toString) ||       // scala type erasure
+            (!compare(lastRight.last, lastLeft.last)) ||
             (left.length > 2)) {
             results += Transaction(left.sets ++ List(right.sets.last)) // {1}{2} & {4} => {1}{2}{4}
             results.last.minMisItem = left.minMisItem
@@ -277,13 +260,13 @@ class MsGeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
             results.last.minMisItem = right.minMisItem
 
             if (((right.size == 2) && (right.length == 2)) &&
-                (erasureCheck(firstLeft, firstRight))) {
+                (compare(firstLeft, firstRight))) {
                 results += Transaction(right.sets.head,                 // {1}{2} & {4} => {1}{2,4}
                     ItemSet(right.sets.last.items.last, firstLeft.last))
                 results.last.minMisItem = right.minMisItem
             }
         } else if (((right.size == 1) && (right.length == 2)) &&
-            (firstLeft.last.toString < firstRight.last.toString) ||     // scala type erasure
+            (compare(firstLeft.last, firstRight.last)) ||
             (right.length > 2)) {
             results += Transaction(right.sets ++ List(left.sets.last))  // {1}{2} & {4} => {1}{2}{4}
             results.last.minMisItem = right.minMisItem

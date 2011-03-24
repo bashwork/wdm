@@ -5,7 +5,6 @@ import scala.collection.mutable.HashMap
 import scala.collection.mutable.ListBuffer
 import org.school.core.support.AbstractSupport
 import org.school.core.{ItemSet, Transaction, FrequentSet}
-import org.school.utility.Stopwatch
 
 /**
  * This is an implementation of the Apriori algorithm outlined in WDM.
@@ -17,12 +16,11 @@ import org.school.utility.Stopwatch
  * @param support The support lookup table for each item
  */
 class Apriori[T](val sequences:List[Transaction[T]],
-    val support:AbstractSupport[T]) {
+    val support:AbstractSupport[T]) extends AbstractAssociation[T] {
 
     /** This is N represented in the gsp algorithm */
     private val sizeN = sequences.size.doubleValue
     private val logger = LoggerFactory.getLogger(this.getClass)
-    private val stopwatch = new Stopwatch()
 
     /**
      * Processes the current sequence list to produce all the
@@ -46,21 +44,6 @@ class Apriori[T](val sequences:List[Transaction[T]],
     }
 
     /**
-     * So scala generics are pretty pathetic. Basically they use type
-     * erasure to maintain backwards compatability with the legacy JVM.
-     * This means that we actually cannot compare the inner types directly
-     * as we don't know what they are! Since we know that we are comparing
-     * something of digits (at least for this class) we can just:
-     * Any.toString.toInt and compare that
-     *
-     * @param l The left item to check
-     * @param r the right item to check
-     * @return true if l is greater than r
-     */
-    private def erasureCheck(l:T, r:T) =
-        l.toString.toInt < r.toString.toInt
-
-    /**
      * Generate all the unique items in the list of transactions
      * Note: this comprises the following portions of the algorith:
      * * M: sort(I,MS)
@@ -73,7 +56,7 @@ class Apriori[T](val sequences:List[Transaction[T]],
         val counts   = allItems groupBy identity mapValues { _.size }               // I.count
         val actual   = HashMap[T,Double]()                                          // I.support
         val unique   = counts.keys.toList                                           // I
-        val sorted   = unique.sortWith { (a,b) => erasureCheck(a,b) }               // M
+        val sorted   = unique.sortWith { (a,b) => compare(a,b) }                    // M
         sorted.foreach { s => actual(s) = counts(s) / sizeN }                       // populate supports
         val filtered = sorted.filter { s => actual(s) >= support.get(s) }           // <F1>
 
@@ -164,7 +147,7 @@ class Apriori[T](val sequences:List[Transaction[T]],
         val (l, r) = (left.sets.head.items, right.sets.head.items)
 
         if ((l.init != r.init) ||                    // {i..n-1} == (j..n-1}
-            (!erasureCheck(l.last, r.last))) None    // (in < jn)
+            (!compare(l.last, r.last))) None         // (in < jn)
         else Some(Transaction(ItemSet(l ++ List(r.last))))
     }
 

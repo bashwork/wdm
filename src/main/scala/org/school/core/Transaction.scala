@@ -186,6 +186,9 @@ class Transaction[T] private (val sets:List[ItemSet[T]],
     override def toString() = sets.mkString("<", "", ">")
 }
 
+/**
+ * Companion object for the transaction class
+ */
 object Transaction {
     def apply[T](items:ItemSet[T]*) = new Transaction[T](items.toList, 0, 0)
     def apply[T](items:List[ItemSet[T]], count:Int = 0) = new Transaction[T](items, count, 0)

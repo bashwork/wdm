@@ -5,7 +5,6 @@ import scala.collection.mutable.HashMap
 import scala.collection.mutable.ListBuffer
 import org.school.core.support.AbstractSupport
 import org.school.core.{ItemSet, Transaction, FrequentSet}
-import org.school.utility.Stopwatch
 
 /**
  * This is an implementation of the Minimum Support Apriori
@@ -17,12 +16,11 @@ import org.school.utility.Stopwatch
  * @param support The support lookup table for each item
  */
 class MsApriori[T](val sequences:List[Transaction[T]],
-    val support:AbstractSupport[T]) {
+    val support:AbstractSupport[T]) extends AbstractAssociation[T] {
 
     /** This is N represented in the gsp algorithm */
     private val sizeN = sequences.size.doubleValue
     private val logger = LoggerFactory.getLogger(this.getClass)
-    private val stopwatch = new Stopwatch()
     private var initialL: FrequentSet[T] = _
 
     /**
@@ -192,21 +190,6 @@ class MsApriori[T](val sequences:List[Transaction[T]],
             case _           => None
         }
     }
-
-    /**
-     * So scala generics are pretty pathetic. Basically they use type
-     * erasure to maintain backwards compatability with the legacy JVM.
-     * This means that we actually cannot compare the inner types directly
-     * as we don't know what they are! Since we know that we are comparing
-     * something of digits (at least for this class) we can just:
-     * Any.toString.toInt and compare that
-     *
-     * @param l The left item to check
-     * @param r the right item to check
-     * @return true if l is greater than r
-     */
-    private def erasureCheck(l:T, r:T) =
-        l.toString.toInt > r.toString.toInt
 
     /**
      * Helper to test each possible candidate set and return the

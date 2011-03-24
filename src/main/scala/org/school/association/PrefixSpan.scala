@@ -5,7 +5,6 @@ import scala.collection.mutable.HashMap
 import scala.collection.mutable.ListBuffer
 import org.school.core.support.AbstractSupport
 import org.school.core.{ItemSet, Transaction, FrequentSet}
-import org.school.utility.Stopwatch
 
 /**
  * This is an implementation of the Minimum Support Prefix Span algorithm
@@ -17,12 +16,11 @@ import org.school.utility.Stopwatch
  * @param support The support lookup table for each item
  */
 class PrefixSpan[T](val sequences:List[Transaction[T]],
-    val support:AbstractSupport[T]) {
+    val support:AbstractSupport[T]) extends AbstractAssociation[T] {
 
     /** This is N represented in the gsp algorithm */
     private val sizeN = sequences.size.doubleValue
 	private val logger = LoggerFactory.getLogger(this.getClass)
-	private val stopwatch = new Stopwatch()
 
     /**
      * Processes the current sequence list to produce all the

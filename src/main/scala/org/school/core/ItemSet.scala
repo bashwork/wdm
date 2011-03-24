@@ -18,7 +18,7 @@ class ItemSet[T] private (val items:List[T])
     var support = 0.0
 
     /** If a template variable exists, its index */
-    var templateIndex = 0xbadbeef // poisoned to never be less than
+    var templateIndex = 0xbadbeef // poisoned to never match
 
     /**
      * Helper method to check if an item is a template index
@@ -59,6 +59,9 @@ class ItemSet[T] private (val items:List[T])
     override def toString() = items.mkString("{", ",", "}")
 }
 
+/**
+ * Companion object for the item set class
+ */
 object ItemSet {
     def apply[T](items:List[T]) = new ItemSet[T](items.distinct)
     def apply[T](items:T*) = new ItemSet[T](items.toList.distinct)
