@@ -9,8 +9,8 @@ import java.io.Serializable
  * @param transactions The k-length frequent patterns
  * @param length The pattern length this represents
  */
-class RuleSet[T] private (val predicate:List[Transaction[T]],
-    val result:List[Transaction[T]]) extends Serializable {
+class RuleSet[T] private (val predicate:Transaction[T],
+    val result:Transaction[T]) extends Serializable {
 
     /** The size of the rulesets */
     def size() = predicate.size + result.size
@@ -18,18 +18,17 @@ class RuleSet[T] private (val predicate:List[Transaction[T]],
     override def hashCode = predicate.hashCode + result.hashCode
     override def equals(other:Any) = other match {
         case that: RuleSet[_] => (that.predicate == this.predicate) &&
-                                 (that.result == this.result)
+                                 (that.result    == this.result)
         case _ => false
     }
-    override def toString() = {
-        predicate.mkString("\n") + " -> " + result.mkString("\n")
-    }
+    override def toString() =
+        predicate.toString + " -> " + result.toString
 }
 
 /**
  * Companion object for the rule class
  */
 object RuleSet {
-    def apply[T](predicate:List[Transaction[T]], result:List[Transaction[T]]) =
+    def apply[T](predicate:Transaction[T], result:Transaction[T]) =
         new RuleSet[T](predicate, result)
 }

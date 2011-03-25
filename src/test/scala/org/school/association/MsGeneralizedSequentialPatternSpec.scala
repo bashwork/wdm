@@ -33,13 +33,17 @@ class MsGeneralizedSequentialPatternSpec extends FlatSpec
 
 	it should "calculate sdc correctly" in {
 		val evaluateSdc = PrivateMethod[Boolean]('evaluateSdc)
-		val s   = (1 to 5).map { x => Transaction(ItemSet(x.toString)) }.toList
+		val s   = (1 to 5).map { x =>
+            val transaction = Transaction(ItemSet(x.toString))
+            transaction.support = x * 0.1
+            transaction
+        }.toList
 		val ms  = MultipleSupport((1 to 5).map { x => (x.toString, x*0.1) } .toMap)
-		ms.sdc = 0.4 // artificial support difference constraint
+		ms.sdc = 0.3 // artificial support difference constraint
 		val gsp = new MsGeneralizedSequentialPattern(s, ms)
 
-		(gsp invokePrivate evaluateSdc(s(0), s(1))) should be (false)
-		(gsp invokePrivate evaluateSdc(s(0), s(4))) should be (true)
+		(gsp invokePrivate evaluateSdc(s(0), s(1))) should be (true)
+		(gsp invokePrivate evaluateSdc(s(0), s(4))) should be (false)
 	}
 
 	it should "generate candidate2 correctly" in {
@@ -166,11 +170,8 @@ class MsGeneralizedSequentialPatternSpec extends FlatSpec
 		// thar be dragons here
 		actual.size should be (expected.size)
 		for (index <- 0 to actual.size - 1) {
-			val (left, right) = (actual(index).transactions, expected(index).transactions)
-			left.size should be (right.size)
-			for (j <- 0 to left.size - 1) {
-            	left(j) == right(j) should be (true) 
-			}
+			(actual(index).transactions ==
+             expected(index).transactions) should be (true)
 		}
 	}
 }

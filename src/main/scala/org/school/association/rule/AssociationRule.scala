@@ -1,5 +1,6 @@
 package org.school.association.rule
 
+import scala.collection.mutable.ListBuffer
 import org.school.core.{ItemSet, Transaction, FrequentSet, RuleSet}
 
 /**
@@ -16,6 +17,12 @@ class AssociationRule[T](val frequents:List[FrequentSet[T]],
      * @return A list of valid association rules
      */
     def process() : List[RuleSet[T]] = {
-        List[RuleSet[T]]()
+        val rules = ListBuffer[RuleSet[T]]()
+
+        frequents.foreach { frequent =>
+            // generate each rule
+        }
+        
+        rules.toList
     }
 }
