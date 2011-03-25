@@ -1,7 +1,10 @@
 package org.school.core.support
 
-import org.school.core.Transaction
-
+/**
+ * A multiple support builder that uses the frequency
+ * of each item in the dataset to build its support
+ * value.
+ */
 class FrequencyBuilder[T](val sdcScale:Double = 10.0)
     extends AbstractSupportBuilder[T] {
 

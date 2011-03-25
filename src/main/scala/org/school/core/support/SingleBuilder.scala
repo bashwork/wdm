@@ -1,7 +1,9 @@
 package org.school.core.support
 
-import org.school.core.Transaction
-
+/**
+ * A multiple support builder that uses a single
+ * value for all the intput values.
+ */
 class SingleBuilder[T](val default:Double = 1.0)
     extends AbstractSupportBuilder[T] {
 
