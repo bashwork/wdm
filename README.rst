@@ -55,11 +55,5 @@ together or share code.
 Todo
 ============================================================
 
-Implement the non-ms versions of the algorithms and implement
-the following association algorithms:
-
-  * apriori
-  * ms-apriori
-  
-Also add more datasets and testing for validation (plus a bit
+Add more datasets and testing for validation (plus a bit
 of cleanup and correct functional reworks).
