@@ -1,5 +1,5 @@
 <ivy-module version="1.0">
-  <info organisation="school" module="wdm" revision="1.0.0" />
+  <info organisation="org" module="wdm" revision="1.0.0" />
 
   <configurations>
     <conf name="default" description="normal build" />
