@@ -1,0 +1,158 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html>
+        <head>
+          <title>org.wdm.distance</title>
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link href="../../../lib/template.css" rel="stylesheet" type="text/css" media="screen" />
+      <script type="text/javascript" src="../../../lib/jquery.js"></script>
+      <script type="text/javascript" src="../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../lib/tools.tooltip.js"></script>
+    
+        </head>
+        <body class="value" onload="windowTitle();">
+
+      <p id="owner"><a href="../../package.html" class="extype" name="org">org</a>.<a href="../package.html" class="extype" name="org.wdm">wdm</a></p>
+
+      <div id="definition">
+        <img src="../../../lib/package_big.png" />
+        <h1>distance</h1>
+      </div>
+
+      <h4 class="signature" id="signature">
+      <span class="kind">package</span>
+      <span class="symbol">
+        <span class="name">distance</span>
+        
+        
+        
+      </span>
+      </h4>
+      <div class="fullcomment" id="comment"></div>
+
+      <div id="template">
+
+        <div id="mbrsel">
+          <div id="textfilter"><span class="pre"></span><span class="input"><input accesskey="/" type="text" /></span><span class="post"></span></div>
+          
+          
+          <div id="visbl">
+              <span class="filtertype">Visibility</span>
+              <ol><li class="public in">Public</li><li class="all out">All</li></ol>
+            </div>
+          <div id="impl">
+              <span class="filtertype">Impl.</span>
+              <ol><li class="concrete in">Concrete</li><li class="abstract in">Abstract</li></ol>
+            </div>
+        </div>
+
+        
+
+        <div class="types members" id="types">
+              <h3>Type Members</h3>
+              <ol><li visbl="pub" data-isabs="false" name="org.wdm.distance.ChebyshevDistanceSpec">
+      <a id="ChebyshevDistanceSpec:ChebyshevDistanceSpec"></a>
+      <h4 class="signature"><a href="ChebyshevDistanceSpec.html">
+      <span class="kind">class</span>
+      <span class="symbol">
+        <span class="name">ChebyshevDistanceSpec</span>
+        
+        
+        <span class="result"> extends FlatSpec with ShouldMatchers</span>
+      </span>
+      </a></h4>
+      
+    </li><li visbl="pub" data-isabs="true" name="org.wdm.distance.Distance">
+      <a id="Distance:Distance"></a>
+      <h4 class="signature"><a href="Distance.html">
+      <span class="kind">trait</span>
+      <span class="symbol">
+        <span class="name">Distance</span>
+        
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </a></h4>
+      <p class="comment cmt">Represents the base trait for a distance function
+</p>
+    </li><li visbl="pub" data-isabs="false" name="org.wdm.distance.EuclideanDistanceSpec">
+      <a id="EuclideanDistanceSpec:EuclideanDistanceSpec"></a>
+      <h4 class="signature"><a href="EuclideanDistanceSpec.html">
+      <span class="kind">class</span>
+      <span class="symbol">
+        <span class="name">EuclideanDistanceSpec</span>
+        
+        
+        <span class="result"> extends FlatSpec with ShouldMatchers</span>
+      </span>
+      </a></h4>
+      
+    </li><li visbl="pub" data-isabs="false" name="org.wdm.distance.ManhattanDistanceSpec">
+      <a id="ManhattanDistanceSpec:ManhattanDistanceSpec"></a>
+      <h4 class="signature"><a href="ManhattanDistanceSpec.html">
+      <span class="kind">class</span>
+      <span class="symbol">
+        <span class="name">ManhattanDistanceSpec</span>
+        
+        
+        <span class="result"> extends FlatSpec with ShouldMatchers</span>
+      </span>
+      </a></h4>
+      
+    </li></ol>
+            </div>
+
+        <div class="values members" id="values">
+              <h3>Value Members</h3>
+              <ol><li visbl="pub" data-isabs="false" name="org.wdm.distance.ChebyshevDistance">
+      <a id="ChebyshevDistance:ChebyshevDistance"></a>
+      <h4 class="signature"><a href="ChebyshevDistance$.html">
+      <span class="kind">object</span>
+      <span class="symbol">
+        <span class="name">ChebyshevDistance</span>
+        
+        
+        <span class="result"> extends Distance</span>
+      </span>
+      </a></h4>
+      <p class="comment cmt">A method that computes the distance of some
+points using the Chebyshev distance formula.</p>
+    </li><li visbl="pub" data-isabs="false" name="org.wdm.distance.EuclideanDistance">
+      <a id="EuclideanDistance:EuclideanDistance"></a>
+      <h4 class="signature"><a href="EuclideanDistance$.html">
+      <span class="kind">object</span>
+      <span class="symbol">
+        <span class="name">EuclideanDistance</span>
+        
+        
+        <span class="result"> extends Distance</span>
+      </span>
+      </a></h4>
+      <p class="comment cmt">A method that computes the distance of some
+points using the euclidian distance formula.</p>
+    </li><li visbl="pub" data-isabs="false" name="org.wdm.distance.ManhattanDistance">
+      <a id="ManhattanDistance:ManhattanDistance"></a>
+      <h4 class="signature"><a href="ManhattanDistance$.html">
+      <span class="kind">object</span>
+      <span class="symbol">
+        <span class="name">ManhattanDistance</span>
+        
+        
+        <span class="result"> extends Distance</span>
+      </span>
+      </a></h4>
+      <p class="comment cmt">A method that computes the distance of some
+points using the Manhattan distance formula.</p>
+    </li></ol>
+            </div>
+
+        
+
+      </div>
+      
+      <div id="tooltip"></div>
+      
+    </body>
+      </html>
