@@ -1,19 +1,20 @@
-package org.wdm.main
+package org.wdm.association.main
 
+import org.wdm.main.RunnerTrait
 import org.wdm.core.{Transaction, FrequentSet}
 import org.wdm.core.support.AbstractSupport
-import org.wdm.association.PrefixSpan
+import org.wdm.association.MsApriori
 
 /**
- * The main runner for the prefix span algorithm 
+ * The main runner for the ms-apriori algorithm
  */ 
-object PrefixSpanMain extends RunnerTrait { 
+object MsAprioriMain extends RunnerTrait { 
 
     val version  = "0.1.0"
-    val mainName = "PrefixSpan"
+    val mainName = "MsApriori"
 
     /**
-     * Process the given input data with the prefix span algorithm
+     * Process the given input data with the ms apriori algorithm
      *
      * @param database The dataset to process
      * @param support The support lookup table
@@ -22,7 +23,7 @@ object PrefixSpanMain extends RunnerTrait {
     def algorithm[T](database:List[Transaction[T]], support:AbstractSupport[T])
         : List[FrequentSet[T]] = {
     
-        val associator = new PrefixSpan(database, support)
+        val associator = new MsApriori(database, support)
         associator.process
     }
 }

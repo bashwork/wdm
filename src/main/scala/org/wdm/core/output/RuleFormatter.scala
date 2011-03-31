@@ -16,7 +16,7 @@ class RuleFormatter(rules:List[RuleSet[String]])
      *
      * @return The processed string result
      */
-    def format() : String = {
+    override def format() : String = {
 		val buffer = new StringBuilder
 
 		rules foreach { rule => 

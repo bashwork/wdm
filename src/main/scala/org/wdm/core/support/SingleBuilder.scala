@@ -15,7 +15,7 @@ class SingleBuilder[T](val default:Double = 1.0)
      * @param sizeN The total number of transactions in the dataset
      * @return The populated support lookup table
      */
-    protected def process(items:Map[T, Int], sizeN:Int) : MultipleSupport[T] = {
+    protected override def process(items:Map[T, Int], sizeN:Int) : MultipleSupport[T] = {
         val (min,max) = (Double.MaxValue, 0.0)
         val supports = items.map { case (item, _) =>
             (item, default) }

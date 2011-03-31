@@ -28,7 +28,7 @@ class GeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
      *
      * @return A list of frequent itemsets
      */
-    def process() : List[FrequentSet[T]] = {
+    override def process() : List[FrequentSet[T]] = {
         val frequents = ListBuffer[FrequentSet[T]]()
         stopwatch.start
         frequents += initialize()

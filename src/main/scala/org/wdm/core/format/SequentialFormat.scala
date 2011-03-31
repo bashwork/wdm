@@ -17,7 +17,7 @@ object SequentialFormat extends AbstractFormat {
      * @param source The source to be processed
      * @return The processed list iterator
      */
-    def process(source:Iterator[String]) : List[Transaction[String]] = {
+    override def process(source:Iterator[String]) : List[Transaction[String]] = {
         val transactions = ListBuffer[Transaction[String]]()
 
         source foreach { _ match {

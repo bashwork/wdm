@@ -16,7 +16,7 @@ class FrequencyBuilder[T](val sdcScale:Double = 10.0)
      * @param sizeN The total number of transactions in the dataset
      * @return The populated support lookup table
      */
-    protected def process(items:Map[T, Int], sizeN:Int) : MultipleSupport[T] = {
+    protected override def process(items:Map[T, Int], sizeN:Int) : MultipleSupport[T] = {
         val supports = items.map { case (item, count) => {
             (item, count/(sizeN * 1.0))
         }}

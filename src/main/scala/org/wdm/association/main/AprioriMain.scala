@@ -1,19 +1,20 @@
-package org.wdm.main
+package org.wdm.association.main
 
+import org.wdm.main.RunnerTrait
 import org.wdm.core.{Transaction, FrequentSet}
 import org.wdm.core.support.AbstractSupport
-import org.wdm.association.MsApriori
+import org.wdm.association.Apriori
 
 /**
- * The main runner for the ms-apriori algorithm
+ * The main runner for the apriori algorithm 
  */ 
-object MsAprioriMain extends RunnerTrait { 
+object AprioriMain extends RunnerTrait { 
 
     val version  = "0.1.0"
-    val mainName = "MsApriori"
+    val mainName = "Apriori"
 
     /**
-     * Process the given input data with the ms apriori algorithm
+     * Process the given input data with the apriori algorithm
      *
      * @param database The dataset to process
      * @param support The support lookup table
@@ -22,7 +23,7 @@ object MsAprioriMain extends RunnerTrait {
     def algorithm[T](database:List[Transaction[T]], support:AbstractSupport[T])
         : List[FrequentSet[T]] = {
     
-        val associator = new MsApriori(database, support)
+        val associator = new Apriori(database, support)
         associator.process
     }
 }

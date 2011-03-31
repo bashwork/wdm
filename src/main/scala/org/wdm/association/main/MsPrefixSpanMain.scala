@@ -1,5 +1,6 @@
-package org.wdm.main
+package org.wdm.association.main
 
+import org.wdm.main.RunnerTrait
 import org.wdm.core.{Transaction, FrequentSet}
 import org.wdm.core.support.AbstractSupport
 import org.wdm.association.MsPrefixSpan

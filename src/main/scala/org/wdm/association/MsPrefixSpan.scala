@@ -32,7 +32,7 @@ class MsPrefixSpan[T](val sequences:List[Transaction[T]],
      *
      * @return A list of frequent itemsets
      */
-    def process() : List[FrequentSet[T]] = {
+    override def process() : List[FrequentSet[T]] = {
         stopwatch.start
         val frequent = initialize()
         logger.debug("actuals: ", actual)
