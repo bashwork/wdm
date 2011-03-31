@@ -8,11 +8,8 @@ package org.wdm.distance
  */
 object EuclideanWeightedDistance {
 
-    def apply(a:Iterable[Double], b:Iterable[Double]) =
-        a.zip(b).foldLeft(0.0) { (total, next) =>
-            total + math.pow(next._1 - next._2, 2) }
-
-    def apply[X:ClassManifest](a:Iterable[Int], b:Iterable[Int]) =
-        a.zip(b).foldLeft(0.0) { (total, next) =>
-            total + math.pow(next._1 - next._2, 2) }
+    def apply(a:Iterable[Double], b:Iterable[Double],
+        w:Iterable[Double]) : Double =
+        a.zip(b).zip(w).foldLeft(0.0) { (total, next) =>
+            total + (math.pow(next._1._1 - next._1._2, 2) * next._2) }
 }

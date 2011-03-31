@@ -11,8 +11,4 @@ object EuclideanDistance extends Distance {
     def apply(a:Iterable[Double], b:Iterable[Double]) : Double =
         math.sqrt(a.zip(b).foldLeft(0.0) { (total, next) =>
             total + math.pow(next._1 - next._2, 2) })
-
-    def apply[X:ClassManifest](a:Iterable[Int], b:Iterable[Int]) : Double =
-        math.sqrt(a.zip(b).foldLeft(0.0) { (total, next) =>
-            total + math.pow(next._1 - next._2, 2) })
 }
