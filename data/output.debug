@@ -1,0 +1,43 @@
+384 [main] INFO org.wdm.association.MsGeneralizedSequentialPattern - initialization took 0.0s
+385 [main] INFO org.wdm.association.MsGeneralizedSequentialPattern - generated initial candidates: List(90, 80, 20, 70, 30, 40, 50, 10)
+394 [main] INFO org.wdm.association.MsGeneralizedSequentialPattern - generating frequent set: 2
+402 [main] INFO org.wdm.association.MsGeneralizedSequentialPattern - generated candidates2: List(<{80,20}>, <{80}{20}>, <{20}{80}>, <{80,70}>, <{80}{70}>, <{70}{80}>, <{80,30}>, <{80}{30}>, <{30}{80}>, <{80,40}>, <{80}{40}>, <{40}{80}>, <{80,50}>, <{80}{50}>, <{50}{80}>, <{80,10}>, <{80}{10}>, <{10}{80}>, <{20,70}>, <{20}{70}>, <{70}{20}>, <{20,30}>, <{20}{30}>, <{30}{20}>, <{20,40}>, <{20}{40}>, <{40}{20}>, <{20,50}>, <{20}{50}>, <{50}{20}>, <{20,10}>, <{20}{10}>, <{10}{20}>, <{70,30}>, <{70}{30}>, <{30}{70}>, <{70,40}>, <{70}{40}>, <{40}{70}>, <{70,50}>, <{70}{50}>, <{50}{70}>, <{70,10}>, <{70}{10}>, <{10}{70}>, <{30,40}>, <{30}{40}>, <{40}{30}>, <{30,50}>, <{30}{50}>, <{50}{30}>, <{30,10}>, <{30}{10}>, <{10}{30}>, <{40,50}>, <{40}{50}>, <{50}{40}>, <{40,10}>, <{40}{10}>, <{10}{40}>, <{50,10}>, <{50}{10}>, <{10}{50}>)
+415 [main] INFO org.wdm.association.MsGeneralizedSequentialPattern - frequent generation took 0.0s
+419 [main] INFO org.wdm.association.MsGeneralizedSequentialPattern - generated frequent set 2: size(10)
+419 [main] INFO org.wdm.association.MsGeneralizedSequentialPattern - generating frequent set: 3
+453 [main] INFO org.wdm.association.MsGeneralizedSequentialPattern - generated candidatesN: List(<{20}{80,70}>, <{20}{80,30}>, <{30}{80,70}>, <{20,70}{80}>, <{20,70}{80}>, <{20,70}{70}>, <{20,70}{70}>, <{20}{70}{80}>, <{20}{70,80}>, <{20}{70}{80}>, <{20}{70,80}>, <{20}{70}{70}>, <{20}{70}{70}>, <{20,30}{80}>, <{20,30}{80}>, <{20,30}{70}>, <{20,30}{70}>, <{20}{80,30}>)
+453 [main] INFO org.wdm.association.MsGeneralizedSequentialPattern - frequent generation took 0.0s
+454 [main] INFO org.wdm.association.MsGeneralizedSequentialPattern - generated frequent set 3: size(5)
+454 [main] INFO org.wdm.association.MsGeneralizedSequentialPattern - generating frequent set: 4
+456 [main] INFO org.wdm.association.MsGeneralizedSequentialPattern - generated candidatesN: List()
+456 [main] INFO org.wdm.association.MsGeneralizedSequentialPattern - frequent generation took 0.0s
+456 [main] INFO org.wdm.association.MsGeneralizedSequentialPattern - generated frequent set 4: size(0)
+456 [main] INFO org.wdm.association.MsGeneralizedSequentialPattern - processing took 0.0s
+254 [main] INFO org.wdm.association.MsPrefixSpan - initialization took 0.0s
+254 [main] INFO org.wdm.association.MsPrefixSpan - generated initial candidates: List(90, 80, 20, 70, 30, 40, 50, 10)
+258 [main] INFO org.wdm.association.MsPrefixSpan - actuals: 
+262 [main] INFO org.wdm.association.MsPrefixSpan - built potentials: List()
+265 [main] INFO org.wdm.association.MsPrefixSpan - built potentials: List(<{20,30}{70,80}{20,30,70}>, <{20,30,70,80}{50,70}>, <{20,30}{30,70,80}>)
+269 [main] INFO org.wdm.association.MsPrefixSpan - built projections(<{30}>): List(<{20,30}{70,80}{20,30,70}>, <{20,30,70,80}{70}>, <{20,30}{30,70,80}>) 
+270 [main] INFO org.wdm.association.MsPrefixSpan - <{30}> extend List(<{20,30}{70,80}{20,30,70}>, <{20,30,70,80}{70}>, <{20,30}{30,70,80}>) 
+272 [main] INFO org.wdm.association.MsPrefixSpan - patterns List(<{30}{20}>, <{30}{70}>, <{30}{80}>, <{30,70}>, <{30,80}>) 
+274 [main] INFO org.wdm.association.MsPrefixSpan - built projections(<{30}{80}>): List(<{70,80}{20,30,70}>, <{30,70,80}>) 
+274 [main] INFO org.wdm.association.MsPrefixSpan - <{30}{80}> extend List(<{70,80}{20,30,70}>, <{30,70,80}>) 
+274 [main] INFO org.wdm.association.MsPrefixSpan - patterns List(<{30}{80}{70}>, <{30}{80}{20}>, <{30}{80,70}>, <{30}{80}{30}>) 
+275 [main] INFO org.wdm.association.MsPrefixSpan - built projections(<{30}{80,70}>): List(<{70,80}{20,30,70}>, <{30,70,80}>) 
+275 [main] INFO org.wdm.association.MsPrefixSpan - <{30}{80,70}> extend List(<{70,80}{20,30,70}>, <{30,70,80}>) 
+275 [main] INFO org.wdm.association.MsPrefixSpan - patterns List(<{30}{80,70}>, <{30}{80,70}{20}>, <{30}{80,70}{30}>) 
+276 [main] INFO org.wdm.association.MsPrefixSpan - built projections(<{30}{80,70}>): List(<{70,80}{20,30,70}>, <{30,70,80}>) 
+276 [main] INFO org.wdm.association.MsPrefixSpan - <{30}{80,70}> extend List(<{70,80}{20,30,70}>, <{30,70,80}>) 
+276 [main] INFO org.wdm.association.MsPrefixSpan - patterns List(<{30}{80,70}>, <{30}{80,70}{20}>, <{30}{80,70}{30}>) 
+277 [main] INFO org.wdm.association.MsPrefixSpan - built projections(<{30}{80,70}>): List(<{70,80}{20,30,70}>, <{30,70,80}>) 
+277 [main] INFO org.wdm.association.MsPrefixSpan - <{30}{80,70}> extend List(<{70,80}{20,30,70}>, <{30,70,80}>) 
+277 [main] INFO org.wdm.association.MsPrefixSpan - patterns List(<{30}{80,70}>, <{30}{80,70}{20}>, <{30}{80,70}{30}>) 
+277 [main] INFO org.wdm.association.MsPrefixSpan - built projections(<{30}{80,70}>): List(<{70,80}{20,30,70}>, <{30,70,80}>) 
+277 [main] INFO org.wdm.association.MsPrefixSpan - <{30}{80,70}> extend List(<{70,80}{20,30,70}>, <{30,70,80}>) 
+278 [main] INFO org.wdm.association.MsPrefixSpan - patterns List(<{30}{80,70}>, <{30}{80,70}{20}>, <{30}{80,70}{30}>) 
+278 [main] INFO org.wdm.association.MsPrefixSpan - built projections(<{30}{80,70}>): List(<{70,80}{20,30,70}>, <{30,70,80}>) 
+278 [main] INFO org.wdm.association.MsPrefixSpan - <{30}{80,70}> extend List(<{70,80}{20,30,70}>, <{30,70,80}>) 
+278 [main] INFO org.wdm.association.MsPrefixSpan - patterns List(<{30}{80,70}>, <{30}{80,70}{20}>, <{30}{80,70}{30}>) 
+279 [main] INFO org.wdm.association.MsPrefixSpan - built projections(<{30}{80,70}>): List(<{70,80}{20,30,70}>, <{30,70,80}>) 
+... until recursion/stack limit ...

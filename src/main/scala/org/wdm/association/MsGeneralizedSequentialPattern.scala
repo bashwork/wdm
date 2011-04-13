@@ -35,16 +35,16 @@ class MsGeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
         frequents += initialize()
 
         (2 to Int.MaxValue).toStream.takeWhile(_ => frequents.last.size > 0).foreach { k =>
-            logger.debug("generating frequent set: " + k)
+            logger.info("generating frequent set: " + k)
             val ck = k match {
                 case 2 => candidateGen2(initialL)
                 case _ => candidateGenN(frequents.last)
             }
             frequents += buildFrequent(ck)
-            logger.debug("generated frequent set {}: size({})", k, frequents.last.size)
+            logger.info("generated frequent set {}: size({})", k, frequents.last.size)
         }
 
-        logger.debug("processing took " + stopwatch.toString)
+        logger.info("processing took " + stopwatch.toString)
         frequents.init.toList // the last frequent is empty
     }
 
@@ -71,8 +71,8 @@ class MsGeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
             actual(s) >= minsup }
         val filtered = level1.filter { s => actual(s) >= support.get(s) }           // <F1>
 
-        logger.debug("initialization took " + stopwatch.toString)
-        logger.debug("generated initial candidates: " + filtered)
+        logger.info("initialization took " + stopwatch.toString)
+        logger.info("generated initial candidates: " + filtered)
         initialL = FrequentSet(level1.map { x => {
             val transaction = Transaction(List(ItemSet(x)), counts(x))
             transaction.support = actual(x)
@@ -107,7 +107,7 @@ class MsGeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
         candidates.foreach { candidate =>       // populate support
             candidate.support = candidate.count / sizeN }
 
-        logger.debug("frequent generation took " + stopwatch.toString)
+        logger.info("frequent generation took " + stopwatch.toString)
         FrequentSet(candidates.filter { c =>
             c.support >= c.minsup(support) }.distinct)   // <{Fn}>
     }
@@ -147,10 +147,10 @@ class MsGeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
                     candidates.last.minMisItem = l.sets.last
                 }
             } }
-            case(l, index) => logger.debug("candidate2 support({}) not met: {}", l.support, l)
+            case(l, index) => logger.info("candidate2 support({}) not met: {}", l.support, l)
         }
 
-        logger.debug("generated candidates2: " + candidates.toList.distinct)
+        logger.info("generated candidates2: " + candidates.toList.distinct)
         candidates.toList.distinct  // remove duplicates
     }
 
@@ -173,7 +173,7 @@ class MsGeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
             } }
         } }
     
-        logger.debug("generated candidatesN: " + candidates.toList)
+        logger.info("generated candidatesN: " + candidates.toList)
         candidates.toList
     }
 

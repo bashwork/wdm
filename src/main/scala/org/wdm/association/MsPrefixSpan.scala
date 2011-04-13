@@ -35,10 +35,10 @@ class MsPrefixSpan[T](val sequences:List[Transaction[T]],
     override def process() : List[FrequentSet[T]] = {
         stopwatch.start
         val frequent = initialize()
-        logger.debug("actuals: ", actual)
+        logger.info("actuals: ", actual)
         buildFrequents(frequent)
 
-        logger.debug("processing took " + stopwatch.toString)
+        logger.info("processing took " + stopwatch.toString)
         frequentDb.map { case(count, buffer) => {
             FrequentSet(buffer.toList) }            // convert map to frequent list
         }.toList.sortWith { _.length < _.length }   // order by frequent length
@@ -66,8 +66,8 @@ class MsPrefixSpan[T](val sequences:List[Transaction[T]],
             actual(s) >= minsup }
         val filtered = level1.filter { s => actual(s) >= support.get(s) }           // <F1>
 
-        logger.debug("initialization took " + stopwatch.toString)
-        logger.debug("generated initial candidates: " + filtered)
+        logger.info("initialization took " + stopwatch.toString)
+        logger.info("generated initial candidates: " + filtered)
 
         FrequentSet(filtered.map { x => {                                           // <{F1}>
         val transaction = Transaction(List(ItemSet(x)), counts(x))
@@ -101,7 +101,7 @@ class MsPrefixSpan[T](val sequences:List[Transaction[T]],
             } }
         }
 
-        logger.debug("built frequents: " + frequents.toList)
+        logger.info("built frequents: " + frequents.toList)
         frequents.toList
     }
 
@@ -153,7 +153,7 @@ class MsPrefixSpan[T](val sequences:List[Transaction[T]],
             }
         }
 
-        logger.debug("built potentials: " + potentials.toList)
+        logger.info("built potentials: " + potentials.toList)
         potentials.toList
     }
 
@@ -229,7 +229,7 @@ class MsPrefixSpan[T](val sequences:List[Transaction[T]],
             }
         }
 
-        logger.debug("built projections({}): {} ", ik, projections.toList)
+        logger.info("built projections({}): {} ", ik, projections.toList)
         projections.toList
     }
 
@@ -245,27 +245,28 @@ class MsPrefixSpan[T](val sequences:List[Transaction[T]],
 
         val patterns = ListBuffer[Transaction[T]]()
 
-        logger.debug("{} extend {} ", ik, projections.toList)
+        logger.info("{} extend {} ", ik, projections.toList)
         projections.foreach { projection =>         // extend our prefix with any possible projections
             projection.sets.foreach { set =>        // extend one item at a time
                 set.items.zipWithIndex.foreach {
                     case(_, index) if index == set.templateIndex =>     // skip "_" item
                     case(item, index) => {
                         val ext = if (index > set.templateIndex) {      // Form <{30, x}>
-                            Transaction(ik.sets.init ++ List(ItemSet(
-                                ik.sets.last.items ++ List(item))))
+                            Transaction(ik.sets.init :+
+                                ItemSet(ik.sets.last.items :+ item))
                         } else {                                        // Form <{30}{x}>
-                            Transaction(ik.sets ++ List(ItemSet(item)))
+                            Transaction(ik.sets :+ ItemSet(item))
                         }
                         if (!patterns.exists { _ == ext }) { patterns += ext }
                 } }
             }
         }
 
-        sk.foreach { sequence =>                    // check the pattern against sk
-            patterns.foreach { pattern =>           // build the pattern support count
-                if (sequence contains pattern) {
-                    pattern.count += 1
+        logger.info("patterns {} ", patterns.toList)
+        sk.foreach { sequence =>                            // check the pattern against sk
+            patterns.foreach { pattern =>                   // build the pattern support count
+                if (sequence contains pattern) {            // if pattern is supported
+                    pattern.count += 1                      // increment support count
                 }
             }
         }
@@ -288,7 +289,7 @@ class MsPrefixSpan[T](val sequences:List[Transaction[T]],
     private def addFrequent(count:Int, transaction:Transaction[T]) {
         val buffer = frequentDb.getOrElseUpdate(count, ListBuffer[Transaction[T]]())
         if (!buffer.exists { _ == transaction }) {          // prevent duplicates
-            buffer += transaction
+            buffer += transaction                           // add frequent to N-frequent bucket
         }
     }
 }

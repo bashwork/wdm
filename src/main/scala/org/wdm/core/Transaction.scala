@@ -147,7 +147,7 @@ class Transaction[T] private (val sets:List[ItemSet[T]],
             val (r, l) = (right.sets.last, sets.last)
             val post = if (r contains l) List(r)            // {3}    & {3, 4}
                 else if (l.items.last == r.items.head)      // {3, 4} & {4, 5}
-                    List(ItemSet(l.items ++ List(r.items.last)))
+                    List(ItemSet(l.items :+ r.items.last))
                 else List(l, r)                             // {3}    & {4}
             
             Transaction(sets.init ++ post)
