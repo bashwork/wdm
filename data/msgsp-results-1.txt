@@ -27,3 +27,7 @@ The number of length 3 sequential patterns is 5
 <{20}{70,80}> Count: 2
 <{20,30}{80}> Count: 2
 <{20,30}{70}> Count: 2
+-><{20,30,70}> Count: 2
+-><{30,70,80}> Count: 2
+The number of length 4 sequential patterns is 0
+-><{20,30}{70,80}> Count: 2

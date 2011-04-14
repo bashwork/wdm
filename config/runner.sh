@@ -2,8 +2,8 @@
 #------------------------------------------------------------ #
 # script variables
 #------------------------------------------------------------ #
-INPUT="data/database-2.txt"
-SUPPORT="data/supports-2.txt"
+INPUT="data/database-1.txt"
+SUPPORT="data/supports-1.txt"
 
 #------------------------------------------------------------ #
 # script runner

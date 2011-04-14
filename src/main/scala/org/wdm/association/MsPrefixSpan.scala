@@ -222,6 +222,7 @@ class MsPrefixSpan[T](val sequences:List[Transaction[T]],
 
         val projections = ListBuffer[Transaction[T]]()
 
+        logger.info("{} project {} ", ik, sk)
         sk.foreach { sequence =>
             sequence.project(ik) match {
                 case Some(projection) => projections += projection
@@ -275,8 +276,9 @@ class MsPrefixSpan[T](val sequences:List[Transaction[T]],
         // for each frequent pattern
         patterns.filter { _.count >= mincount }.foreach { pattern =>
             if (pattern contains ik.root) {                 // we must still contain the root
-                addFrequent(pattern.length, pattern)        // add the frequent pattern
-                restrictedPrefixSpan(pattern, sk, mincount) // find further extensions
+                if (addFrequent(pattern.length, pattern)) { // add the frequent pattern
+                    restrictedPrefixSpan(pattern, sk, mincount) // find further extensions
+                }
             }
         }
     }
@@ -287,10 +289,13 @@ class MsPrefixSpan[T](val sequences:List[Transaction[T]],
      * @param count The frequent count to store this under
      * @param transaction The transaction to append
      */
-    private def addFrequent(count:Int, transaction:Transaction[T]) {
+    private def addFrequent(count:Int, transaction:Transaction[T]) : Boolean = {
+        logger.info("addFrequent({})", transaction)
         val buffer = frequentDb.getOrElseUpdate(count, ListBuffer[Transaction[T]]())
         if (!buffer.exists { _ == transaction }) {          // prevent duplicates
             buffer += transaction                           // add frequent to N-frequent bucket
+            return true;
         }
+        return false;
     }
 }
