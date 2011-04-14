@@ -43,11 +43,11 @@ My accuracy (using the supplied testing dataset) evaluated to 85% before any for
 of pruning was utilized. This was calculated by simply running every entry in the
 testing dataset through my tree and then counting how many entries were classified
 correctly and dividing by the total test set. After looking at the testing dataset,
-I don't believe that there is any way I could have pruned the tree to increase its
-accuracy as the training set had 100% accuracy and the two classification errors
-in the testing set occurred very early in the tree. That being said, I could remove
-the entire tree after the condition *light > 8.10* and achieve the same accuracy
-as using the entire tree.
+
+I found that I could prune the tree a little bit to improve my accuracy to 92%,
+however, it would affect the accuracy of the training set, which was 100%.
+That being said, I found that I could remove the entire tree after the first 
+decision and achieve the same accuracy testing as using the entire tree.
 
 To create rule sets out of my tree, I simply perform a depth first walk through
 the tree until I reach a leaf. During the walk, each predicate is recorded as a
@@ -59,7 +59,9 @@ portion of the rule.  An example rule that was generated is as follows::
         if entry.light <= 8.10:
             entry.label = "-"
 
-###TODO rule pruning###
+As with the tree I was able to modify and prune the rules to get an accurracy
+of 92% at the expense of the training set accurracy. Furthermore, I was able to
+remove most of the rules and maintain the same training accuracy.
 
 The tree can also be used to infer missing data of new entries. If the entry
 can be classified with the tree (i.e. the missing values were not needed to
@@ -76,10 +78,17 @@ one would hope to infer from a training set.
 Problem 2.1: Generated Decision Tree
 ------------------------------------------------------------
 
-*The following decision tree was deduced from the training dataset*::
+*The following decision tree was deduced from the training dataset*:
 
   .. image:: images/training.png
 
+*The following is the pruned decision tree*:
+
+  .. image:: images/training-pruned.png
+
+*The following is the minimized decision tree*:
+
+  .. image:: images/training-pruned.png
 
 Problem 2.2: Generated Rules
 ------------------------------------------------------------
@@ -93,6 +102,16 @@ Problem 2.2: Generated Rules
     temp >  8.000000, light >  8.100000, cloud <= 50.000000, humid >  96.000000 -> -
     temp >  8.000000, light >  8.100000, cloud >  50.000000 -> +
 
+*The following are the resulting pruned rules*::
+
+    temp <= 8.000000 -> -
+    temp >  8.000000, cloud <= 50.000000 -> -
+    temp >  8.000000, cloud >  50.000000 -> +
+
+*The following are the resulting minimized rules*::
+
+    temp <= 8.000000 -> -
+    temp >  8.000000 -> +
 
 Problem 3: Naive Bayes Classifier
 ------------------------------------------------------------
@@ -110,7 +129,7 @@ What follows are the calculations I came up with::
     
     Temperature: 
     --------------------------------------------------------
-    P(T=   -5..0|C = +) = 0/12     P(T=  -5..0|C = -) = 0/12 
+    P(T=   -5..0|C = +) = 0/12     P(T=  -5..0|C = -) = 0/11
     P(T=    1..5|C = +) = 0/12     P(T=   1..5|C = -) = 4/11
     P(T=   6..10|C = +) = 1/12     P(T=  6..10|C = -) = 3/11
     P(T=  11..15|C = +) = 5/12     P(T= 11..15|C = -) = 3/11
@@ -118,26 +137,26 @@ What follows are the calculations I came up with::
     
     Humidity:
     --------------------------------------------------------
-    P(H=     80<|C = +) = 1/12    P(H=     80<|C = -) = 2/12 
-    P(H=  80..90|C = +) = 5/12    P(H=  80..90|C = -) = 4/12 
-    P(H=     >90|C = +) = 6/12    P(H=     >90|C = -) = 5/12 
+    P(H=     80<|C = +) = 1/12    P(H=     80<|C = -) = 2/11 
+    P(H=  80..90|C = +) = 5/12    P(H=  80..90|C = -) = 4/11 
+    P(H=     >90|C = +) = 6/12    P(H=     >90|C = -) = 5/11 
     
     Light:
     --------------------------------------------------------
-    P(L=    0..5|C = +) = 0/12    P(L=    0..5|C = -) = 1/12 
-    P(L=   6..10|C = +) = 2/12    P(L=   6..10|C = -) = 8/12 
-    P(L=     >10|C = +) = 10/12   P(L=     >10|C = -) = 2/12 
+    P(L=    0..5|C = +) = 0/12    P(L=    0..5|C = -) = 1/11 
+    P(L=   6..10|C = +) = 2/12    P(L=   6..10|C = -) = 8/11 
+    P(L=     >10|C = +) = 10/12   P(L=     >10|C = -) = 2/11 
     
     Cloud:
     --------------------------------------------------------
-    P(C=   0..25|C = +) = 1/12    P(C=   0..25|C = -) = 1/12 
-    P(C=  26..50|C = +) = 2/12    P(C=  26..50|C = -) = 4/12 
-    P(C=  51..75|C = +) = 1/12    P(C=  51..75|C = -) = 1/12 
-    P(C= 76..100|C = +) = 8/12    P(C= 76..100|C = -) = 5/12 
+    P(C=   0..25|C = +) = 1/12    P(C=   0..25|C = -) = 1/11 
+    P(C=  26..50|C = +) = 2/12    P(C=  26..50|C = -) = 4/11 
+    P(C=  51..75|C = +) = 1/12    P(C=  51..75|C = -) = 1/11 
+    P(C= 76..100|C = +) = 8/12    P(C= 76..100|C = -) = 5/11 
 
 The problem then asked use to label the entry at 1/24/1988 using
 the naive Bayes classifier. The following is the calculation
-used to arrive at the "-" label for the entry::
+used to arrive at the *-* label for the entry::
 
     entry(1/24/1988) = { T:6, H:73, L:9.5, C:30 }
 
@@ -155,13 +174,23 @@ The MAP hypothesis basically lets us say::
 Problem 5: ML Hypothesis
 ------------------------------------------------------------
 
-The ML hypothesis basically lets us say::
+The ML hypothesis basically lets us find the classification
+that gives the largest value to *P(D|C=c).* For this we can
+simply use the following::
 
-   hml = max { P(D|H) }
+    size(dataset) = 23
+    P(C = +)      = 12/23 = 0.522
+    P(C = - )     = 11/23 = 0.478
+
+    ml = max { P(+), P(-) }
+
+Therefore we can say that given a new entry without any
+prior knowledge, we can classify it as *+* with the greatest
+certainty.
 
 Notes
 ------------------------------------------------------------
 
 * The code used to predict problems 1 and 2 can be found at:
-  https://github.com/bashwork/common/raw/master/python/algorithms/k-nearest-neighbor.py
+  https://github.com/bashwork/common/raw/master/python/algorithms/
 
