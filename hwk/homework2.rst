@@ -97,6 +97,52 @@ Problem 2.2: Generated Rules
 Problem 3: Naive Bayes Classifier
 ------------------------------------------------------------
 
+In order to to use the Bayes classifier on our continuous dataset,
+our attribute values must first be discretized into range bins. For this
+purpose, I manually chose bin ranges that seemed to spread evenly across
+the attibute ranges (i.e. an even number of values were stored in each range).
+What follows are the calculations I came up with::
+
+    Global
+    --------------------------------------------------------
+    size(dataset)       = 23
+    P(C = +)            = 12/23    P(C = - )         = 11/23
+    
+    Temperature: 
+    --------------------------------------------------------
+    P(T=   -5..0|C = +) = 0/12     P(T=  -5..0|C = -) = 0/12 
+    P(T=    1..5|C = +) = 0/12     P(T=   1..5|C = -) = 4/11
+    P(T=   6..10|C = +) = 1/12     P(T=  6..10|C = -) = 3/11
+    P(T=  11..15|C = +) = 5/12     P(T= 11..15|C = -) = 3/11
+    P(T=  16..21|C = +) = 6/12     P(T= 16..21|C = -) = 1/11
+    
+    Humidity:
+    --------------------------------------------------------
+    P(H=     80<|C = +) = 1/12    P(H=     80<|C = -) = 2/12 
+    P(H=  80..90|C = +) = 5/12    P(H=  80..90|C = -) = 4/12 
+    P(H=     >90|C = +) = 6/12    P(H=     >90|C = -) = 5/12 
+    
+    Light:
+    --------------------------------------------------------
+    P(L=    0..5|C = +) = 0/12    P(L=    0..5|C = -) = 1/12 
+    P(L=   6..10|C = +) = 2/12    P(L=   6..10|C = -) = 8/12 
+    P(L=     >10|C = +) = 10/12   P(L=     >10|C = -) = 2/12 
+    
+    Cloud:
+    --------------------------------------------------------
+    P(C=   0..25|C = +) = 1/12    P(C=   0..25|C = -) = 1/12 
+    P(C=  26..50|C = +) = 2/12    P(C=  26..50|C = -) = 4/12 
+    P(C=  51..75|C = +) = 1/12    P(C=  51..75|C = -) = 1/12 
+    P(C= 76..100|C = +) = 8/12    P(C= 76..100|C = -) = 5/12 
+
+The problem then asked use to label the entry at 1/24/1988 using
+the naive Bayes classifier. The following is the calculation
+used to arrive at the "-" label for the entry::
+
+    entry(1/24/1988) = { T:6, H:73, L:9.5, C:30 }
+
+    P(C = +|D=entry) = (12/23)(1/12)(1/12)(2/12)(2/12) = 1.0e-4
+    P(C = -|D=entry) = (11/23)(3/11)(2/11)(8/11)(4/11) = 6.27e-3
 
 Problem 4: MAP Hypothesis
 ------------------------------------------------------------
