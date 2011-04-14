@@ -64,12 +64,22 @@ The number of length 3 sequential patterns is 6
 <{2,13}{7}> Count: 1
 <{2,13}{14}> Count: 1
 <{2}{14}{7}> Count: 1
+-><{2}{5,13}> Count: 1
 
 The number of length 4 sequential patterns is 4
+-> <{2,13}{5,13}> Count: 1
 <{2}{5}{14}{7}> Count: 1
 <{2,13}{5}{7}> Count: 1
 <{2,13}{5}{14}> Count: 1
 <{2,13}{14}{7}> Count: 1
+-> <{2}{5,13}{14}> Count: 1
+-> <{2}{5,13}{7}> Count: 1
 
 The number of length 5 sequential patterns is 1
 <{2,13}{5}{14}{7}> Count: 1
+-> <{2,13}{5,13}{14}> Count: 1
+-> <{2,13}{5,13}{7}> Count: 1
+-> <{2}{5,13}{14}{7}> Count: 1
+
+The number of length 6 sequential patterns is 0
+-> <{2,13}{5,13}{14}{7}> Count: 1

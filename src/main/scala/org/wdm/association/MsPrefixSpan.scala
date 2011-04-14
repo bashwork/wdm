@@ -250,6 +250,7 @@ class MsPrefixSpan[T](val sequences:List[Transaction[T]],
             projection.sets.foreach { set =>        // extend one item at a time
                 set.items.zipWithIndex.foreach {
                     case(_, index) if index == set.templateIndex =>     // skip "_" item
+                        logger.info("{} index {} ", set, index)
                     case(item, index) => {
                         val ext = if (index > set.templateIndex) {      // Form <{30, x}>
                             Transaction(ik.sets.init :+

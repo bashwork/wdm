@@ -213,6 +213,7 @@ class MsGeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
         frequent:FrequentSet[T]) : Option[List[Transaction[T]]] = {
         val results = ListBuffer[Transaction[T]]()
 
+        logger.info("joinleft: {}:{}", left, right)
         if ((left.without(1) != right.without(-1)) && // check if we will be frequent
              right.minsup(support) > left.minsup(support)) return None
 
@@ -250,6 +251,7 @@ class MsGeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
         frequent:FrequentSet[T]) : Option[List[Transaction[T]]] = {
         val results = ListBuffer[Transaction[T]]()
 
+        logger.info("joinright: {}:{}", left, right)
         if ((left.without(0) != right.without(-2)) && // check if we will be frequent
              right.minsup(support) < left.minsup(support)) return None
 
@@ -286,6 +288,7 @@ class MsGeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
     private def candidateJoinRegular(left:Transaction[T], right:Transaction[T],
         frequent:FrequentSet[T]) : Option[List[Transaction[T]]] = {
 
+        logger.info("join: {}:{}", left, right)
         left.join(right) match {
             case Some(result) => {
                 result.minMisItem = left.minMisItem

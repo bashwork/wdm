@@ -159,16 +159,22 @@ the naive Bayes classifier. The following is the calculation
 used to arrive at the *-* label for the entry::
 
     entry(1/24/1988) = { T:6, H:73, L:9.5, C:30 }
-
+    
     P(C = +|D=entry) = (12/23)(1/12)(1/12)(2/12)(2/12) = 1.0e-4
     P(C = -|D=entry) = (11/23)(3/11)(2/11)(8/11)(4/11) = 6.27e-3
 
 Problem 4: MAP Hypothesis
 ------------------------------------------------------------
 
-The MAP hypothesis basically lets us say::
+The MAP hypothesis basically lets us say##TODO##.  Therefore,
+we can use the following calculations::
 
-   hmap = max { P(D|H)P(h) }
+    map = max { P(D|h)P(h) }
+
+    entry(1/24/1988) = { T:6, H:73, L:9.5, C:30 }
+    
+    P(C = +|D=entry) = (12/23)(1/12)(1/12)(2/12)(2/12) = 1.0e-4
+    P(C = -|D=entry) = (11/23)(3/11)(2/11)(8/11)(4/11) = 6.27e-3
 
 
 Problem 5: ML Hypothesis
@@ -177,6 +183,8 @@ Problem 5: ML Hypothesis
 The ML hypothesis basically lets us find the classification
 that gives the largest value to *P(D|C=c).* For this we can
 simply use the following::
+
+    ml = max { P(D|h) }
 
     size(dataset) = 23
     P(C = +)      = 12/23 = 0.522
