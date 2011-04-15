@@ -9,26 +9,30 @@ The number of length 1 sequential patterns is 8
 <{50}> Count: 3
 <{10}> Count: 3
 
-The number of length 2 sequential patterns is 10
+The number of length 2 sequential patterns is 12
 <{30}{80}> Count: 2
 <{30,80}> Count: 2
 <{70,80}> Count: 3
+<{80}{70}> Count: 2
 <{20,30}> Count: 3
-<{20}{70}> Count: 2
+<{20}{70}> Count: 3
 <{20}{80}> Count: 2
 <{20,70}> Count: 2
-<{30}{70}> Count: 2
+<{30}{70}> Count: 3
 <{30,70}> Count: 3
 <{10,40}> Count: 3
+<{10}{40}> Count: 3
 
-The number of length 3 sequential patterns is 7
+The number of length 3 sequential patterns is 9
 <{30}{80,70}> Count: 2
-<{20,30}{70}> Count: 2
+<{70,80}{70}> Count: 2
+<{20,30}{70}> Count: 3
 <{20,30}{80}> Count: 2
 <{20,30,70}> Count: 2
 <{20}{70,80}> Count: 2
 <{30}{70,80}> Count: 2
 <{30,70,80}> Count: 2
+<{10,40}{40}> Count: 3
 
 The number of length 4 sequential patterns is 1
 <{20,30}{70,80}> Count: 2
