@@ -44,14 +44,16 @@ class Transaction[T] private (val sets:List[ItemSet[T]],
      * @return true if successful, false otherwise
      */
     def contains(other:Transaction[T]) : Boolean = {
-        val initial = other.sets.map { o =>
-            sets.findIndexOf { t => t contains o } }
-        var result = !initial.contains(-1) && !initial.isEmpty
-        for (i <- 0 until initial.size -1) {
-            result &= initial(i) < initial(i + 1)
+        var index = -1                      // set intially not found
+
+        other.sets.foreach { o =>           // apply sliding window scan
+            val next = sets.drop(index + 1).findIndexOf { t =>
+                t contains o } + index + 1  // add index back
+            if (next <= index) { return false }
+            index = next;
         }
 
-        result
+        true;
     }
 
     /**

@@ -41,7 +41,7 @@ class MsGeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
                 case _ => candidateGenN(frequents.last)
             }
             frequents += buildFrequent(ck)
-            logger.info("generated frequent set {}: size({})", k, frequents.last.size)
+            logger.info("generated frequent set {}: {}", k, frequents.last)
         }
 
         logger.info("processing took " + stopwatch.toString)
@@ -99,6 +99,7 @@ class MsGeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
         sequences.foreach { sequence =>
             candidates.foreach { candidate =>
                 if (sequence contains candidate) {
+                    logger.info("{} contains {}", sequence, candidate)
                     candidate.count += 1
                 }
                 // Todo if c - c{1} in T: c.restCount

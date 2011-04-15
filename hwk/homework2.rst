@@ -6,7 +6,8 @@ Problem 1: Nearest Neighbors
 ------------------------------------------------------------
 
 For problems one and two, I actually got the same class labeling when I used
-Euclidean and Manhattan distance functions and 5-nearest-neighbors::
+Euclidean and Manhattan distance functions and 5-nearest-neighbors on the first
+three testing examples::
 
     * entry1: "-"
     * entry2: "-"
@@ -14,7 +15,10 @@ Euclidean and Manhattan distance functions and 5-nearest-neighbors::
 
 The difference between the two methods (1-nn vs 5-nn) is simply the value of K which
 instructs the algorithm of how many of the nearest neighbors to use in evaluating
-the class label that it should apply to the new data entry.
+the class label that it should apply to the new data entry. So given 1, we would
+simply assign our entry to the same class label as its closest neighbor (using
+say Euclidean distance). However for K-nearest neighbors, we would chose K of
+the closest neighbors and then choose the most frequent class label among them.
 
 As for data points with missing values, there are a number of techniques that can
 be employed to fill in the attribute values, however, the best way to populate
@@ -31,7 +35,7 @@ attribute split at the value of 8.0.  I chose this value because in my calculati
 that attribute with that value provided the greatest information gain at that point
 int the tree.  The remaining nodes were chosen in the same way.
 
-My first three training examples all evaluated correctly. This was performed
+My first three testing examples all evaluated correctly. This was performed
 by simply running them through the tree and then assigning them the class of the
 leaf node that they finished on::
 
@@ -59,8 +63,8 @@ portion of the rule.  An example rule that was generated is as follows::
         if entry.light <= 8.10:
             entry.label = "-"
 
-As with the tree I was able to modify and prune the rules to get an accurracy
-of 92% at the expense of the training set accurracy. Furthermore, I was able to
+As with the tree I was able to modify and prune the rules to get an accuracy
+of 92% at the expense of the training set accuracy. Furthermore, I was able to
 remove most of the rules and maintain the same training accuracy.
 
 The tree can also be used to infer missing data of new entries. If the entry
@@ -119,7 +123,7 @@ Problem 3: Naive Bayes Classifier
 In order to to use the Bayes classifier on our continuous dataset,
 our attribute values must first be discretized into range bins. For this
 purpose, I manually chose bin ranges that seemed to spread evenly across
-the attibute ranges (i.e. an even number of values were stored in each range).
+the attribute ranges (i.e. an even number of values were stored in each range).
 What follows are the calculations I came up with::
 
     Global
@@ -166,8 +170,10 @@ used to arrive at the *-* label for the entry::
 Problem 4: MAP Hypothesis
 ------------------------------------------------------------
 
-The MAP hypothesis basically lets us say##TODO##.  Therefore,
-we can use the following calculations::
+The MAP hypothesis basically lets us say find the most probable
+classification without given our current knowledge.  Therefore,
+we can use the following calculations (which is really just the
+naive Bayes)::
 
     map = max { P(D|h)P(h) }
 
@@ -176,25 +182,23 @@ we can use the following calculations::
     P(C = +|D=entry) = (12/23)(1/12)(1/12)(2/12)(2/12) = 1.0e-4
     P(C = -|D=entry) = (11/23)(3/11)(2/11)(8/11)(4/11) = 6.27e-3
 
+Therefore we can say that the new entry can be classified as *-*
+with the greatest certainty.
 
 Problem 5: ML Hypothesis
 ------------------------------------------------------------
 
 The ML hypothesis basically lets us find the classification
-that gives the largest value to *P(D|C=c).* For this we can
-simply use the following::
+that gives the largest value to *P(D|C=c)* without any class prior.
+So for this we can simply use the following::
 
     ml = max { P(D|h) }
 
-    size(dataset) = 23
-    P(C = +)      = 12/23 = 0.522
-    P(C = - )     = 11/23 = 0.478
+    P(D=entry|C = +) = (1/12)(1/12)(2/12)(2/12) = 2.10e-4
+    P(D=entry|C = -) = (3/11)(2/11)(8/11)(4/11) = 1.31e-2
 
-    ml = max { P(+), P(-) }
-
-Therefore we can say that given a new entry without any
-prior knowledge, we can classify it as *+* with the greatest
-certainty.
+Therefore we can say that the new entry can be classified as *-*
+with the greatest certainty.
 
 Notes
 ------------------------------------------------------------
