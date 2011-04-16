@@ -87,10 +87,11 @@ class Transaction[T] private (val sets:List[ItemSet[T]],
             else None                                               // skip empty projections
         }
 
-        form1.sets.foreach { set =>                                 // otherwise we are a {ik, x} match
+        form1.sets.findIndexOf { set =>                             // otherwise we are a {ik, x} match
             val index = set.items.findIndexOf {                     // find which set has our match
                 _ == pattern.sets.last.items.last } 
             if (index >= 0) { set.templateIndex = index }           // set that index to _
+            (index >= 0)
         }
         if (form1.length > 0) Some(form1) else None                 // skip empty projections
     }
