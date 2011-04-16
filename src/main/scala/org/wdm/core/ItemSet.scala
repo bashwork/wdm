@@ -20,6 +20,12 @@ class ItemSet[T] private (val items:List[T])
     /** If a template variable exists, its index */
     var templateIndex = 0xbadbeef // poisoned to never match
 
+    /** If this is a one item ItemSet, return that item
+     *
+     * @return The single item of this set
+     */
+    def item() = items.head 
+
     /**
      * Helper method to check if an item is a template index
      * (used for prefix span). Note, although the value may

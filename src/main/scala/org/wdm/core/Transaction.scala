@@ -111,7 +111,7 @@ class Transaction[T] private (val sets:List[ItemSet[T]],
             }
             case _ if index  < 0 => {
                 val i = math.abs(index)
-                if (sets.last.size >= i) (sets.size - 1, sets.last.size - i)
+                if (sets.last.size >= i) (sets.size  - 1, sets.last.size - i)
                 else (sets.size - 2, (sets(sets.size - 2).size) - (i - sets.last.size))
             }
         }

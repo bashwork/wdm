@@ -48,5 +48,5 @@ trait AbstractAssociation[T] {
      * @return true if left is greater than right
      */
     protected def compare(left:List[T], right:List[T]) =
-        (left.last.toString.toInt > right.last.toString.toInt)
+        (left.last.toString.toInt < right.last.toString.toInt)
 }

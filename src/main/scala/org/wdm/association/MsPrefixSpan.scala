@@ -34,11 +34,11 @@ class MsPrefixSpan[T](val sequences:List[Transaction[T]],
      */
     override def process() : List[FrequentSet[T]] = {
         stopwatch.start
-        val frequent = initialize()
+        val frequent = initialize()                                                 // get our initial frequents
         logger.info("actuals: ", actual)
-        buildFrequents(frequent)
+        buildFrequents(frequent)                                                    // the main starting point
 
-        logger.info("processing took " + stopwatch.toString)
+        logger.info("processing took " + stopwatch.toString)                        // ego...
         frequentDb.map { case(count, buffer) => {
             FrequentSet(buffer.toList) }                                            // convert map to frequent list
         }.toList.sortWith { _.length < _.length }                                   // order by frequent length
@@ -157,7 +157,7 @@ class MsPrefixSpan[T](val sequences:List[Transaction[T]],
      * @return Sk-cleaned
      */
     private def removeInfrequent(s:List[Transaction[T]], mincount:Int)
-        : (HashMap[T, Int], List[Transaction[T]]) = {
+        : List[Transaction[T]] = {
 
         val local = HashMap[T, Int]()
         val filtered = ListBuffer[Transaction[T]]()

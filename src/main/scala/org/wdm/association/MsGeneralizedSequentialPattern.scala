@@ -45,7 +45,7 @@ class MsGeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
         }
 
         logger.info("processing took " + stopwatch.toString)
-        frequents.init.toList // the last frequent is empty
+        frequents.init.toList                                                       // the last frequent is empty
     }
 
     /**
@@ -73,17 +73,17 @@ class MsGeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
 
         logger.info("initialization took " + stopwatch.toString)
         logger.info("generated initial candidates: " + filtered)
-        initialL = FrequentSet(level1.map { x => {
-            val transaction = Transaction(List(ItemSet(x)), counts(x))
-            transaction.support = actual(x)
-            transaction.minMisItem = ItemSet(x)
+        initialL = FrequentSet(level1.map { x => {                                  // the initial is not filtered
+            val transaction = Transaction(List(ItemSet(x)), counts(x))              // remember our support count
+            transaction.support = actual(x)                                         // and our support
+            transaction.minMisItem = ItemSet(x)                                     // and the minimum mis item
             transaction
         }})
 
         FrequentSet(filtered.map { x => {                                           // <{F1}>
-            val transaction = Transaction(List(ItemSet(x)), counts(x))
-            transaction.support = actual(x)
-            transaction.minMisItem = ItemSet(x) // not needed
+            val transaction = Transaction(List(ItemSet(x)), counts(x))              // remember our support count
+            transaction.support = actual(x)                                         // and our support
+            transaction.minMisItem = ItemSet(x)                                     // not needed
             transaction
        }})
     }
@@ -96,19 +96,19 @@ class MsGeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
      * @return The frequent candidate list
      */
     def buildFrequent(candidates:List[Transaction[T]]) : FrequentSet[T] = {
-        sequences.foreach { sequence =>                                             // build candidate support
-            candidates.foreach { candidate =>                                       // using the sequence dataset
-                if (sequence contains candidate) {
+        sequences.foreach { sequence =>                                             // using the original dataset
+            candidates.foreach { candidate =>                                       // take each possible candidate
+                if (sequence contains candidate) {                                  // and build its support
                     candidate.count += 1
                 }
                 // Todo if c - c{1} in T: c.restCount                               // for rule generation
             }
         }
-        candidates.foreach { candidate =>                                           // populate support
-            candidate.support = candidate.count / sizeN }
+        candidates.foreach { candidate =>                                           // for each possible candidate
+            candidate.support = candidate.count / sizeN }                           // populate their support
 
         logger.info("frequent generation took " + stopwatch.toString)
-        FrequentSet(candidates.filter { c =>
+        FrequentSet(candidates.filter { c =>                                        // if they are supported
             c.support >= c.minsup(support) }.distinct)                              // <{Fn}>
     }
 
@@ -132,26 +132,26 @@ class MsGeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
     private def candidateGen2(frequent:FrequentSet[T]) : List[Transaction[T]] = {
         implicit def transToType(t:Transaction[T]) : T = t.sets.head.items.head
 
-        val candidates = ListBuffer[Transaction[T]]()
-        val transactions = frequent.transactions
+        val candidates = ListBuffer[Transaction[T]]()                   // because I am functionally lazy
+        val transactions = frequent.transactions                        // generate with the last frequents
 
         transactions.zipWithIndex.foreach {
             case(l, index) if l.support >= l.minsup(support) => {
             transactions.drop(index + 1).foreach { h =>
                 if (h.support >= l.minsup(support) && evaluateSdc(l, h)) {
-                    candidates += Transaction(ItemSet[T](l, h)) // <{1,  2}>
-                    candidates.last.minMisItem = l.sets.last
-                    candidates += Transaction(l.sets ++ h.sets) // <{1},{2}>
-                    candidates.last.minMisItem = l.sets.last
-                    candidates += Transaction(h.sets ++ l.sets) // <{2},{1}>
-                    candidates.last.minMisItem = l.sets.last
+                    candidates += Transaction(ItemSet[T](l, h))         // <{1,  2}>
+                    candidates.last.minMisItem = l.sets.last            // remember, remember
+                    candidates += Transaction(l.sets ++ h.sets)         // <{1},{2}>
+                    candidates.last.minMisItem = l.sets.last            // remember, remember
+                    candidates += Transaction(h.sets ++ l.sets)         // <{2},{1}>
+                    candidates.last.minMisItem = l.sets.last            // remember, remember
                 }
             } }
-            case(l, index) => logger.info("candidate2 support({}) not met: {}", l.support, l)
+            case(l, index) =>                                           // support not met
         }
 
-        logger.info("generated candidates2: " + candidates.toList.distinct)
-        candidates.toList.distinct  // remove duplicates
+        logger.info("candidates2: " + candidates.toList.distinct)
+        candidates.toList.distinct                                      // remove duplicates
     }
 
     /**
@@ -161,19 +161,19 @@ class MsGeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
      * @return A possible candidate set to process
      */
     def candidateGenN(frequent:FrequentSet[T]) : List[Transaction[T]] = {
-        val candidates = ListBuffer[Transaction[T]]()
-        val transactions = frequent.transactions
+        val candidates = ListBuffer[Transaction[T]]()                   // because I am functionally lazy
+        val transactions = frequent.transactions                        // generate with the last frequents
 
-        transactions.foreach { left => {
-            transactions.foreach { right => {
-                candidateCheck(left, right, frequent) match {
-                    case Some(candidate) => candidates ++= candidate
-                    case None => // these two did not join
+        transactions.foreach { left => {                                // try to merge every frequent
+            transactions.foreach { right => {                           // with every other frequent
+                candidateCheck(left, right, frequent) match {           // and if they are frequent
+                    case Some(candidate) => candidates ++= candidate    // then they become candidates
+                    case None =>                                        // unless they cannot be joined
                 }
             } }
         } }
     
-        logger.info("generated candidatesN: " + candidates.toList)
+        logger.info("candidatesN: " + candidates.toList)
         candidates.toList
     }
 
@@ -188,10 +188,10 @@ class MsGeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
     private def candidateCheck(left:Transaction[T], right:Transaction[T],
         frequent:FrequentSet[T]) : Option[List[Transaction[T]]] = {
 
-        val result =
-            if (left.minMisItem.items.head == left.sets.head.items.head) {
+        val result = // find our min-mis-item, and join appropriately
+            if (left.minMisItem.item == left.sets.head.items.head) {
                  candidateJoinLeft(left, right, frequent)
-            } else if (right.minMisItem.items.last == right.sets.last.items.last) {
+            } else if (right.minMisItem.item == right.sets.last.items.last) {
                  candidateJoinRight(left, right, frequent)
             } else { candidateJoinRegular(left, right, frequent) }
 
@@ -215,20 +215,21 @@ class MsGeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
         val results = ListBuffer[Transaction[T]]()
 
         logger.info("joining left: {}:{}", left, right)
-        if ((left.without(1) != right.without(-1)) ||   // check if we will be frequent
-             right.minsup(support) > left.minsup(support)) return None
+        if ((left.without(1) != right.without(-1)) ||                   // if the two pieces fit
+             right.minsup(support) > left.minsup(support)) return None  // check if we will be frequent
+             // maybe just right.last.minsup > left.first.minsup
 
         val lastLeft  = left.sets.last.items
         val lastRight = right.sets.last.items
-        if (lastRight.size == 1) { // {1}{2} & {3} => {1}{2}{3}
+        if (lastRight.size == 1) {                                      // {1}{2} & {3} => {1}{2}{3}
             logger.info("join1")
-            results += Transaction(left.sets ++ List(ItemSet(lastRight.last)))
+            results += Transaction(left.sets :+ ItemSet(lastRight.last))
             results.last.minMisItem = left.minMisItem
 
             if (((left.size == 2) && (left.length == 2)) &&
-                (compare(lastRight, lastLeft))) {
+                (compare(lastLeft, lastRight))) {
                 logger.info("join2")
-                results += Transaction(left.sets.head,  // {1}{2} & {4} => {1}{2,4}
+                results += Transaction(left.sets.head,                  // {1}{2} & {4} => {1}{2,4}
                     ItemSet(left.sets.last.items.last, lastRight.last))
                 results.last.minMisItem = left.minMisItem
             }
@@ -236,8 +237,8 @@ class MsGeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
             (!compare(lastRight.last, lastLeft.last)) ||
             (left.length > 2)) {
             logger.info("join3")
-            results += Transaction(left.sets.init :+    // join {x,y} {x,y} => {x,y} is pruned below
-                ItemSet(lastLeft :+ lastRight.last))    // {1}{2} & {2, 4} => {1}{2, 4}
+            results += Transaction(left.sets.init :+                    // join {x,y} {x,y} => {x,y} is pruned below
+                ItemSet(lastLeft :+ lastRight.last))                    // {1}{2} & {2, 4} => {1}{2, 4}
             results.last.minMisItem = left.minMisItem
         }
 
@@ -246,7 +247,7 @@ class MsGeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
 
     /**
      * If the last item in the second sequence is the minMisItem,
-     * we perform * this join step.
+     * we perform this join step.
      *
      * @param left The left transaction to join
      * @param right The right transaction to join
@@ -257,17 +258,20 @@ class MsGeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
         val results = ListBuffer[Transaction[T]]()
 
         logger.info("joining right: {}:{}", left, right)
-        if ((left.without(0) != right.without(-2)) ||                       // check if we will be frequent
-             right.minsup(support) < left.minsup(support)) return None
+        if ((left.without(0) != right.without(-2)) ||                       // if the two pieces fit
+             right.minsup(support) < left.minsup(support)) return None      // check if we will be frequent
+             // maybe just left.first.minsup > right.last.minsup
 
         val firstLeft  = left.sets.head.items
         val firstRight = right.sets.head.items
         if (firstLeft.size == 1) {                                          // {1}{2} & {3} => {1}{2}{3}
+            logger.info("join1")
             results += Transaction(right.sets ++ List(ItemSet(firstLeft.last)))
             results.last.minMisItem = right.minMisItem
 
             if (((right.size == 2) && (right.length == 2)) &&
-                (compare(firstLeft, firstRight))) {
+                (compare(firstRight, firstLeft))) {
+                logger.info("join2")
                 results += Transaction(right.sets.head,                     // {1}{2} & {4} => {1}{2,4}
                     ItemSet(right.sets.last.items.last, firstLeft.last))
                 results.last.minMisItem = right.minMisItem
@@ -275,6 +279,7 @@ class MsGeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
         } else if (((right.size == 1) && (right.length == 2)) &&
             (compare(firstLeft.last, firstRight.last)) ||
             (right.length > 2)) {
+            logger.info("join3")
             //results += Transaction(right.sets ++ List(left.sets.last))    // {1}{2} & {4} => {1}{2}{4}
             results += Transaction(right.sets.init :+                       // join {x,y} {x,y} => {x,y} is pruned below
                 ItemSet(right.sets.last.items :+ left.sets.last.items.last))// {1}{2} & {2, 4} => {1}{2, 4}
@@ -285,8 +290,8 @@ class MsGeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
     }
 
     /**
-     * Helper to test each possible candidate set and return the
-     * merged result.
+     * This is the join from the regular gsp algorithm that doesn't
+     * worry about the minMisItem.
      *
      * @param left The left transaction to join
      * @param right The right transaction to join
@@ -303,7 +308,7 @@ class MsGeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
                     frequent.transactions.exists { t => t contains s }}
                 if (isGood) { return Some(List(result)) }
             }
-            case None =>  // could not join the two
+            case None =>                                                // could not join the two
         }
 
         return None
@@ -327,10 +332,10 @@ class MsGeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
         joins.foreach { join => 
             val isGood = join.subsequences.forall { s =>
                 val minimum = Transaction(join.minMisItem)
-                (frequent.transactions.exists { t => t contains s }) ||
-                (!s.contains(minimum)) // missing lowest mis-item is okay
-            } && (join.length > lastLength) // so we don't get previous frequents
-            if (isGood) { results += join }
+                (frequent.transactions.exists { t => t contains s }) || // is the subsequence frequent
+                (!s.contains(minimum))                                  // missing lowest mis-item is okay
+            } && (join.length > lastLength)                             // so we don't get previous frequents
+            if (isGood) { results += join }                             // gotta be good to get to heaven
         }
 
         if (results.size > 0) Some(results.toList) else None
