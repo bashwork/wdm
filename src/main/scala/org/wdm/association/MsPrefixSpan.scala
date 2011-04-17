@@ -25,6 +25,7 @@ class MsPrefixSpan[T](val sequences:List[Transaction[T]],
     private val frequentDb = HashMap[Int, ListBuffer[Transaction[T]]]()
     /** the actual support for all the items in the dataset */
     private val actual = HashMap[T, Double]()
+    private var counts = Map[T, Int]()
 
     /**
      * Processes the current sequence list to produce all the
@@ -54,7 +55,7 @@ class MsPrefixSpan[T](val sequences:List[Transaction[T]],
      */
     private def initialize() : FrequentSet[T] = {
         val allItems = sequences.map { _.unique }.flatten                           // I with repeats
-        val counts   = allItems groupBy identity mapValues { _.size }               // I.count
+        counts   = allItems groupBy identity mapValues { _.size }               // I.count
         val unique   = counts.keys.toList                                           // I
         val sorted   = unique.sortWith { (a,b) => support.get(a) < support.get(b) } // M
         sorted.foreach { s => actual(s) = counts(s) / sizeN }                       // populate supports
@@ -159,19 +160,21 @@ class MsPrefixSpan[T](val sequences:List[Transaction[T]],
     private def removeInfrequent(s:List[Transaction[T]], mincount:Int)
         : List[Transaction[T]] = {
 
-        val local = HashMap[T, Int]()
+        //val local = HashMap[T, Int]()
         val filtered = ListBuffer[Transaction[T]]()
 
-        s.foreach { sequence =>                                         // build our frequency database
-            sequence.sets.foreach { set =>
-                set.items.foreach { item =>                             // for every item in the sequnce
-                    local(item) = local.getOrElse(item, 0) + 1
-                }
-            }
-        } // TODO I don't think this is right
+        //s.foreach { sequence =>                                         // build our frequency database
+        //    sequence.sets.foreach { set =>
+        //        set.items.foreach { item =>                             // for every item in the sequnce
+        //            local(item) = local.getOrElse(item, 0) + 1
+        //        }
+        //    }
+        //} // TODO I don't think this is right
 
-        val frequents = local.filter {                                  // get our frequency database
+        val frequents = counts.filter {                                 // get our frequency database
             case(k,v) => v >= mincount }                                // relative to ik
+        //logger.info("infrequent: {} ", local)
+        logger.info("frequent: {} ", frequents)
 
         s.foreach { sequence =>                                         // in the local database
             val items = sequence.sets.map { set =>

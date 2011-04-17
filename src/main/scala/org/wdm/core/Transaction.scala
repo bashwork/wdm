@@ -105,12 +105,22 @@ class Transaction[T] private (val sets:List[ItemSet[T]],
      */
     def without(index:Int) : Transaction[T] = {
         val id = index match {
-            case i if index >= 0 => {
-                if (sets.head.size >= i) (0, i)
-                else (1, i - sets.head.size)
+            case i if index > 0 => {
+                //var coords = (0, i - 1, 0)
+                //(0 to sets.size).toStream.takeWhile(_ => coords._3 < i).foreach { k =>
+                //    coords = (k, i - coords._3 - 1, coords._3 + sets(k).size)
+                //}
+                //coords
+                if (sets.head.size >= i) (0, i - 1)
+                else (1, i - sets.head.size - 1)
             }
             case _ if index  < 0 => {
                 val i = math.abs(index)
+                //var coords = (0, i - 1, 0)
+                //(0 to sets.size - 1).reverse.toStream.takeWhile(_ => coords._3 < i).foreach { k =>
+                //    coords = (k, i - coords._3 - sets(k).size, coords._3 + sets(k).size)
+                //}
+                //coords
                 if (sets.last.size >= i) (sets.size  - 1, sets.last.size - i)
                 else (sets.size - 2, (sets(sets.size - 2).size) - (i - sets.last.size))
             }

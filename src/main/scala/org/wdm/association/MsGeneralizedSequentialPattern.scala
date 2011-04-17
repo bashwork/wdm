@@ -215,7 +215,9 @@ class MsGeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
         val results = ListBuffer[Transaction[T]]()
 
         logger.info("joining left: {}:{}", left, right)
-        if ((left.without(1) != right.without(-1)) ||                   // if the two pieces fit
+        logger.info("wo: {}:{}", left.without(2), right.without(-1))
+        logger.info("ms: {}:{}", left.minsup(support), right.minsup(support))
+        if ((left.without(2) != right.without(-1)) ||                   // if the two pieces fit
              right.minsup(support) > left.minsup(support)) return None  // check if we will be frequent
              // maybe just right.last.minsup > left.first.minsup
 
@@ -258,7 +260,9 @@ class MsGeneralizedSequentialPattern[T](val sequences:List[Transaction[T]],
         val results = ListBuffer[Transaction[T]]()
 
         logger.info("joining right: {}:{}", left, right)
-        if ((left.without(0) != right.without(-2)) ||                       // if the two pieces fit
+        logger.info("wo: {}:{}", left.without(1), right.without(-2))
+        logger.info("ms: {}:{}", left.minsup(support), right.minsup(support))
+        if ((left.without(1) != right.without(-2)) ||                       // if the two pieces fit
              right.minsup(support) < left.minsup(support)) return None      // check if we will be frequent
              // maybe just left.first.minsup > right.last.minsup
 
