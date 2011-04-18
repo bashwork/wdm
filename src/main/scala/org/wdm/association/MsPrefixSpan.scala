@@ -36,7 +36,6 @@ class MsPrefixSpan[T](val sequences:List[Transaction[T]],
     override def process() : List[FrequentSet[T]] = {
         stopwatch.start
         val frequent = initialize()                                                 // get our initial frequents
-        logger.info("actuals: ", actual)
         buildFrequents(frequent)                                                    // the main starting point
 
         logger.info("processing took " + stopwatch.toString)                        // ego...
@@ -55,7 +54,7 @@ class MsPrefixSpan[T](val sequences:List[Transaction[T]],
      */
     private def initialize() : FrequentSet[T] = {
         val allItems = sequences.map { _.unique }.flatten                           // I with repeats
-        counts   = allItems groupBy identity mapValues { _.size }               // I.count
+            counts   = allItems groupBy identity mapValues { _.size }               // I.count
         val unique   = counts.keys.toList                                           // I
         val sorted   = unique.sortWith { (a,b) => support.get(a) < support.get(b) } // M
         sorted.foreach { s => actual(s) = counts(s) / sizeN }                       // populate supports
@@ -89,10 +88,9 @@ class MsPrefixSpan[T](val sequences:List[Transaction[T]],
     private def buildFrequents(candidate:FrequentSet[T]) = {
         candidate.transactions.foreach { ik =>                                      // extend every {1} frequent
             val s = initializePotentials(ik)                                        // projections
-            val count = math.ceil(ik.minsup(support)                                // count(MIS(ik))
-                * sizeN).intValue
+            val count = math.ceil(ik.minsup(support) * sizeN).intValue              // count(MIS(ik))
             val sk = removeInfrequent(s, count)                                     // local frequents
-            val result = restrictedPrefixSpan(ik, sk, count)                        // start the engine
+            restrictedPrefixSpan(ik, sk, count)                                     // start the engine
         }
     }
 
@@ -160,31 +158,18 @@ class MsPrefixSpan[T](val sequences:List[Transaction[T]],
     private def removeInfrequent(s:List[Transaction[T]], mincount:Int)
         : List[Transaction[T]] = {
 
-        //val local = HashMap[T, Int]()
-        val filtered = ListBuffer[Transaction[T]]()
-
-        //s.foreach { sequence =>                                         // build our frequency database
-        //    sequence.sets.foreach { set =>
-        //        set.items.foreach { item =>                             // for every item in the sequnce
-        //            local(item) = local.getOrElse(item, 0) + 1
-        //        }
-        //    }
-        //} // TODO I don't think this is right
-
         val frequents = counts.filter {                                 // get our frequency database
             case(k,v) => v >= mincount }                                // relative to ik
-        //logger.info("infrequent: {} ", local)
-        logger.info("frequent: {} ", frequents)
 
-        s.foreach { sequence =>                                         // in the local database
+        logger.info("count: {} ", mincount)
+        logger.info("frequent: {} ", frequents)
+        s.map { sequence =>                                             // in the local database
             val items = sequence.sets.map { set =>
                 ItemSet(set.items.filter {                              // build a new itemset
                     frequents.contains(_) })                            // with infrequent values removed
             }.filter { _.size > 0 }                                     // remove empty itemsets
-            filtered += Transaction(items)                              // add it to our SK list
+            Transaction(items)                                          // add it to our SK list
         }
-
-        filtered.toList                                                 // cleaned Sk
     }
 
     /**
