@@ -46,40 +46,48 @@ The number of length 1 sequential patterns is 45
 <{48}> Count: 25
 <{49}> Count: 19
 
-The number of length 2 sequential patterns is 9
+The number of length 2 sequential patterns is 10
 <{2}{5}> Count: 1
 <{2}{7}> Count: 1
 <{2}{9}> Count: 1
 <{2,13}> Count: 1
+<{2}{13}> Count: 1
 <{2}{14}> Count: 1
 <{2}{21}> Count: 1
 <{3,4}> Count: 1
 <{13}{3}> Count: 1
 <{22}{3}> Count: 1
 
-The number of length 3 sequential patterns is 6
+The number of length 3 sequential patterns is 10
 <{2}{5}{7}> Count: 1
+<{2}{5,13}> Count: 1
 <{2}{5}{14}> Count: 1
 <{2,13}{5}> Count: 1
 <{2,13}{7}> Count: 1
+<{2,13}{13}> Count: 1
 <{2,13}{14}> Count: 1
+<{2}{13}{7}> Count: 1
+<{2}{13}{14}> Count: 1
 <{2}{14}{7}> Count: 1
--><{2}{5,13}> Count: 1
 
-The number of length 4 sequential patterns is 4
--> <{2,13}{5,13}> Count: 1
+The number of length 4 sequential patterns is 10
+<{2}{5,13}{7}> Count: 1
+<{2}{5,13}{14}> Count: 1
 <{2}{5}{14}{7}> Count: 1
 <{2,13}{5}{7}> Count: 1
+<{2,13}{5,13}> Count: 1
 <{2,13}{5}{14}> Count: 1
+<{2,13}{13}{7}> Count: 1
+<{2,13}{13}{14}> Count: 1
 <{2,13}{14}{7}> Count: 1
--> <{2}{5,13}{14}> Count: 1
--> <{2}{5,13}{7}> Count: 1
+<{2}{13}{14}{7}> Count: 1
 
-The number of length 5 sequential patterns is 1
+The number of length 5 sequential patterns is 5
+<{2}{5,13}{14}{7}> Count: 1
+<{2,13}{5,13}{7}> Count: 1
+<{2,13}{5,13}{14}> Count: 1
 <{2,13}{5}{14}{7}> Count: 1
--> <{2,13}{5,13}{14}> Count: 1
--> <{2,13}{5,13}{7}> Count: 1
--> <{2}{5,13}{14}{7}> Count: 1
+<{2,13}{13}{14}{7}> Count: 1
 
-The number of length 6 sequential patterns is 0
--> <{2,13}{5,13}{14}{7}> Count: 1
+The number of length 6 sequential patterns is 1
+<{2,13}{5,13}{14}{7}> Count: 1
