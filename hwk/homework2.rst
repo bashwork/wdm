@@ -171,7 +171,7 @@ Problem 4: MAP Hypothesis
 ------------------------------------------------------------
 
 The MAP hypothesis basically lets us say find the most probable
-classification without given our current knowledge.  Therefore,
+classification estimation without a uniform prior.  Therefore,
 we can use the following calculations (which is really just the
 naive Bayes)::
 
@@ -206,3 +206,5 @@ Notes
 * The code used to predict problems 1 and 2 can be found at:
   https://github.com/bashwork/common/raw/master/python/algorithms/
 
+* I discussed the homework at a high level with Mandi Ries and
+  Jen Guriel.
