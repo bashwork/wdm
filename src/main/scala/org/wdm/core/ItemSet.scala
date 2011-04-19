@@ -18,7 +18,7 @@ class ItemSet[T] private (val items:List[T])
     var support = 0.0
 
     /** If a template variable exists, its index */
-    var templateIndex = 0xbadbeef // poisoned to never match
+    var templateIndex = ItemSet.poison
 
     /** If this is a one item ItemSet, return that item
      *
@@ -69,6 +69,7 @@ class ItemSet[T] private (val items:List[T])
  * Companion object for the item set class
  */
 object ItemSet {
+    val poison = 0xbadbeef // poisoned to never match
     def apply[T](items:List[T]) = new ItemSet[T](items.distinct)
     def apply[T](items:T*) = new ItemSet[T](items.toList.distinct)
 }

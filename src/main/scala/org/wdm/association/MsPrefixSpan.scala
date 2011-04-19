@@ -231,13 +231,16 @@ class MsPrefixSpan[T](val sequences:List[Transaction[T]],
                 set.items.zipWithIndex.foreach {
                     case(_, index) if index == set.templateIndex =>     // skip "_" item
                     case(item, index) => {
-                        val ext = if (index > set.templateIndex) {      // Form <{30, x}>
-                            Transaction(ik.sets.init :+
-                                ItemSet(ik.sets.last.items :+ item))
-                        } else {                                        // Form <{30}{x}>
-                            Transaction(ik.sets :+ ItemSet(item))
-                        }
-                        if (!patterns.exists { _ == ext }) { patterns += ext }
+                        //val extend = if (index > set.templateIndex) {
+                        //    List(Transaction(ik.sets.init :+            // Form <{30, x}>
+                        //        ItemSet(ik.sets.last.items :+ item)))
+                        //} else {
+                        val extend = List(Transaction(ik.sets :+ ItemSet(item)), // Form <{30}{x}>
+                                 Transaction(ik.sets.init :+            // Form <{30, x}>
+                                    ItemSet(ik.sets.last.items :+ item)))
+                        //} else { List[Transaction[T]]() }
+                        extend.foreach { ext =>
+                            if (!patterns.exists { _ == ext }) { patterns += ext } }
                 } }
             }
         }
