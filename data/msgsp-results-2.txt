@@ -58,7 +58,7 @@ The number of length 2 sequential patterns is 10
 <{13}{3}> Count: 1
 <{22}{3}> Count: 1
 
-The number of length 3 sequential patterns is 10
+The number of length 3 sequential patterns is 12
 <{2}{5}{7}> Count: 1
 <{2}{5,13}> Count: 1
 <{2}{5}{14}> Count: 1
@@ -69,6 +69,8 @@ The number of length 3 sequential patterns is 10
 <{2}{13}{7}> Count: 1
 <{2}{13}{14}> Count: 1
 <{2}{14}{7}> Count: 1
+<{13}{3,4}> Count: 1
+<{22}{3,4}> Count: 1
 
 The number of length 4 sequential patterns is 10
 <{2}{5,13}{7}> Count: 1
