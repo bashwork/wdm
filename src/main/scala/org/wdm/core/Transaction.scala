@@ -79,19 +79,18 @@ class Transaction[T] private (val sets:List[ItemSet[T]],
         // element and we can drop the beggining of the set
         val index = sets findIndexOf { _ contains pattern.sets.last }
 
-        val form1 = Transaction(sets.drop(index).filterNot {        // attempt {ik}{x} match
-            pattern.sets contains _ })                              // prune all {ik} matches
-
-        if (!form1.contains(pattern.sets.last)) {                   // if we do not contain ik
-            return if (form1.length > 0) Some(form1)                // then we are a {ik}{x} match
+        val form1 = Transaction(sets.drop(index))                   // remove initial {...}{ik}{x} => {ik}{x}
+        val form2 = Transaction(sets.drop(index + 1))               // remove initial {ik}         =>     {x}
+        if (form1.sets.head == pattern.sets.last) {                 // if the front == {ik}
+            return if (form2.length > 0) Some(form2)                // then we are a {ik}{x} match
             else None                                               // skip empty projections
         }
 
         form1.sets.findIndexOf { set =>                             // otherwise we are a {ik, x} match
             val index = set.items.findIndexOf {                     // find which set has our match
-                _ == pattern.sets.last.items.last } 
+                _ == pattern.sets.last.items.last }                 // which should be in the first set 
             if (index >= 0) { set.templateIndex = index }           // set that index to _
-            (index >= 0)
+            (index >= 0)                                            // stop on first discovery
         }
         if (form1.length > 0) Some(form1) else None                 // skip empty projections
     }

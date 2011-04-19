@@ -160,9 +160,13 @@ class MsPrefixSpan[T](val sequences:List[Transaction[T]],
 
         val frequents = counts.filter {                                 // get our frequency database
             case(k,v) => v >= mincount }                                // relative to ik
+        //val frequents = s.foreach { transaction =>
+        //    transaction.allItems.foreach { item =>
 
-        logger.info("count: {} ", mincount)
-        logger.info("frequent: {} ", frequents)
+        //    }
+        //}
+        // this should be the counts in s
+
         s.map { sequence =>                                             // in the local database
             val items = sequence.sets.map { set =>
                 ItemSet(set.items.filter {                              // build a new itemset
@@ -232,12 +236,13 @@ class MsPrefixSpan[T](val sequences:List[Transaction[T]],
                     case(_, index) if index == set.templateIndex =>     // skip "_" item
                     case(item, index) => {
                         //val extend = if (index > set.templateIndex) {
-                        //    List(Transaction(ik.sets.init :+            // Form <{30, x}>
+                        //    List(Transaction(ik.sets.init :+          // Form <{30, x}>
                         //        ItemSet(ik.sets.last.items :+ item)))
                         //} else {
-                        val extend = List(Transaction(ik.sets :+ ItemSet(item)), // Form <{30}{x}>
-                                 Transaction(ik.sets.init :+            // Form <{30, x}>
-                                    ItemSet(ik.sets.last.items :+ item)))
+                        val extend = List(
+                            Transaction(ik.sets :+ ItemSet(item)),      // Form <{30}{x}>
+                            Transaction(ik.sets.init :+                 // Form <{30, x}>
+                                ItemSet(ik.sets.last.items :+ item)))
                         //} else { List[Transaction[T]]() }
                         extend.foreach { ext =>
                             if (!patterns.exists { _ == ext }) { patterns += ext } }
