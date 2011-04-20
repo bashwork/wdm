@@ -38,7 +38,7 @@ class MsPrefixSpan[T](val sequences:List[Transaction[T]],
         val frequent = initialize()                                                 // get our initial frequents
         buildFrequents(frequent)                                                    // the main starting point
 
-        logger.info("processing took " + stopwatch.toString)                        // ego...
+        logger.debug("processing took " + stopwatch.toString)                        // ego...
         frequentDb.map { case(count, buffer) => {
             FrequentSet(buffer.toList) }                                            // convert map to frequent list
         }.toList.sortWith { _.length < _.length }                                   // order by frequent length
@@ -66,8 +66,8 @@ class MsPrefixSpan[T](val sequences:List[Transaction[T]],
             actual(s) >= minsup }
         val filtered = level1.filter { s => actual(s) >= support.get(s) }           // <F1>
 
-        logger.info("initialization took " + stopwatch.toString)
-        logger.info("generated initial candidates: " + filtered)
+        logger.debug("initialization took " + stopwatch.toString)
+        logger.debug("generated initial candidates: " + filtered)
 
         FrequentSet(filtered.map { x => {                                           // <{F1}>
         val transaction = Transaction(List(ItemSet(x)), counts(x))                  // copy global counts
@@ -143,7 +143,7 @@ class MsPrefixSpan[T](val sequences:List[Transaction[T]],
             }
         }
 
-        logger.info("built potentials: " + potentials.toList)
+        logger.debug("built potentials: " + potentials.toList)
         potentials.toList
     }
 
@@ -188,7 +188,7 @@ class MsPrefixSpan[T](val sequences:List[Transaction[T]],
 
         val frequents = sk.map { _.allItems }.flatten.distinct          // for all items in sk
             .filter { i => counts(i) >= mincount }                      // if they are frequent
-        logger.info("frequent rps({}): {}", ik, frequents)
+        logger.debug("frequent rps({}): {}", ik, frequents)
         frequents.foreach { frequent =>                                 // see if we can extend them
             val fik = Transaction(ItemSet(frequent))
             fik.root = ik.root                                          // but they must contain ik
@@ -209,7 +209,7 @@ class MsPrefixSpan[T](val sequences:List[Transaction[T]],
         val projections = projectDatabase(ik, sk, mincount)
         if (!projections.isEmpty) {
             projections.foreach { p =>
-                logger.info("ti: {}", p.sets.map { _.templateIndex })}
+                logger.debug("ti: {}", p.sets.map { _.templateIndex })}
             extendPrefix(projections, ik, sk, mincount)
         }
     }
@@ -227,7 +227,7 @@ class MsPrefixSpan[T](val sequences:List[Transaction[T]],
 
         val projections = ListBuffer[Transaction[T]]()
 
-        logger.info("project({}): {} ", ik, sk)
+        logger.debug("project({}): {} ", ik, sk)
         sk.foreach { sequence =>
             sequence.project(ik) match {
                 case Some(projection) => projections += projection
@@ -235,7 +235,7 @@ class MsPrefixSpan[T](val sequences:List[Transaction[T]],
             }
         }
 
-        logger.info("built projections({}): {} ", ik, projections.toList)
+        logger.debug("built projections({}): {} ", ik, projections.toList)
         projections.toList
     }
 
@@ -251,12 +251,12 @@ class MsPrefixSpan[T](val sequences:List[Transaction[T]],
 
         val patterns = ListBuffer[Transaction[T]]()
 
-        logger.info("extend({}): {} ", ik, projections.toList)
+        logger.debug("extend({}): {} ", ik, projections.toList)
         projections.foreach { projection =>                             // extend our prefix with any possible projections
             projection.sets.foreach { set =>                            // extend one item at a time
                 set.items.zipWithIndex.foreach {
                     case(item, index) if index == set.templateIndex =>     // skip "_" item
-                        logger.info("skipped {}", item)
+                        logger.debug("skipped {}", item)
                     case(item, index) => {
                         //val extend = if (index > set.templateIndex) {
                         //    List(Transaction(ik.sets.init :+          // Form <{30, x}>
@@ -273,7 +273,7 @@ class MsPrefixSpan[T](val sequences:List[Transaction[T]],
             }
         }
 
-        logger.info("patterns {} ", patterns.toList)
+        logger.debug("patterns {} ", patterns.toList)
         sk.foreach { sequence =>                                        // check the pattern against sk
             patterns.foreach { pattern =>                               // build the pattern support count
                 if (sequence contains pattern) {                        // if pattern is supported
@@ -300,7 +300,7 @@ class MsPrefixSpan[T](val sequences:List[Transaction[T]],
     private def addFrequent(count:Int, transaction:Transaction[T]) : Boolean = {
         val buffer = frequentDb.getOrElseUpdate(count, ListBuffer[Transaction[T]]())
         if (!buffer.exists { _ == transaction }) {                      // prevent duplicates
-            logger.info("addFrequent({}): {}", transaction, count)
+            logger.debug("addFrequent({}): {}", transaction, count)
             buffer += transaction                                       // add frequent to N-frequent bucket
             return true;                                                // continue with this pattern
         }
