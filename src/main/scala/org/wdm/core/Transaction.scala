@@ -77,7 +77,9 @@ class Transaction[T] private (val sets:List[ItemSet[T]],
 
         // since we know we are contained, just find the last index of our last
         // element and we can drop the beggining of the set
-        val index = sets findIndexOf { _ contains pattern.sets.last }
+        val index = sets findIndexOf { set =>
+            set.templateIndex = ItemSet.poison                      // clear reference...I suck at f-programming
+            set contains pattern.sets.last }
 
         val form1 = Transaction(sets.drop(index))                   // remove initial {...}{ik}{x} => {ik}{x}
         val form2 = Transaction(sets.drop(index + 1))               // remove initial {ik}         =>     {x}

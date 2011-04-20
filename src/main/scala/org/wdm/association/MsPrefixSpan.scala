@@ -186,8 +186,30 @@ class MsPrefixSpan[T](val sequences:List[Transaction[T]],
     private def restrictedPrefixSpan(ik:Transaction[T], sk:List[Transaction[T]],
         mincount:Int) {
 
+        val frequents = sk.map { _.allItems }.flatten.distinct          // for all items in sk
+            .filter { i => counts(i) >= mincount }                      // if they are frequent
+        logger.info("frequent rps({}): {}", ik, frequents)
+        frequents.foreach { frequent =>                                 // see if we can extend them
+            val fik = Transaction(ItemSet(frequent))
+            fik.root = ik.root                                          // but they must contain ik
+            prefixSpan(fik, sk, mincount)                               // recurse
+        }
+    }
+
+    /**
+     * Performs the recursive prefix span
+     *
+     * @param ik The transaction to build a projection for
+     * @param sk The potentials for this transaction
+     * @param mincount The minimum count that must be met
+     */
+    private def prefixSpan(ik:Transaction[T], sk:List[Transaction[T]],
+        mincount:Int) {
+
         val projections = projectDatabase(ik, sk, mincount)
         if (!projections.isEmpty) {
+            projections.foreach { p =>
+                logger.info("ti: {}", p.sets.map { _.templateIndex })}
             extendPrefix(projections, ik, sk, mincount)
         }
     }
@@ -233,7 +255,8 @@ class MsPrefixSpan[T](val sequences:List[Transaction[T]],
         projections.foreach { projection =>                             // extend our prefix with any possible projections
             projection.sets.foreach { set =>                            // extend one item at a time
                 set.items.zipWithIndex.foreach {
-                    case(_, index) if index == set.templateIndex =>     // skip "_" item
+                    case(item, index) if index == set.templateIndex =>     // skip "_" item
+                        logger.info("skipped {}", item)
                     case(item, index) => {
                         //val extend = if (index > set.templateIndex) {
                         //    List(Transaction(ik.sets.init :+          // Form <{30, x}>
@@ -262,7 +285,7 @@ class MsPrefixSpan[T](val sequences:List[Transaction[T]],
         patterns.filter { _.count >= mincount }.foreach { pattern =>    // for each frequent pattern
             if (pattern contains ik.root) {                             // we must still contain the root
                 if (addFrequent(pattern.length, pattern)) {             // add the frequent pattern
-                    restrictedPrefixSpan(pattern, sk, mincount)         // find further extensions
+                    prefixSpan(pattern, sk, mincount)                   // find further extensions
                 }
             }
         }
